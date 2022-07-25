@@ -1,0 +1,83 @@
+
+head {
+	color: rgb(221,221,221);
+}
+body {
+	background-color: #1c1c1e;
+	font-family: sans-serif;
+	color: rgb(221,221,221);
+	max-width: 80%;
+	margin: auto;
+}
+
+.site-header {
+	text-align: center;
+}
+
+/* add a black background color to the top navigation */
+.navbar {
+	
+	float: left;
+	width: 100%;
+	display: block;
+	overflow: hidden;
+	/*
+	background-color: #1c1c1e;
+	overflow: hidden;
+	*/
+}
+.navbar a {
+	float: left;
+	padding: 12px;
+	color: white;
+	text-decoration: none;
+	font-size: 17px;
+	width: 25%; /* Four links of equal widths */
+	text-align: center;
+}
+.navbar a:hover {
+	background-color: #000;
+}
+  
+.navbar a.active {
+	background-color: #1c1c1e;
+}
+  
+@media screen and (max-width: 500px) {
+	.navbar a {
+		float: none;
+	  	display: block;
+	  	width: 100%;
+	  	text-align: left;
+	}
+}
+
+
+
+.item-title {
+	margin: auto;
+	margin-bottom: 2%;
+}
+
+.item-list {
+	width: 100%;
+	background-color: rgb(44, 44, 46);
+	border-radius: 25px;
+	border: 2px solid rgb(44, 44, 46);
+	padding: 20px; 
+	overflow: hidden;
+}
+
+.mySelf {
+	margin-top: 25%;
+	height: auto;
+}
+
+.whitePaint {
+	color: rgb(221,221,221);
+}
+
+.emptyDeco {
+	text-decoration: none;
+}
+

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>2048</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <link rel="stylesheet" href="2048.css" />
+  <body>
+    <table id="title" border="0">
+      <tr>
+        <td id="titleField">
+          <p id="title">2048</p>
+        </td>
+        <td id="scoreField">
+          <p id="scoreType ">Score</p>
+          <p id="score"></p>
+        </td>
+      </tr>
+    </table>
+    <table id="board" border="0">
+      <tbody id="boardBody">
+      <tr>
+        <td id="00"></td>
+        <td id="01"></td>
+        <td id="02"></td>
+        <td id="03"></td>
+      </tr>
+      <tr id="tiles">
+        <td id="10"></td>
+        <td id="11"></td>
+        <td id="12"></td>
+        <td id="13"></td>
+      </tr>
+      <tr>
+        <td id="20"></td>
+        <td id="21"></td>
+        <td id="22"></td>
+        <td id="23"></td>
+      </tr>
+      <tr>
+        <td id="30"></td>
+        <td id="31"></td>
+        <td id="32"></td>
+        <td id="33"></td>
+      </tr>
+    </tbody>
+    </table>
+    <!-- <div class="field">
+      <label for="signinID">NAME:</label>
+      <input type="text" id="name" name="name" placeholder="Enter your first name." /><br><br>
+    </div> -->
+    <table id="rank" border="5">
+      <th id="rankTitle">Ranking List</th>
+      <!-- <td id="rankTitle">Ranking List</td> -->
+      <th colspan="3">
+      <div id="field" style="display: none">
+      <!-- <div id="field"> -->
+        <label for="name">NAME:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your first name." /><br><br>
+        <button type="button" onclick="getName()">Enter</button>
+      </div>
+      
+      </div>
+      </th>
+      <tr>
+        <td id="00">Rank</td>
+        <td id="01">Name</td>
+        <td id="02">Score</td>
+        <td id="03">Tile score</td>
+      </tr>
+      <tr> 
+        <td id="01">1</td>
+        <td id="1name"><%= rank[0][1] %></td>
+        <td id="1score"><%= rank[0][2] %></td>
+        <td id="1tile"><%= rank[0][3] %></td>
+      </tr>
+      <tr>
+        <td id="02">2</td>
+        <td id="2name"><%= rank[1][1] %></td>
+        <td id="2score"><%= rank[1][2] %></td>
+        <td id="2tile"><%= rank[1][3] %></td>
+      </tr>
+      <tr>
+        <td id="03">3</td>
+        <td id="3name"><%= rank[2][1] %></td>
+        <td id="3score"><%= rank[2][2] %></td>
+        <td id="3tile"><%= rank[2][3] %></td>
+      </tr>
+      <tr>
+        <td id="94">4</td>
+        <td id="4name"><%= rank[3][1] %></td>
+        <td id="4score"><%= rank[3][2] %></td>
+        <td id="4tile"><%= rank[3][3] %></td>
+      </tr>
+      <tr>
+        <td id="05">5</td>
+        <td id="5name"><%= rank[4][1] %></td>
+        <td id="5score"><%= rank[4][2] %></td>
+        <td id="5tile"><%= rank[4][3] %></td>
+      </tr>
+      <tr>
+        <td id="06">6</td>
+        <td id="6name"><%= rank[5][1] %></td>
+        <td id="6score"><%= rank[5][2] %></td>
+        <td id="6tile"><%= rank[5][3] %></td>
+      </tr>
+      <tr>
+        <td id="07">7</td>
+        <td id="7name"><%= rank[6][1] %></td>
+        <td id="7score"><%= rank[6][2] %></td>
+        <td id="7tile"><%= rank[6][3] %></td>
+      </tr>
+      <tr>
+        <td id="08">8</td>
+        <td id="8name"><%= rank[7][1] %></td>
+        <td id="8score"><%= rank[7][2] %></td>
+        <td id="8tile"><%= rank[7][3] %></td>
+      </tr>
+      <tr>
+        <td id="09">9</td>
+        <td id="9name"><%= rank[8][1] %></td>
+        <td id="9score"><%= rank[8][2] %></td>
+        <td id="9tile"><%= rank[8][3] %></td>
+      </tr>
+      <tr>
+        <td id="10">10</td>
+        <td id="10name"><%= rank[9][1] %></td>
+        <td id="10score"><%= rank[9][2] %></td>
+        <td id="10tile"><%= rank[9][3] %></td>
+      </tr>
+    </table>
+  </body>
+  <script src="2048.js"></script>
+</html>

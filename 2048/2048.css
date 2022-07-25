@@ -1,0 +1,103 @@
+td {
+  border: 2px solid #372c25;
+  border-radius: 9px;
+  text-align: center;
+  vertical-align: center;
+  font-size: 18pt;
+  font-weight: bold;
+  height: 70px;
+  width: 70px;
+  color: #684a23;
+  background-color: #fbeddc;
+}
+
+
+/* td {
+  border: 2px solid #372c25;
+  border-radius: 9px;
+  text-align: center;
+  vertical-align: center;
+  font-size: 18pt;
+  font-weight: bold;
+  height: 70px;
+  width: 70px;
+  color: #684a23;
+  background-color: #fbeddc;
+} */
+
+p {
+  color: white;
+  vertical-align: top;
+}
+
+body {
+  background-color: #FBEDDC;
+}
+
+#title {
+  color: white;
+  font-size: 48px;
+  padding: 0px;
+  margin: 0px;
+}
+
+#titleBar {
+  margin-left: 70px;
+  margin-top: 35px;
+  height: 70px;
+}
+
+#titleField {
+  width: 148px;
+  height: 35px;
+  background-color: #696969;
+  margin: 0px;
+}
+
+#scoreField {
+  width: 148px;
+  height: 35px;
+  background-color: #696969;
+  padding: 0px;
+  margin: 0px;
+}
+
+#scoreType {
+  font-size: 14pt;
+  margin: 0px;
+  color: #715541;
+}
+
+#score {
+  font-size: 28pt;
+  margin: 0px;
+  color: white;
+}
+
+#board {
+  margin-left: 70px;
+  margin-top: 5px;
+  display: inline-block;
+  float: left;
+  width: 50%;
+  height: 50%;
+}
+
+#info {
+  margin-top: 3px;
+  margin-left: 82px;
+  font-size: 10pt;
+  color: white;
+}
+
+#rankTitle {
+  color: #696969;
+  font-size: 30pt;
+  text-align: center;
+}
+
+#rank {
+  /* float: right; */
+  margin: auto;
+  margin-top: -5%;
+}

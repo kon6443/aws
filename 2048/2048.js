@@ -39,10 +39,18 @@ function displayRank(res) {
 }
 
 function getName() {
-  document.getElementById('field').style.display = 'block';
   const name = document.getElementById('name').value;
   document.getElementById('name').value = "";
-  return name;
+  console.log(name, score, getMaxNum());
+  $.ajax({
+    type: "post",
+    url: 'http://localhost:80/2048/:name/:score/:maxtile',
+    data: {name:name, score:score, maxtile:getMaxNum()},
+    dataType:'text',
+    success: function(res) {
+      location.reload();
+    }
+  });
 }
 
 function compareScore() {
@@ -52,21 +60,8 @@ function compareScore() {
     data: {score:score},
     dataType:'json',
     success: function(res) {
-      console.log('success function has been called.');
       if(res[0]==='True') {
         document.getElementById('field').style.display = 'block';
-        document.getElementById("field").addEventListener("click", function() {
-          const name = document.getElementById('name').value;
-          document.getElementById('name').value = "";
-          recordNew(name);
-        });
-        // const name = getName(function() {
-        //   console.log('name: ', name);
-        //   recordNew(name);
-        // });
-        
-        // recordNew();
-        // recordNew(getName());
       }
     }
   });

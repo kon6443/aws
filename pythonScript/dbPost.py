@@ -38,17 +38,18 @@ def insert(name, score, tile_score):
         rows = cursor.fetchall()
         for row in rows:
             result.append(list(row))
-        result = sorted(result, key=lambda score: score[2], reverse=True)
         if len(result)>=10:
-            result[-1][0] = name
-            result[-1][1] = int(score)
-            result[-1][2] = int(tile_score)
+            result[-1][1] = name
+            result[-1][2] = int(score)
+            result[-1][3] = int(tile_score)
         else:
             result.append(list([len(result)+1, name, int(score), int(tile_score)]))
-            sql = "insert into RANK(name,score,tile_score) values (?,?,?)"
-            cursor.execute(sql,(result[-1][1],result[-1][2],result[-1][3]))
-            conn.commit()
-            
+        result = sorted(result, key=lambda score: score[2], reverse=True)
+        cursor.execute('DELETE FROM RANK')
+        sql = "insert into RANK(name,score,tile_score) values (?,?,?)"
+        for i in range(len(result)):
+            cursor.execute(sql,(result[i][1],result[i][2],result[i][3]))
+        conn.commit()
 
         # data = (
         #     ('One', 1, 'Seoul'),

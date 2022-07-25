@@ -50,6 +50,8 @@ def compare(score):
         if int(score)>int(result[-1][2]):
             # return_value = json.dumps(result)
             print('True')
+        else:
+            print('False')
             
 
 

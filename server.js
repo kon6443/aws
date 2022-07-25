@@ -37,26 +37,9 @@ app.get('/2048', function(req, res, next) {
     });
 });
 
-// app.get('/2048/:name', function(req, res) {
-//     console.log('name middleware has been called,');
-//     var options = {
-//         mode: 'json',
-//         pythonPath:'',  
-//         pythonOptions:['-u'],
-//         scriptPath:'',
-//         args: [null]
-//     };
-//     PythonShell.PythonShell.run('./pythonScript/dbDisplay.py', options, function(err, results) {
-//         if(err) throw err;
-//         res.status(200).send(results[0]);
-//     });
-// });
-
 app.get('/2048/:score', function(req, res) {
     //req.query.country
     //req.params.country
-    console.log('score middle ware has benn called.');
-    console.log(req.query.score);
     var options = {
         mode: 'text',
         pythonPath:'',  
@@ -66,26 +49,22 @@ app.get('/2048/:score', function(req, res) {
     };
     PythonShell.PythonShell.run('./pythonScript/dbCompare.py', options, function(err, results) {
         if(err) throw err;
-        console.log(results);
         return res.status(200).send(results);
     });
 });
 
 app.post('/2048/:name/:score/:maxtile', function(req, res) {
-    let name, score, maxtile = req.body;
-    console.log(name, score, maxtile);
     var options = {
         mode: 'text',
         pythonPath:'',  
         pythonOptions:['-u'],
         scriptPath:'',
-        args: [name, score, maxtile]
+        args: [req.body.name, req.body.score, req.body.maxtile]
     };
     PythonShell.PythonShell.run('./pythonScript/dbPost.py', options, function(err, results) {
         if(err) throw err;
-        console.log(results);
+        return res.status(200).send(results);
     });
-    return res.render(__dirname + '/2048/2048', {rank:results[0]});
 });
 
 app.get('/tetris', function(req, res) {

@@ -18,7 +18,7 @@ function recordNew(name) {
   console.log('name: ', name);
   $.ajax({
     type: "post",
-    url: 'http://localhost:80/2048/:name/:score/:maxtile',
+    url: '/2048/:name/:score/:maxtile',
     data: {name:name, score:score, maxtile:getMaxNum()},
     dataType:'text',
     success: function(res) {
@@ -44,7 +44,7 @@ function getName() {
   console.log(name, score, getMaxNum());
   $.ajax({
     type: "post",
-    url: 'http://localhost:80/2048/:name/:score/:maxtile',
+    url: '/2048/:name/:score/:maxtile',
     data: {name:name, score:score, maxtile:getMaxNum()},
     dataType:'text',
     success: function(res) {
@@ -56,7 +56,7 @@ function getName() {
 function compareScore() {
   $.ajax({
     type: "get",
-    url: 'http://localhost:80/2048/:score',
+    url: '/2048/:score',
     data: {score:score},
     dataType:'json',
     success: function(res) {
@@ -367,7 +367,7 @@ function update() {
 function displayChart() {
   $.ajax({
     type: "get",
-    url: 'http://localhost:80/2048/:name',
+    url: '/2048/:name',
     data: {},
     dataType:'json',
     success: function(res) {

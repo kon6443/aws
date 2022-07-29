@@ -23,6 +23,15 @@ app.get('/', function(req, res) {
     return res.sendFile(__dirname + '/home.html');
 });
 
+app.get('/login', function(req, res) {
+    return res.sendFile(__dirname + '/login/login.html');
+});
+
+app.post('/login/:signUpid/:signUpaddress/:signUppw/:signUppwc', function(req, res) {
+    console.log('body: ', req.body);
+    return res.sendFile(__dirname + '/login/login.html');
+});
+
 app.get('/2048', function(req, res, next) {
     var options = {
         mode: 'json',

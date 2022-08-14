@@ -69,9 +69,11 @@ function compareScore() {
 
 function gameOver() {
   alert("[Game Over]\nMax: " + getMaxNum() + "\nScore" + score);
-  compareScore(function() {
-    init();
-  });
+  compareScore();
+  init();
+  // compareScore(function() {
+  //   init();
+  // });
 }
 
 function checkGameOver() {

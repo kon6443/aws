@@ -41,7 +41,6 @@ function displayRank(res) {
 function getName() {
   const name = document.getElementById('name').value;
   document.getElementById('name').value = "";
-  console.log(name, score, getMaxNum());
   $.ajax({
     type: "post",
     url: '/2048/:name/:score/:maxtile',
@@ -69,11 +68,9 @@ function compareScore() {
 
 function gameOver() {
   alert("[Game Over]\nMax: " + getMaxNum() + "\nScore" + score);
-  compareScore();
-  init();
-  // compareScore(function() {
-  //   init();
-  // });
+  compareScore(function() {
+    init();
+  });
 }
 
 function checkGameOver() {

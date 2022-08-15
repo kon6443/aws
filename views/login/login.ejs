@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="/public/css/styles.css">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<title>Onam Kwon</title>
+		<body class="body" style="background-color: #1c1c1e; color: rgb(221,221,221); font-family: Sans-serif; margin:0 auto;"></body>
+		<!-- Bootstrap CSS
+		<body class="body" style="background-color: #1c1c1e; color: rgb(221,221,221); font-family: Sans-serif; margin:0 auto;">
+		 -->
+	</head>
+	
+	<body>
+		<div class="navbar">
+			<a class="active" href="/">Onam Kwon</a> 
+			<a href="/dev">Dev</a> 
+			<a href="/private">Private</a> 
+			<a href="/about">About</a>
+		</div>  
+		<div class="wrapper">
+			<ul class="item-list mySelf">
+				<ul class="about">
+					<article class="about-text">
+                        <div>
+                            <h1><%= user.id %>! Welcome<br>
+                                Your address: <%= user.address %>. <br>
+                                You are: logged in. <br>
+                                This is your private page! <br>
+                            </h1>
+                            <form id="signOut">
+                                <button type="button" id="logOut" onclick="signOut()">Log out</button><br><br>
+                            </form>
+                        </div>
+                        <script>
+                            function signOut() {
+                                $.ajax({
+                                    type: "get",
+                                    url: 'http://localhost:8080/logOut',
+                                    data: {},
+                                    dataType:'text',
+                                    success: function(res) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                            function signInAjax() {
+								const signinID = document.getElementById("signinID").value;
+                                const signinPW = document.getElementById("signinPW").value;
+                                document.getElementById("signinID").value = "";
+                                document.getElementById("signinPW").value = "";
+                                $.ajax({
+                                    type: "post",
+                                    url: 'http://localhost:8080/login/:signInid/:signInpw',
+                                    data: {id:signinID,pw:signinPW},
+                                    dataType:'text',
+                                    success: function(res) {
+                                        console.log('sign in complete res: ', res);
+                                        
+                                    }
+                                });
+                            }
+                            function login() {
+                                $.ajax({
+                                    type: "get",
+                                    url: 'http://localhost:8080/login',
+                                    // url: 'http://localhost:8080/login/:signInid/:signInpw',
+                                    data: {},
+                                    dataType:'text',
+                                    success: function(res) {
+                                        console.log('show logged in : ', res);
+                                    }
+                                });
+                            }
+                        </script>
+                        <style>
+                            #logOut {
+                                margin-top: 2%;
+                                width: 19%;
+                                height: 34px;
+                                border-radius: 50px;
+                                background: black;
+                                color: white;
+                            }
+                        </style>
+					</article>
+				</ul>
+			</ul>			
+		</div>
+		<!-- Option 1: Bootstrap Bundle with Popper -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+	</body>
+</html>
+
+

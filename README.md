@@ -2,6 +2,8 @@
 ### Aug 12, 2022.
 I am trying to make my code to be better looking.
 
+<br><br>
+
 ## Aug 12, 2022.
 I wanted to make a clean code that everyone can see and understand easily.
 I was looking for how to, and I have noticed that I need to apply MVC pattern to my server. 
@@ -18,3 +20,7 @@ Separating their purpose can layer server structure which means:
 This implies that making more clean code and separating exact purpose of their code.
 
 I have made each of router files based on categories in `routes` directory.
+
+## Aug 15, 2022.
+• Applied router to 2048 game.
+• Applying router to login.

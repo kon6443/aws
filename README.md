@@ -1,6 +1,4 @@
 # This repository has been made to practice publishing my NodeJS server using AWS EC2.
-### Aug 12, 2022.
-I am trying to make my code to be better looking.
 
 <br><br>
 
@@ -23,4 +21,10 @@ I have made each of router files based on categories in `routes` directory.
 
 ## Aug 15, 2022.
 • Applied router to 2048 game.
-• Applying router to login.
+• Applied router to login.
+• Added `controllers` and `models` directory.
+
+## Aug 16, 2022.
+• Added `userValidateCheck` function module.
+• Connected mongoDB using mongoose module.
+• 

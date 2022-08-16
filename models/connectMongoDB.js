@@ -2,10 +2,12 @@
 const mongoose = require('mongoose');
 
 const path = require('path');
+
 // calling enviroment variable from .env file
+// require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
 
-exports.db = () => {
+exports.connectMongoDB = () => {
     mongoose.connect(
         process.env.MONGO_URI,
         {
@@ -20,4 +22,3 @@ exports.db = () => {
         console.log(err);
     });   
 }
-

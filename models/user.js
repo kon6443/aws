@@ -19,11 +19,6 @@ const userSchema = mongoose.Schema({  // making a schema called userSchema.
     required: true,
     maxLength: 100,
   },
-  pwc: {
-    type: String,
-    required: true,
-    maxLength: 100,
-  },
 });
 
 const User = mongoose.model('User', userSchema);

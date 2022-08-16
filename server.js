@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 // allows you to use req.body var when you use http post method.
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const { connectMongoDB } = require('./models/connectMongoDB');
+
 const mainRouter = require('./routes/mainRouter');
 const game2048Router = require('./routes/2048Router');
 const gameTetrisRouter = require('./routes/tetrisRouter');
@@ -17,6 +19,8 @@ const port = 80;
 const server = app.listen(port, function() {
     console.log('Listening on '+port+'!');
 });
+
+connectMongoDB();
 
 app.use('/', mainRouter);
 app.use('/2048', game2048Router);

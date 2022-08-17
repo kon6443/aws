@@ -11,24 +11,24 @@ const User = require('../models/user');
 router.get('/', function(req, res) {
     const user = req.decoded;
     if(user) {
-        console.log('user');
+        // console.log('user');
         return res.render(path.join(__dirname, '../views/login/login'), {user:user.docs});
         // return res.render('login', {user:user.docs});
     } else {
-        console.log('!user');
+        // console.log('!user');
         return res.sendFile(path.join(__dirname, '../views/login/login.html'));
     }
 });
 
-router.post('/:id/:address/:pw/:pwc', function(req, res) {
+router.post('/:id/:address/:pw/:pwc', async function(req, res) {
     const { id, address, pw, pwc } = req.body;
-    const errorFlag = userValidateCheck(id, address, pw, pwc);
-    if(errorFlag) { // user typed went wrong.
+    const errorFlag = await userValidateCheck(id, address, pw, pwc);
+    if(errorFlag) { // user typed something wrong.
         return res.status(200).send(errorFlag);
-    } else {
-        const user = new User(req.body);
-        return res.sendFile(path.join(__dirname, '../views/login/login.html'));
     }
+    const user = new User(req.body);
+    
+    return res.sendFile(path.join(__dirname, '../views/login/login.html'));
 });
 
 module.exports = router;

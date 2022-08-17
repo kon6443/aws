@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const path = require('path');
-// importing .env file
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
 
-exports.auth = (req, res, next) => {
+// importing .env file
+require('dotenv').config(); 
+
+module.exports = (req, res, next) => {
     try {
         // verifying jwt using cookies and secret key then return it to req.decoded
         req.decoded = jwt.verify(req.cookies.user, process.env.SECRET_KEY);

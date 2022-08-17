@@ -1,7 +1,8 @@
 // loginCheck.js
 
-// importing bcrypt moudle to encrypt user password.
-const bcrypt = require('bcrypt');
+// // importing bcrypt moudle to encrypt user password.
+// const bcrypt = require('bcrypt');
+
 const comparePassword = require('../models/comparePassword');
 const findUser = require('../models/findUser');
 
@@ -11,6 +12,6 @@ const saltRounds = 10;
 module.exports = async function(id, typedPw) {
     const user = await findUser(id);
     const dbPw = user.pw;
-    const userCorrect = await comparePassword(typedPw, dbPw);
-    return userCorrect;
+    const userConfirmed = await comparePassword(typedPw, dbPw);
+    return userConfirmed;
 };

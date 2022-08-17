@@ -9,7 +9,8 @@
 
 ## Aug 14, 2022.
 • The entire NodeJS server is not applied routers. <br>
-• I have made a `routes` directory to organize my entire server structure. Now I can distinguish purposes of `controller`, `model`, `view`. <br>
+• I have made a `routes` directory to organize my entire server structure. <br>
+Now I can distinguish purposes of `controller`, `model`, `view`. <br>
 
 • Separating their purpose can layer server structure which means:  <br>
     `View` is used to interace only clients. <br>

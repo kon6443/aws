@@ -11,6 +11,6 @@ const saltRounds = 10;
 module.exports = async function(id, typedPw) {
     const user = await findUser(id);
     const dbPw = user.pw;
-    const temp = await comparePassword(typedPw, dbPw);
-    return temp;
+    const userCorrect = await comparePassword(typedPw, dbPw);
+    return userCorrect;
 };

@@ -6,6 +6,7 @@ const path = require('path');
 const userValidateCheck = require("../controllers/userValidateCheck");
 const encryptPassword = require("../controllers/encryptPassword");
 const loginCheck = require("../controllers/loginCheck");
+const issueToken = require("../controllers/issueToken");
 
 // importing user schema.
 const User = require('../models/user');
@@ -14,11 +15,11 @@ const User = require('../models/user');
 router.get('/', function(req, res) {
     const user = req.decoded;
     if(user) {
-        // console.log('user');
+        console.log('user');
         return res.render(path.join(__dirname, '../views/login/login'), {user:user.docs});
         // return res.render('login', {user:user.docs});
     } else {
-        // console.log('!user');
+        console.log('!user');
         return res.sendFile(path.join(__dirname, '../views/login/login.html'));
     }
 });
@@ -40,9 +41,14 @@ router.post('/:id/:address/:pw/:pwc', async function(req, res) {
 router.post('/:id/:pw', async function(req, res) {
     const { id, pw } = req.body;
     const userCorrect = await loginCheck(id, pw);
-    // if(userCorrect) {
-        
-    // }
+    if(userCorrect) {
+        const token = await issueToken(id);
+        return res
+            .cookie('user', token,{maxAge:30*60 * 1000}) // 1000 is a sec
+            .end();
+    } else {
+        return res.status(200).send('Your password is not correct.');
+    }
 });
 
 module.exports = router;

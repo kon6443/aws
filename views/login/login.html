@@ -88,7 +88,11 @@
                                     data: {id:signinID,pw:signinPW},
                                     dataType:'text',
                                     success: function(res) {
-                                        location.reload();
+                                        if(res.length == 0) {
+                                            location.reload();
+                                        } else {
+                                            alert(res);
+                                        }
                                     }
                                 });
                             }

@@ -2,6 +2,6 @@
 const User = require('../models/user');
 
 module.exports = async function(id) {
-    const userExists = await User.findOne({id:id});
-    return userExists;
+    const user = await User.findOne({id:id});
+    return user;
 }

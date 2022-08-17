@@ -4,10 +4,13 @@ const path = require('path');
 
 // importing userValidateCheck funtion.
 const userValidateCheck = require("../controllers/userValidateCheck");
+const encryptPassword = require("../controllers/encryptPassword");
+const loginCheck = require("../controllers/loginCheck");
 
 // importing user schema.
 const User = require('../models/user');
 
+// Main login page.
 router.get('/', function(req, res) {
     const user = req.decoded;
     if(user) {
@@ -20,6 +23,7 @@ router.get('/', function(req, res) {
     }
 });
 
+// Sign up.
 router.post('/:id/:address/:pw/:pwc', async function(req, res) {
     const { id, address, pw, pwc } = req.body;
     const errorFlag = await userValidateCheck(id, address, pw, pwc);
@@ -27,8 +31,18 @@ router.post('/:id/:address/:pw/:pwc', async function(req, res) {
         return res.status(200).send(errorFlag);
     }
     const user = new User(req.body);
-    
+    user.pw = await encryptPassword(user.pw);
+    user.save();
     return res.sendFile(path.join(__dirname, '../views/login/login.html'));
+});
+
+// Sing in.
+router.post('/:id/:pw', async function(req, res) {
+    const { id, pw } = req.body;
+    const userCorrect = await loginCheck(id, pw);
+    // if(userCorrect) {
+        
+    // }
 });
 
 module.exports = router;

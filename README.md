@@ -20,11 +20,14 @@
 I have made each of router files based on categories in `routes` directory. <br>
 
 ## Aug 15, 2022.
-• Applied router to 2048 game. <br>
-• Applied router to login. <br>
+• Applying router. <br>
 • Added `controllers` and `models` directory. <br>
 
 ## Aug 16, 2022.
-• Added `userValidateCheck` function module.
-• Connected mongoDB using mongoose module.
-• 
+• Connected mongoDB using mongoose module. <br>
+• Working on sign up feature <br>
+
+## Aug 17, 2022.
+• Sign up feature done. <br>
+• Sign in feature done. <br>
+

@@ -37,8 +37,8 @@
                         <script>
                             function signOut() {
                                 $.ajax({
-                                    type: "get",
-                                    url: 'http://localhost:8080/logOut',
+                                    type: "delete",
+                                    url: '/login/logout',
                                     data: {},
                                     dataType:'text',
                                     success: function(res) {

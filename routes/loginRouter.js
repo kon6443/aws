@@ -18,10 +18,8 @@ router.use('/', auth);
 router.get('/', function(req, res) {
     const user = req.decoded;
     if(user) {
-        console.log('user');
         return res.render(path.join(__dirname, '../views/login/login'), {user:user});
     } else {
-        console.log('!user');
         return res.sendFile(path.join(__dirname, '../views/login/login.html'));
     }
 });
@@ -36,7 +34,7 @@ router.post('/:id/:address/:pw/:pwc', async function(req, res) {
     const user = new User(req.body);
     user.pw = await encryptPassword(user.pw);
     user.save();
-    return res.sendFile(path.join(__dirname, '../views/login/login.html'));
+    return res.status(200).send('Your account has been created successfully, you can now log in.');
 });
 
 // Sing in.
@@ -51,6 +49,10 @@ router.post('/:id/:pw', async function(req, res) {
     } else {
         return res.status(200).send('Your password is not correct.');
     }
+});
+
+router.delete('/logout', function(req, res) {
+    return res.clearCookie('user').end();
 });
 
 module.exports = router;

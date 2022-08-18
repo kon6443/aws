@@ -18,7 +18,7 @@ app.set('view engine', 'ejs');
 const { connectMongoDB } = require('./models/connectMongoDB');
 
 // Routers.
-const mainRouter = require('./routes/mainRouter');
+const homeRouter = require('./routes/homeRouter');
 const game2048Router = require('./routes/2048Router');
 const gameTetrisRouter = require('./routes/tetrisRouter');
 const loginRouter = require('./routes/loginRouter');
@@ -30,7 +30,7 @@ const server = app.listen(port, function() {
 
 connectMongoDB();
 
-app.use('/', mainRouter);
+app.use('/', homeRouter);
 app.use('/2048', game2048Router);
 app.use('/tetris', gameTetrisRouter);
 app.use('/login', loginRouter);

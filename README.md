@@ -32,3 +32,6 @@ I have made each of router files based on categories in `routes` directory. <br>
 • Sign up feature done. <br>
 • Sign in feature done. <br>
 
+## Aug 18, 2022
+• Sign out feature done. <br>
+

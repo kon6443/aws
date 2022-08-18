@@ -2,10 +2,9 @@ const express = require("express");
 const app = express();
 
 const router = express.Router();
-const path = require('path');
+// const path = require('path');
 
-//  To use python script
-var PythonShell = require('python-shell');
+const game2048MiddleWare = require('../controllers/2048/2048.controller');
 
 // importing body-parser to create bodyParser object
 const bodyParser = require('body-parser');
@@ -15,97 +14,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // allows you to ejs view engine.
 app.set('view engine', 'ejs');  
 
-router.get('/', function(req, res, next) {
-    var options = {
-        mode: 'json',
-        pythonPath:'',  
-        pythonOptions:['-u'],
-        scriptPath:'',
-        args: [null]
-    };
-    PythonShell.PythonShell.run(path.join(__dirname, '../pythonScript/dbDisplay.py'), options, function(err, results) {
-    // PythonShell.PythonShell.run('./pythonScript/dbDisplay.py', options, function(err, results) {
-        if(err) throw err;
-        return res.render(path.join(__dirname, '../views/2048/2048.ejs'), {rank:results[0]});
-    });
-});
+router.get('/', game2048MiddleWare.displayGame);
 
-router.get('/:score', function(req, res) {
-    //req.query.country
-    //req.params.country
-    var options = {
-        mode: 'text',
-        pythonPath:'',  
-        pythonOptions:['-u'],
-        scriptPath:'',
-        args: [req.query.score]
-    };
-    PythonShell.PythonShell.run('./pythonScript/dbCompare.py', options, function(err, results) {
-        if(err) throw err;
-        return res.status(200).send(results);
-    });
-});
+router.get('/:score', game2048MiddleWare.checkNewRecord);
 
-router.post('/:name/:score/:maxtile', function(req, res) {
-    var options = {
-        mode: 'text',
-        pythonPath:'',  
-        pythonOptions:['-u'],
-        scriptPath:'',
-        args: [req.body.name, req.body.score, req.body.maxtile]
-    };
-    PythonShell.PythonShell.run('./pythonScript/dbPost.py', options, function(err, results) {
-        if(err) throw err;
-        return res.status(200).send(results);
-    });
-});
+router.post('/:name/:score/:maxtile', game2048MiddleWare.saveRecord);
 
 module.exports = router;
-
-
-
-// Below code is original code.
-
-// app.get('/2048', function(req, res, next) {
-//     var options = {
-//         mode: 'json',
-//         pythonPath:'',  
-//         pythonOptions:['-u'],
-//         scriptPath:'',
-//         args: [null]
-//     };
-//     PythonShell.PythonShell.run('./pythonScript/dbDisplay.py', options, function(err, results) {
-//         if(err) throw err;
-//         return res.render(__dirname + '/2048/2048', {rank:results[0]});
-//     });
-// });
-
-// app.get('/2048/:score', function(req, res) {
-//     //req.query.country
-//     //req.params.country
-//     var options = {
-//         mode: 'text',
-//         pythonPath:'',  
-//         pythonOptions:['-u'],
-//         scriptPath:'',
-//         args: [req.query.score]
-//     };
-//     PythonShell.PythonShell.run('./pythonScript/dbCompare.py', options, function(err, results) {
-//         if(err) throw err;
-//         return res.status(200).send(results);
-//     });
-// });
-
-// app.post('/2048/:name/:score/:maxtile', function(req, res) {
-//     var options = {
-//         mode: 'text',
-//         pythonPath:'',  
-//         pythonOptions:['-u'],
-//         scriptPath:'',
-//         args: [req.body.name, req.body.score, req.body.maxtile]
-//     };
-//     PythonShell.PythonShell.run('./pythonScript/dbPost.py', options, function(err, results) {
-//         if(err) throw err;
-//         return res.status(200).send(results);
-//     });
-// });

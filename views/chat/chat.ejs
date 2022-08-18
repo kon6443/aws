@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="/public/css/styles.css">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<title>Onam Kwon</title>
+		<body class="body" style="background-color: #1c1c1e; color: rgb(221,221,221); font-family: Sans-serif; margin:0 auto;"></body>
+		<!-- Bootstrap CSS
+		<body class="body" style="background-color: #1c1c1e; color: rgb(221,221,221); font-family: Sans-serif; margin:0 auto;">
+		 -->
+	</head>
+	
+	<body>
+		<div class="navbar">
+			<a class="active" href="/">Onam Kwon</a> 
+			<a href="/dev">Dev</a> 
+			<a href="/private">Private</a> 
+			<a href="/about">About</a>
+		</div>  
+		<div class="wrapper">
+			<ul class="item-list mySelf">
+				<ul class="about">
+					<article class="about-text">
+                        <h1 id="header"><%= header %></h1>
+                        <!-- importing JS file from socketIO server -->
+                        <script src="/socket.io/socket.io.js"></script>
+                        <!-- chat contents will be written down below. -->
+                        <div id="chatContent">
+                        
+                        </div>
+                        <input id="myChat" type="text">
+                        <input type="submit" id="send" value="Send">
+                        <form id="signOut">
+                            <button type="button" id="logOut" onclick="signOut()">Log out</button><br><br>
+                        </form>
+                        <script>
+                            // var socket = io.connect('http://localhost:8080', {
+                            var socket = io.connect('/', {
+                                path: '/socket.io',
+                                // transports: ['websocket']
+                            });
+
+                            // receiving a message
+                            socket.on('msg', function (data) {
+                                var msgLine = $('<div class="msgLine">');
+                                var msgBox = $('<div class="msgBox">');
+                                msgBox.append(data);
+                                msgBox.css('display', 'inline-block');
+                                msgLine.append(msgBox);
+                                $('#chatContent').append(msgLine);
+                                // auto scorll down when a user send something
+                                chatContent.scrollTop = chatContent.scrollHeight;
+                            });
+
+                            // sending a message
+                            $("#myChat").on("keyup", function () {
+                                if (window.event.keyCode==13 && $(this).val()!="") {
+                                    var msgLine = $('<div class="msgLine">');
+                                    var msgBox = $('<div class="msgBox">');
+                                    msgBox.append($(this).val());
+                                    msgBox.css('display', 'inline-block');
+                                    msgLine.css('text-align', 'right');
+                                    msgLine.append(msgBox);
+                                    $('#chatContent').append(msgLine);
+                                    socket.emit('msg', $(this).val());
+                                    $(this).val("");
+                                    chatContent.scrollTop = chatContent.scrollHeight;
+                                }
+                            });
+                            function signOut() {
+                                $.ajax({
+                                    type: "get",
+                                    url: '/logout',
+                                    data: {},
+                                    dataType:'text',
+                                    success: function(res) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        </script>
+                        <style>
+                            * {
+                              box-sizing: border-box;
+                            }
+                            .msgLine {
+                                margin: 15px;
+                            }
+                            .msgBox {
+                                border: 1px solid black;
+                                background: black;
+                                padding: 2px 5px;
+                                border-radius: 10px;
+                            }
+                            #chatContent {
+                              border: 1px solid #000;
+                              width: 100%;
+                              height: 200px;
+                              margin-bottom: 10px;
+                              overflow-y: auto;
+                            }
+                            #myChat {
+                              width: 100%;
+                            }
+                            #msg, #myChat {
+                                width: 80%;
+                                height: 32px;
+                                border-radius: 8px;
+                            }
+                            #send {
+                                width: 19%;
+                                height: 34px;
+                                border-radius: 50px;
+                                background: black;
+                                color: white;
+                            }
+                            #logOut {
+                                margin-top: 2%;
+                                width: 19%;
+                                height: 34px;
+                                border-radius: 50px;
+                                background: black;
+                                color: white;
+                            }
+
+                            .msgLine2 {
+                                margin: 15px;
+                            }
+                            .msgBox2 {
+                                border: 1px solid black;
+                                background: black;
+                                padding: 2px 5px;
+                                border-radius: 10px;
+                            }
+                            #chatContent2 {
+                              border: 1px solid #000;
+                              width: 100%;
+                              height: 200px;
+                              margin-bottom: 10px;
+                              overflow-y: auto;
+                            }
+                            #myChat2 {
+                              width: 100%;
+                            }
+                            #msg2, #myChat2 {
+                                width: 80%;
+                                height: 32px;
+                                border-radius: 8px;
+                            }
+                            #send2 {
+                                width: 16%;
+                                height: 34px;
+                                border-radius: 50px;
+                                background: black;
+                                color: white;
+                            }
+                        </style>
+					</article>
+				</ul>
+			</ul>			
+		</div>
+		<!-- Option 1: Bootstrap Bundle with Popper -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+	</body>
+</html>
+
+

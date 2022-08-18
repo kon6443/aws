@@ -47,11 +47,19 @@ def compare(score):
         rows = cursor.fetchall()
         for row in rows:
             result.append(row)
-        if int(score)>int(result[-1][2]):
-            # return_value = json.dumps(result)
-            print('True')
+        if len(result)<= 10:
+        	print('True')
         else:
-            print('False')
+        	if int(score)>int(result[-1][2]):
+	        	print('True')
+        	else:
+        		print('False')
+        	
+#         if int(score)>int(result[-1][2]):
+#             # return_value = json.dumps(result)
+#             print('True')
+#         else:
+#             print('False')
             
 
 

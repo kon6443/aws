@@ -36,3 +36,5 @@ I have made each of router files based on categories in `routes` directory. <br>
 • Sign out feature done. <br>
 • Working on separated controllers and routers <br>
 
+## Aug 19, 2022
+• <br>

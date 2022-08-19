@@ -41,4 +41,7 @@ I have made each of router files based on categories in `routes` directory. <br>
 • Separated routers and controllers. <br>
 
 ## Aug 20, 2022
-• <br>
+• Published. <br>
+• Web chat - online user list available. <br>
+
+

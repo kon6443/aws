@@ -29,12 +29,15 @@ I have made each of router files based on categories in `routes` directory. <br>
 • Working on sign up feature <br>
 
 ## Aug 17, 2022
-• Sign up feature done. <br>
-• Sign in feature done. <br>
+• Sign up feature. <br>
+• Sign in feature. <br>
 
 ## Aug 18, 2022
 • Sign out feature done. <br>
-• Working on separated controllers and routers <br>
+• Working on separating controllers and routers <br>
 
 ## Aug 19, 2022
+• Web chat. <br>
+
+## Aug 20, 2022
 • <br>

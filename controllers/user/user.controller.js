@@ -1,31 +1,33 @@
+// login.controller.js
+
 const express = require("express");
-const router = express.Router();
+const app = express();
+
 const path = require('path');
 
-// importing userValidateCheck funtion.
-const userValidateCheck = require("../controllers/userValidateCheck");
-const encryptPassword = require("../controllers/encryptPassword");
-const loginCheck = require("../controllers/loginCheck");
-const issueToken = require("../controllers/issueToken");
-const auth = require("../controllers/authMiddleware");
+// allows you to ejs view engine.
+app.set('view engine', 'ejs');
 
 // importing user schema.
-const User = require('../models/user');
+const User = require('../../models/user');
 
-router.use('/', auth);
+const userValidateCheck = require("../../controllers/userValidateCheck");
+const encryptPassword = require("../../controllers/encryptPassword");
+const loginCheck = require("../../controllers/loginCheck");
+const issueToken = require("../../controllers/issueToken");
 
 // Main login page.
-router.get('/', function(req, res) {
+ exports.showMain = (req, res) => {
     const user = req.decoded;
     if(user) {
-        return res.render(path.join(__dirname, '../views/login/login'), {user:user});
+        return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     } else {
-        return res.sendFile(path.join(__dirname, '../views/login/login.html'));
+        return res.sendFile(path.join(__dirname, '../../views/user/user.html'));
     }
-});
+}
 
 // Sign up.
-router.post('/:id/:address/:pw/:pwc', async function(req, res) {
+exports.signUp = async (req, res) => {
     const { id, address, pw, pwc } = req.body;
     const errorFlag = await userValidateCheck(id, address, pw, pwc);
     if(errorFlag) { // user typed something wrong.
@@ -35,10 +37,10 @@ router.post('/:id/:address/:pw/:pwc', async function(req, res) {
     user.pw = await encryptPassword(user.pw);
     user.save();
     return res.status(200).send('Your account has been created successfully, you can now log in.');
-});
+}
 
 // Sing in.
-router.post('/:id/:pw', async function(req, res) {
+exports.signIn = async (req, res) => {
     const { id, pw } = req.body;
     const userConfirmed = await loginCheck(id, pw);
     if(userConfirmed) {
@@ -49,10 +51,9 @@ router.post('/:id/:pw', async function(req, res) {
     } else {
         return res.status(200).send('Your password is not correct.');
     }
-});
+}
 
-router.delete('/logout', function(req, res) {
+// Sign out.
+exports.signOut = (req, res) => {
     return res.clearCookie('user').end();
-});
-
-module.exports = router;
+}

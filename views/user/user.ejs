@@ -38,7 +38,7 @@
                             function signOut() {
                                 $.ajax({
                                     type: "delete",
-                                    url: '/login/logout',
+                                    url: '/user/logout',
                                     data: {},
                                     dataType:'text',
                                     success: function(res) {
@@ -53,7 +53,7 @@
                                 document.getElementById("signinPW").value = "";
                                 $.ajax({
                                     type: "post",
-                                    url: 'http://localhost:8080/login/:signInid/:signInpw',
+                                    url: '/user/:signInid/:signInpw',
                                     data: {id:signinID,pw:signinPW},
                                     dataType:'text',
                                     success: function(res) {
@@ -65,7 +65,7 @@
                             function login() {
                                 $.ajax({
                                     type: "get",
-                                    url: 'http://localhost:8080/login',
+                                    url: '/user',
                                     // url: 'http://localhost:8080/login/:signInid/:signInpw',
                                     data: {},
                                     dataType:'text',

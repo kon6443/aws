@@ -72,8 +72,8 @@
                             });
                             function signOut() {
                                 $.ajax({
-                                    type: "get",
-                                    url: '/logout',
+                                    type: "delete",
+                                    url: '/user/logout',
                                     data: {},
                                     dataType:'text',
                                     success: function(res) {

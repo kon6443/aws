@@ -15,31 +15,28 @@ app.use(cookieParser());
 // allows you to ejs view engine.
 app.set('view engine', 'ejs');
 
+// Socket.
+const connectSocket = require('./controllers/chat/connectSocket');
 // MongoDB.
 const { connectMongoDB } = require('./models/connectMongoDB');
-
-// SocketIO
-const SocketIO = require('socket.io');
 
 // Routers.
 const homeRouter = require('./routes/homeRouter');
 const game2048Router = require('./routes/2048Router');
 const gameTetrisRouter = require('./routes/tetrisRouter');
-const loginRouter = require('./routes/loginRouter');
+const userRouter = require('./routes/userRouter');
 const chatRouter = require('./routes/chatRouter');
 
 const port = 80;
 const server = app.listen(port, function() {
-    console.log('Listening on '+port+'!');
+    console.log('Listening on '+port);
 });
 
-const io = SocketIO(server, {path: '/socket.io'});
-
-// Connecting MongoDB.
+connectSocket(server);
 connectMongoDB();
 
 app.use('/', homeRouter);
 app.use('/2048', game2048Router);
 app.use('/tetris', gameTetrisRouter);
-app.use('/login', loginRouter);
+app.use('/user', userRouter);
 app.use('/chat', chatRouter);

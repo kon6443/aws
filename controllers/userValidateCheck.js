@@ -4,7 +4,7 @@ const findUser = require('../models/findUser');
 module.exports = async function(id, address, pw, pwc) {
     if(!id) return 'Please type your ID.';
     const user = await findUser(id);
-    if(user) return 'there is: ' + user.id;
+    if(user) return 'User name: ' + user.id + ' already exists';
     if(!address) return 'Please type your address.';
     if(!pw) return 'Please type your password.';
     if(!pwc) return 'Please type your password confirmation.';

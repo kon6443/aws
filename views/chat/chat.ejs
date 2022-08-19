@@ -36,6 +36,12 @@
                         <form id="signOut">
                             <button type="button" id="logOut" onclick="signOut()">Log out</button><br><br>
                         </form>
+                        <div id="online">
+                            <h2>Online</h2>
+                            <div id="onlineUsers">
+                                
+                            </div>
+                        </div>
                         <script>
                             // var socket = io.connect('http://localhost:8080', {
                             var socket = io.connect('/', {
@@ -70,6 +76,16 @@
                                     chatContent.scrollTop = chatContent.scrollHeight;
                                 }
                             });
+                            socket.on('online', function (data) {
+                                $('#onlineUsers').empty();
+                                const users = Object.values(data);
+                                let onlineUsers = '';
+                                for(let i=0;i<users.length;i++) {
+                                    onlineUsers += '<a>🟢 ' + users[i] + '</a> <br>';
+                                }
+                                $('#onlineUsers').append(onlineUsers);
+                            });
+
                             function signOut() {
                                 $.ajax({
                                     type: "delete",

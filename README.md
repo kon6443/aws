@@ -44,4 +44,6 @@ I have made each of router files based on categories in `routes` directory. <br>
 • Published. <br>
 • Web chat - online user list available. <br>
 
-
+## Aug 21, 2022
+• Sign in bug fixed - error handling. <br>
+•  <br>

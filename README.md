@@ -46,4 +46,4 @@ I have made each of router files based on categories in `routes` directory. <br>
 
 ## Aug 21, 2022
 • Sign in bug fixed - error handling. <br>
-•  <br>
+• Enter to submit available now. <br>

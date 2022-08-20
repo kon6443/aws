@@ -48,7 +48,10 @@ exports.signIn = async (req, res) => {
         return res
             .cookie('user', token,{maxAge: 30 * 60 * 1000}) // 1000 is a sec
             .end();
-    } else {
+    } else if(userConfirmed==false) {
+        return res.status(200).send('Your ID is not correct.');
+    }
+    else {
         return res.status(200).send('Your password is not correct.');
     }
 }

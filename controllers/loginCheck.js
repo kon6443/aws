@@ -6,12 +6,9 @@
 const comparePassword = require('../models/comparePassword');
 const findUser = require('../models/findUser');
 
-// declaring saltRounds to decide cost factor of salt function.
-const saltRounds = 10;
-
-module.exports = async function(id, typedPw) {
+module.exports = async function(id, clientTypedPw) {
     const user = await findUser(id);
-    const dbPw = user.pw;
-    const userConfirmed = await comparePassword(typedPw, dbPw);
+    if(user == null) return false;
+    const userConfirmed = await comparePassword(clientTypedPw, user.pw);
     return userConfirmed;
 };

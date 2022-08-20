@@ -53,14 +53,14 @@
                                     data: {id:signinID,pw:signinPW},
                                     dataType:'text',
                                     success: function(res) {
-                                        location.reload();
+                                        if(res.length == 0) {
+                                            location.reload();
+                                        } else {
+                                            alert(res);
+                                        }
                                     }
                                 });
                             }
-                            // var socket = io.connect('http://localhost:8080', {
-                            //     path: '/socket.io',
-                            //     // transports: ['websocket']
-                            // });
 
                             // receiving a message
                             socket.on('msg', function (data) {

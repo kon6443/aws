@@ -84,7 +84,7 @@
                                 document.getElementById("signinPW").value = "";
                                 $.ajax({
                                     type: "post",
-                                    url: '/user/:signInid/:signInpw',
+                                    url: '/user/:id/:pw',
                                     data: {id:signinID,pw:signinPW},
                                     dataType:'text',
                                     success: function(res) {

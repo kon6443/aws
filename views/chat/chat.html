@@ -37,8 +37,27 @@
                             </div>
                             <button type="button" onclick="signInAjax()">Log in</button><br><br>
                         </form>
-
                         
+                        <form id="signup">
+                            <h2>Simple sign up here if you don't have an aacount</h2>
+                            <div class="field">
+                                <label for="id">ID:</label>
+                                <input type="text" id="id" name="id" placeholder="Enter your fullname" /><br><br>
+                            </div>
+                            <div class="field">
+                                <label for="pw">Address:</label>
+                                <input type="text" id="address" name="address" placeholder="Enter your address" /><br><br>
+                            </div>
+                            <div class="field">
+                                <label for="pw">PW:</label>
+                                <input type="text" id="pw" name="pw" placeholder="Enter your password" /><br><br>
+                            </div>
+							<div class="field">
+                                <label for="pwc">PW confirmation:</label>
+                                <input type="text" id="pwc" name="pwc" placeholder="PW confirmation" /><br><br>
+                            </div>
+                            <button type="button" onclick="SignUpAjax()">Submit</button><br><br>
+                        </form>
 
                         <script src="/socket.io/socket.io.js"></script>
                         <script>
@@ -61,6 +80,36 @@
                                     }
                                 });
                             }
+                            function SignUpAjax() {
+								const id = document.getElementById("id").value;
+                                const address = document.getElementById("address").value;
+                                const pw = document.getElementById("pw").value;
+                                const pwc = document.getElementById("pwc").value;
+                                document.getElementById("id").value = "";
+                                document.getElementById("address").value = "";
+                                document.getElementById("pw").value = "";
+                                document.getElementById("pwc").value = "";
+                                $.ajax({
+                                    type: "post",
+                                    url: '/user/:id/:address/:pw/:pwc',
+                                    data: {id:id,address:address,pw:pw,pwc:pwc},
+                                    dataType:'text',
+                                    success: function(res) {
+                                        window.alert(res);
+                                    }
+                                });
+                            }
+
+                            $("#signinPW").on("keyup", function () {
+                                if(window.event.keyCode==13 && $(this).val()!=""){
+                                    signInAjax();
+                                }
+                            });
+                            $("#pwc").on("keyup", function () {
+                                if(window.event.keyCode==13 && $(this).val()!=""){
+                                    SignUpAjax();
+                                }
+                            });
 
                             // receiving a message
                             socket.on('msg', function (data) {

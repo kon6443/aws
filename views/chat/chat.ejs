@@ -61,21 +61,29 @@
                                 chatContent.scrollTop = chatContent.scrollHeight;
                             });
 
-                            // sending a message
-                            $("#myChat").on("keyup", function () {
-                                if (window.event.keyCode==13 && $(this).val()!="") {
+                            const sendMessage = () => {
                                     var msgLine = $('<div class="msgLine">');
                                     var msgBox = $('<div class="msgBox">');
-                                    msgBox.append($(this).val());
+                                    const msg = document.getElementById("myChat").value;
+                                    msgBox.append(msg);
                                     msgBox.css('display', 'inline-block');
                                     msgLine.css('text-align', 'right');
                                     msgLine.append(msgBox);
                                     $('#chatContent').append(msgLine);
-                                    socket.emit('msg', $(this).val());
-                                    $(this).val("");
+                                    socket.emit('msg', msg);
+                                    document.getElementById("myChat").value = "";
                                     chatContent.scrollTop = chatContent.scrollHeight;
+                            }
+                            document.getElementById("send").addEventListener("click", sendMessage);
+                            
+                            // sending a message
+                            $("#myChat").on("keyup", function () {
+                                if(window.event.keyCode==13 && $(this).val()!=""){
+                                    sendMessage();
                                 }
                             });
+
+                            // Displaying online users.
                             socket.on('online', function (data) {
                                 $('#onlineUsers').empty();
                                 const users = Object.values(data);

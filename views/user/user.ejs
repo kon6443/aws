@@ -47,14 +47,14 @@
                                 });
                             }
                             function signInAjax() {
-								const signinID = document.getElementById("signinID").value;
-                                const signinPW = document.getElementById("signinPW").value;
+								const id = document.getElementById("signinID").value;
+                                const pw = document.getElementById("signinPW").value;
                                 document.getElementById("signinID").value = "";
                                 document.getElementById("signinPW").value = "";
                                 $.ajax({
                                     type: "post",
-                                    url: '/user/:signInid/:signInpw',
-                                    data: {id:signinID,pw:signinPW},
+                                    url: '/user/:id/:pw',
+                                    data: {id:id,pw:pw},
                                     dataType:'text',
                                     success: function(res) {
                                         console.log('sign in complete res: ', res);

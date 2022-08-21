@@ -7,10 +7,9 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 exports.connectMySQL = () => {
   var con = mysql.createConnection({
-    // host: "127.0.0.1",
-    host: "%",
-    user: "kon6443",
-    password: "fowk12",
+    host: "127.0.0.1",
+    user: "root",
+    password: "",
     database: 'board_db'
   });
   

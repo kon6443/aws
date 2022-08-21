@@ -48,4 +48,5 @@ I have made each of router files based on categories in `routes` directory. <br>
 
 ## Aug 21, 2022
 • Working on connecting MySQL with the server. <br>
+• Working on adding a board. <br>
 

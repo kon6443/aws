@@ -1,4 +1,4 @@
-# This repository has been made to practice publishing my NodeJS server using AWS EC2 and applying MVC pattern.
+# This repository has been made to practice MVC pattern with NodeJS and AWS EC2.
 
 <br>
 

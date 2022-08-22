@@ -2,9 +2,12 @@
 
 ## Implemented
 • Web chat. <br>
-• Applied MVC pattern and trying to make a clean good looking code. <br>
-• 회원가입 => Sign up, sign in, sign out. <br>
+• Applied MVC pattern, trying to make a clean and good looking code. <br>
+• 로그인, 회원가입, 로그아웃 => Sign up, sign in, sign out. <br>
 • CRUD REST API <br>
+
+## How to implement
+• You need to rename `.env.forGitHub` file to `.env` before run this project.
 
 ### Aug 12, 2022
 • I wanted to make a clean code that everyone can see and understand easily. <br>

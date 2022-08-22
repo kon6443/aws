@@ -19,7 +19,6 @@ app.set('view engine', 'ejs');
 const connectSocket = require('./controllers/chat/connectSocket');
 // MongoDB.
 const { connectMongoDB } = require('./models/connectMongoDB');
-const { connectMySQL } = require('./models/connectMySQL');
 
 // Routers.
 const homeRouter = require('./routes/homeRouter');
@@ -36,7 +35,6 @@ const server = app.listen(port, function() {
 
 connectSocket(server);
 connectMongoDB();
-connectMySQL();
 
 app.use('/', homeRouter);
 app.use('/2048', game2048Router);

@@ -5,16 +5,13 @@ var mysql = require('mysql');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
 
-exports.connectMySQL = () => {
-  var con = mysql.createConnection({
-    host: "127.0.0.1",
-    user: "root",
-    password: "",
+const conn = mysql.createConnection({
+    host: "localhost",
+    user: process.env.SQL_USER,
+    password: process.env.SQL_PASSWORD,
     database: 'board_db'
-  });
-  
-  con.connect(function(err) {
-    if (err) throw err;
-    console.log("MySQL connected...");
-  });
-}
+});
+
+conn.connect();
+
+module.exports = conn;

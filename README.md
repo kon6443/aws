@@ -59,3 +59,7 @@ I have made each of router files based on categories in `routes` directory. <br>
 
 ### Aug 22, 2022
 • Connected MySQL server with NodeJS. <br>
+• Working on adding a board. <br>
+
+### Aug 23, 2022
+• Working on adding a board. <br>

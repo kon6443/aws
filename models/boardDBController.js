@@ -5,19 +5,33 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
 const conn = require('../models/connectMySQL');
 
-exports.showTables = () => {
-    conn.query("SELECT * FROM BOARD;", function (err, result) {
-        if (err) throw err;
-        console.log('result: ', result);
-    });
+const util = require('util');
+// node native promisify
+const query = util.promisify(conn.query).bind(conn);
+
+exports.showTable = async () => {
+    const table = await query("SELECT * FROM BOARD;");
+    return table;
 }
 
-// let title = 'first';
-//   let content = 'first content';
-//   let post_date = '2022-08-21';
-//   let update_date = '2022-08-22';
-//   let sql = "INSERT INTO BOARD (TITLE, content, POST_DATE, UPDATE_DATE) VALUES ("+title+", "+content+", "+post_date+", "+update_date+")";
-//   con.query(sql, function (err, result) {
-//     if (err) throw err;
-//     console.log("1 record inserted");
-// });
+exports.insert = async (title, content, author) => {
+    // Query to insert multiple rows
+    let query = `INSERT INTO BOARD (TITLE, content, POST_DATE, UPDATE_DATE, AUTHOR) VALUES ?;`;
+    const post_date = '2022-08-22';
+    const update_date = '2022-08-23';
+    // Values to be inserted
+    let values = [
+        [title, content, post_date, update_date, author]
+    ];
+    const values2 = "'"+title+"','"+content+"','"+post_date+"','"+update_date+"','"+author+"'";
+    let query2 = "INSERT INTO BOARD (TITLE, content, POST_DATE, UPDATE_DATE, AUTHOR) VALUES ("+values2+");";
+    console.log(query2);
+    const table = await query(query2);
+    console.log(table);
+    console.log('done.');
+    // Executing the query
+    // conn.query(query, [values], (err, rows) => {
+    //     if (err) throw err;
+    //     console.log("All Rows Inserted");
+    // });
+}

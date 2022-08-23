@@ -25,33 +25,30 @@
 				<ul class="about">
 					<article class="about-text">
                         <div>
-                            <h1><%= user.id %>, Welcome! </h1>
-                            <form id="signOut">
-                                <button type="button" id="logOut" onclick="signOut()">Log out</button>
-                            </form>
-                        </div>
-                        <div>
-                            <form>
-                                <button type="button" id="post" onclick="location.href='/board/write'">Post</button> <br><br>
-                            </form>
-                        </div>
-                        <div>
-                            <table id="board" border="5">
+                            <h1>Board</h1>
+                            <table id="board">
+                                <tr>
+                                    <th style="width: 15%;"> Article Number </th>
+                                    <th> Title </th>
+                                    <th style="width: 10%;"> Posted date </th>
+                                    <th style="width: 10%;"> Author </th>
+                                </tr>
                                 <% for(let i=0; i < length; i++) { %>
                                     <tr>
                                         <td><%= table[i].BOARD_NO %></td>
-                                        <td><%= table[i].TITLE %></td>
-                                        <td><%= table[i].content %></td>
+                                        <td><a href="/board/<%= table[i].BOARD_NO %>"><%= table[i].TITLE %></a></td>
                                         <td><%= table[i].POST_DATE %></td>
-                                        <td><%= table[i].UPDATE_DATE %></td>
                                         <td><%= table[i].AUTHOR %></td>
                                     </tr>
                                 <% } %>
-                            </table>
-                            
+                            </table >
                         </div>
+                        <right>
+                            <form>
+                                <button type="button" id="new" onclick="location.href='/board/write'">New</button>
+                            </form>
+                        </right>
                         <script>
-                            
                             function signOut() {
                                 $.ajax({
                                     type: "delete",
@@ -63,37 +60,19 @@
                                     }
                                 });
                             }
-                            function signInAjax() {
-								const id = document.getElementById("signinID").value;
-                                const pw = document.getElementById("signinPW").value;
-                                document.getElementById("signinID").value = "";
-                                document.getElementById("signinPW").value = "";
-                                $.ajax({
-                                    type: "post",
-                                    url: '/user/:id/:pw',
-                                    data: {id:id,pw:pw},
-                                    dataType:'text',
-                                    success: function(res) {
-                                        console.log('sign in complete res: ', res);
-                                        
-                                    }
-                                });
-                            }
-                            function login() {
-                                $.ajax({
-                                    type: "get",
-                                    url: '/user',
-                                    // url: 'http://localhost:8080/login/:signInid/:signInpw',
-                                    data: {},
-                                    dataType:'text',
-                                    success: function(res) {
-                                        console.log('show logged in : ', res);
-                                    }
-                                });
-                            }
                         </script>
                         <style>
-                            #logOut, #post {
+                            table {
+                                width: 95%;
+                            }
+                            tr {
+                                height: 30px;
+                            }
+                            table, tr, td, th {
+                                border: 1px solid;
+                                text-align: center;
+                            }
+                            #new {
                                 margin-top: 2%;
                                 width: 19%;
                                 height: 34px;

@@ -41,7 +41,8 @@
                                         <label for="content"> <h3>Contents: </h3></label> <br>
                                         <textarea id="content" rows="10%" cols="100%" /></textarea>
                                     </div>
-                                    <button type="button" onclick="post()">Post</button><br><br>
+                                    <button type="button" id="back" onclick="location.href='/board'">Back</button>
+                                    <button type="button" id="post" onclick="post()">Post</button><br><br>
                                 </center>
                             </form>
                         </div>
@@ -66,7 +67,7 @@
                             }
                         </script>
                         <style>
-                            #logOut, #post {
+                            #back, #post {
                                 margin-top: 2%;
                                 width: 19%;
                                 height: 34px;

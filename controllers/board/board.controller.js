@@ -42,7 +42,6 @@ exports.postWrite = (req, res) => {
     const { title, content } = req.body;
     if(user) {
         const author = user.id;
-        console.log(title, content, author);
         dbMySQLModel.insert(title, content, author);
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/board.html'));

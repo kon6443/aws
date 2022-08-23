@@ -17,21 +17,15 @@ exports.showTable = async () => {
 exports.insert = async (title, content, author) => {
     // Query to insert multiple rows
     let query = `INSERT INTO BOARD (TITLE, content, POST_DATE, UPDATE_DATE, AUTHOR) VALUES ?;`;
-    const post_date = '2022-08-22';
-    const update_date = '2022-08-23';
+    
+    const date_obj = new Date();
+    const post_date = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
+    const update_date = post_date;
+
     // Values to be inserted
     let values = [
         [title, content, post_date, update_date, author]
     ];
-    const values2 = "'"+title+"','"+content+"','"+post_date+"','"+update_date+"','"+author+"'";
-    let query2 = "INSERT INTO BOARD (TITLE, content, POST_DATE, UPDATE_DATE, AUTHOR) VALUES ("+values2+");";
-    console.log(query2);
-    const table = await query(query2);
-    console.log(table);
-    console.log('done.');
     // Executing the query
-    // conn.query(query, [values], (err, rows) => {
-    //     if (err) throw err;
-    //     console.log("All Rows Inserted");
-    // });
+    await conn.query(query, [values]);
 }

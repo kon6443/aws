@@ -6,7 +6,11 @@
 • 로그인, 회원가입, 로그아웃 => Sign up, sign in, sign out. <br>
 • CRUD REST API <br>
 
-## How to implement
+## Planing to implement
+• Comments <br>
+• Admin account <br>
+
+## How to run
 • You need to rename `.env.forGitHub` file to `.env` before run this project.
 
 ### Aug 23, 2022

@@ -42,7 +42,7 @@
                                         <textarea id="content" rows="10%" cols="100%" /></textarea>
                                     </div>
                                     <button type="button" id="back" onclick="location.href='/board'">Back</button>
-                                    <button type="button" id="post" onclick="post()">Post</button><br><br>
+                                    <button type="button" id="post" onclick="postArticle()" >Post</button> <br><br>
                                 </center>
                             </form>
                         </div>
@@ -50,18 +50,17 @@
                             
                         </div>
                         <script>
-                            function post() {
+                            function postArticle() {
                                 const title = document.getElementById("title").value;
                                 const content = document.getElementById("content").value;
-                                console.log(title);
-                                console.log(content);
                                 $.ajax({
                                     type: "post",
-                                    url: '/board/write',
+                                    url: '/board/article',
                                     data: {title: title, content:content},
                                     dataType:'text',
                                     success: function(res) {
-                                        location.reload();
+                                        alert(res);
+                                        window.location.href = '/board';
                                     }
                                 });
                             }

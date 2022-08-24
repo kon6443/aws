@@ -15,10 +15,41 @@ app.set('view engine', 'ejs');
     
 const dbMySQLModel = require('../../models/boardDBController');
 
+async function getBoardItems(page, limit) {
+    page = Math.max(1, parseInt(page));
+    limit = Math.max(1, parseInt(limit));
+    page = !isNaN(page)?page:1;
+    limit = !isNaN(limit)?limit:10;
+    const articles = await dbMySQLModel.showTable();
+    let article_total = articles.length;
+    let page_max = Math.ceil(article_total/limit);
+    let range_max;
+    const range_min = (page-1)*limit;
+    (page === page_max) ? (range_max = articles.length) : (range_max = page*limit)
+    const obj = {
+        page:page, 
+        limit:limit, 
+        articles:Object(articles),
+        page_max:page_max, 
+        range_min:range_min, 
+        range_max:range_max
+    }
+    return obj;
+}
+
 // Main login page.
 exports.showMain = async (req, res) => {
-    const table = await dbMySQLModel.showTable();
-    return res.render(path.join(__dirname, '../../views/board/board'), {table:table, length: table.length});
+    let { page, limit } = req.query;
+    const boardObject = await getBoardItems(page, limit);
+    return res.render(path.join(__dirname, '../../views/board/board'), {
+        articles:boardObject.articles, 
+        page_current:boardObject.page, 
+        page_max:boardObject.page_max, 
+        length:boardObject.articles.length, 
+        limit:boardObject.limit, 
+        range_min:boardObject.range_min, 
+        range_max:boardObject.range_max
+    });
 }
 
 exports.showPost = async (req, res) => {
@@ -42,13 +73,26 @@ exports.boardWrite = (req, res) => {
     }
 }
 
-exports.postWrite = (req, res) => {
+exports.insertArticle = async (req, res) => {
     const user = req.decoded;
     const { title, content } = req.body;
     if(user) {
         const author = user.id;
-        dbMySQLModel.insert(title, content, author);
+        await dbMySQLModel.insert(title, content, author);
+        return res.status(200).send('Article has been posted.').end(); 
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+    }
+}
+
+exports.deleteArticle = async (req, res) => {
+    const user = req.decoded;
+    const { article_num } = req.body;
+    const article = await dbMySQLModel.showArticleByNum(article_num);
+    if(user.id === article.AUTHOR) {
+        await dbMySQLModel.deleteByNum(article_num);
+        return res.status(200).send('Article has been removed.').end(); 
+    } else {
+        return res.status(200).send('Account not matched.').end();
     }
 }

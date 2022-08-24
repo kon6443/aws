@@ -14,6 +14,7 @@ router.use('/', auth);
 router.get('/', boardMiddleWare.showMain);
 router.get('/write', boardMiddleWare.boardWrite);
 router.get('/:id', boardMiddleWare.showPost);
-router.post('/write', boardMiddleWare.postWrite);
+router.delete('/:id', boardMiddleWare.deleteArticle);
+router.post('/article', boardMiddleWare.insertArticle);
 
 module.exports = router;

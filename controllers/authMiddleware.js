@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
         }
         // JsonWebTokenError
         if (error.name === 'JsonWebTokenError') {
-            console.log('JsonWebTokenError');
+            // console.log('JsonWebTokenError');
             next();
             // return res.status(401).json({
             //     code: 401,

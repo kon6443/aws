@@ -55,10 +55,38 @@
                             </div>
                         </div>
                     </div>
+                        <button type="button" id="delete" onclick="deleteArticle()">Delete</button>
+                        <button type="button" id="edit" onclick="editArticle()">Edit</button>
                 </div>
             </div>
 		</div>
         <script>
+            function deleteArticle() {
+                const article_num = <%= article.BOARD_NO %>;
+                $.ajax({
+                    type: "delete",
+                    url: '/board/:id',
+                    data: {article_num: article_num},
+                    dataType:'text',
+                    success: function(res) {
+                        alert(res);
+                        if(res === 'Article has been removed.') {
+                            window.location.href = '/board';
+                        }
+                    }
+                });
+            }
+            function editArticle() {
+                $.ajax({
+                    type: "update",
+                    url: '/board/delete',
+                    data: {article_num: article_num},
+                    dataType:'text',
+                    success: function(res) {
+                        location.reload();
+                    }
+                });
+            }
             function signOut() {
                 $.ajax({
                     type: "delete",
@@ -72,11 +100,15 @@
             }
         </script>
         <style>
+            #edit, #delete {
+                float: right;
+                margin-right: 2%;
+            }
             .box {
                 border-style: solid;
                 border-width: 0.5px;
             }
-            #logOut, #post, #back{
+            #logOut, #post, #back, #edit, #delete {
                 margin-top: 2%;
                 width: 19%;
                 height: 34px;

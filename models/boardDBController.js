@@ -52,3 +52,8 @@ exports.insert = async (title, content, author) => {
     // Executing the query
     await conn.query(query, [values]);
 }
+
+exports.deleteByNum = async (article_num) => {
+    let query = `DELETE FROM BOARD WHERE BOARD_NO=`+article_num+`;`;
+    await conn.query(query);
+}

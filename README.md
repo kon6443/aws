@@ -9,13 +9,15 @@
 ## Planing to implement
 • Comments <br>
 • Admin account <br>
+• Grop chat <br>
 
 ## How to run
 • You need to rename `.env.forGitHub` file to `.env` before run this project.
 
 ### Aug 24, 2022
-• Working on page screen. <br>
 • Error handling. <br>
+• Deleting available now. <br>
+• Board screen page available now. <br>
 
 ### Aug 23, 2022
 • Posting available now. <br>

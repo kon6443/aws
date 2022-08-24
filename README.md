@@ -13,6 +13,10 @@
 ## How to run
 • You need to rename `.env.forGitHub` file to `.env` before run this project.
 
+### Aug 24, 2022
+• Working on page screen. <br>
+• Error handling. <br>
+
 ### Aug 23, 2022
 • Posting available now. <br>
 • Working on page screen. <br>
@@ -68,4 +72,3 @@ I have made each of router files based on categories in `routes` directory. <br>
 • I wanted to make a clean code that everyone can see and understand easily. <br>
 • I was looking for how to, and I have noticed that I need to apply MVC pattern to my server.  <br>
 • I have decided to apply it to my entire NodeJS server. <br>
-

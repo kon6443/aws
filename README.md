@@ -17,7 +17,7 @@
 ### Aug 24, 2022
 • Error handling. <br>
 • Deleting available now. <br>
-• Board screen page available now. <br>
+• Page feature in board screen available now. <br>
 
 ### Aug 23, 2022
 • Posting available now. <br>

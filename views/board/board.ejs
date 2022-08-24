@@ -28,25 +28,23 @@
                             <h1>Board</h1>
                             <table id="board">
                                 <tr>
-                                    <th style="width: 15%;"> Article Number </th>
-                                    <th> Title </th>
-                                    <th style="width: 10%;"> Posted date </th>
-                                    <th style="width: 10%;"> Author </th>
+                                    <th style="height: 6vh; width: 15%;"> Article Number </th>
+                                    <th style="height: 6vh;"> Title </th>
+                                    <th style="height: 6vh; width: 10%;"> Posted date </th>
+                                    <th style="height: 6vh; width: 10%;"> Author </th>
                                 </tr>
                                 <% for(let i=0; i < length; i++) { %>
                                     <tr>
-                                        <td><%= table[i].BOARD_NO %></td>
-                                        <td><a href="/board/<%= table[i].BOARD_NO %>"><%= table[i].TITLE %></a></td>
-                                        <td><%= table[i].POST_DATE %></td>
-                                        <td><%= table[i].AUTHOR %></td>
+                                        <td style="height: 5vh;"><%= table[i].BOARD_NO %></td>
+                                        <td style="height: 5vh;"><a href="/board/<%= table[i].BOARD_NO %>"><%= table[i].TITLE %></a></td>
+                                        <td style="height: 5vh;"><%= table[i].POST_DATE %></td>
+                                        <td style="height: 5vh;"><%= table[i].AUTHOR %></td>
                                     </tr>
                                 <% } %>
                             </table >
                         </div>
                         <right>
-                            <form>
-                                <button type="button" id="new" onclick="location.href='/board/write'">New</button>
-                            </form>
+                            <button type="button" id="new" onclick="location.href='/board/write'">New</button>
                         </right>
                         <script>
                             function signOut() {
@@ -62,10 +60,14 @@
                             }
                         </script>
                         <style>
-                            table {
-                                width: 95%;
+                            #new {
+                                float: right;
+                                margin-right: 3%;
                             }
-                            tr {
+                            table {
+                                width: 97%;
+                            }
+                            tr {;
                                 height: 30px;
                             }
                             table, tr, td, th {

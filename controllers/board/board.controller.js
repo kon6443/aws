@@ -23,9 +23,13 @@ exports.showMain = async (req, res) => {
 
 exports.showPost = async (req, res) => {
     const user = req.decoded;
-    const article_num = req.params.id;
-    let article = await dbMySQLModel.showArticleByNum(article_num);
-    return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article});
+    if(user) {
+        const article_num = req.params.id;
+        let article = await dbMySQLModel.showArticleByNum(article_num);
+        return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article});
+    } else {
+        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+    }
 }
 
 // Writing page.
@@ -34,7 +38,7 @@ exports.boardWrite = (req, res) => {
     if(user) {
         return res.render(path.join(__dirname, '../../views/board/boardWrite'), {user:user});
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/board/board.html'));
+        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
     }
 }
 
@@ -45,6 +49,6 @@ exports.postWrite = (req, res) => {
         const author = user.id;
         dbMySQLModel.insert(title, content, author);
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/board/board.html'));
+        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
     }
 }

@@ -99,16 +99,21 @@ exports.deleteArticle = async (req, res) => {
 
 exports.editArticle = async (req, res) => {
     const user = req.decoded;
-    const article_num = req.query.id;
-    console.log('article_num: ', req.params.id);
-    console.log('article_num: ', req.query.id);
+    const article_num = req.params.id;
     const article = await dbMySQLModel.showArticleByNum(article_num);
     if(user.id === article.AUTHOR) {
-        console.log('1');
         return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
-    } else {    
-        console.log('2');
-        return res.status(200).send('Account not matched.').end();
     }
-    // return res.status(200).send('Article has been editied.').end();
+}
+
+exports.submitEditedArticle = async (req, res) => {
+    const user = req.decoded;
+    const article_num = req.body.id;
+    const title = req.body.title;
+    const content = req.body.content;
+    let article = await dbMySQLModel.showArticleByNum(article_num);
+    const date_obj = new Date();
+    article.UPDATE_DATE = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
+    await dbMySQLModel.editArticle(article_num, title, content, article.UPDATE_DATE);
+    return res.status(200).send('Your article has been editied.');
 }

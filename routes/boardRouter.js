@@ -17,6 +17,6 @@ router.get('/:id', boardMiddleWare.showPost);
 router.delete('/:id', boardMiddleWare.deleteArticle);
 router.post('/article', boardMiddleWare.insertArticle);
 router.get('/article/:id', boardMiddleWare.editArticle);
-// router.put('/article/:id', boardMiddleWare.editArticle);
+router.put('/article/:id', boardMiddleWare.submitEditedArticle);
 
 module.exports = router;

@@ -58,6 +58,7 @@ exports.deleteByNum = async (article_num) => {
     await conn.query(query);
 }
 
-exports.submitEditiedArticle = async (article_num) => {
-    console.log('ef');
+exports.editArticle = async (article_num, title, content, update) => {
+    let query = "UPDATE BOARD SET TITLE='"+title+"', content='"+content+"', UPDATE_DATE='"+update+"' WHERE BOARD_NO="+article_num+";";
+    await conn.query(query);
 }

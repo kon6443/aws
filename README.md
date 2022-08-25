@@ -1,16 +1,16 @@
 # This repository has been made to practice MVC pattern with NodeJS and AWS EC2.
 
 ## Implemented
+• Board - Posting, editing, deleting. => Signing in required. <br>
 • Web chat. <br>
 • Applied MVC pattern, trying to make a clean and good looking code. <br>
-• 로그인, 회원가입, 로그아웃 => Sign up, sign in, sign out. <br>
+• Sign up, sign in, sign out. <br>
 • CRUD REST API <br>
 
 ## Planing to implement
-• Comments <br>
+• Board - Comments <br>
 • Admin account <br>
-• Grop chat <br>
-• Board Edit feature <br>
+• Grop chat(invitation) <br>
 
 ## How to run
 • You need to rename `.env.forGitHub` file to `.env` before run this project.

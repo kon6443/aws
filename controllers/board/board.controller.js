@@ -96,3 +96,19 @@ exports.deleteArticle = async (req, res) => {
         return res.status(200).send('Account not matched.').end();
     }
 }
+
+exports.editArticle = async (req, res) => {
+    const user = req.decoded;
+    const article_num = req.query.id;
+    console.log('article_num: ', req.params.id);
+    console.log('article_num: ', req.query.id);
+    const article = await dbMySQLModel.showArticleByNum(article_num);
+    if(user.id === article.AUTHOR) {
+        console.log('1');
+        return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
+    } else {    
+        console.log('2');
+        return res.status(200).send('Account not matched.').end();
+    }
+    // return res.status(200).send('Article has been editied.').end();
+}

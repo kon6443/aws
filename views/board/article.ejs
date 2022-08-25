@@ -77,10 +77,26 @@
                 });
             }
             function editArticle() {
+                const article_num = '<%= article.BOARD_NO %>';
+                    $.ajax({
+                        type: "get",
+                        url: '/board/article/id',
+                        data: {id:article_num},
+                        dataType:'text',
+                        success: function(res) {
+                            if(res==='Account not matched.') {
+                                alert(res);
+                            } else {
+                                window.location.href = '/board/article/'+article_num;
+                            }
+                        }
+                    });
+            }
+            function editedArticleSubmit() {
                 $.ajax({
-                    type: "update",
-                    url: '/board/delete',
-                    data: {article_num: article_num},
+                    type: "put",
+                    url: '/board/article',
+                    data: {},
                     dataType:'text',
                     success: function(res) {
                         location.reload();

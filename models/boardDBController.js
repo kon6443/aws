@@ -57,3 +57,7 @@ exports.deleteByNum = async (article_num) => {
     let query = `DELETE FROM BOARD WHERE BOARD_NO=`+article_num+`;`;
     await conn.query(query);
 }
+
+exports.submitEditiedArticle = async (article_num) => {
+    console.log('ef');
+}

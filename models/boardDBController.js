@@ -9,22 +9,31 @@ const util = require('util');
 // node native promisify
 const query = util.promisify(conn.query).bind(conn);
 
+function convertDateFormmat(date) {
+    date = date.toLocaleString('default', {year:'numeric', month:'2-digit', day:'2-digit'});
+    let year = date.substr(6,4);
+    let month = date.substr(0,2);
+    let day = date.substr(3,2);
+    let convertedDate = `${year}-${month}-${day}`;
+    return convertedDate;
+}
+
 function convertTableDateFormat(table) {
     for(let i=0;i<table.length;i++) {
-        table[i].POST_DATE = table[i].POST_DATE.toISOString().split('T')[0];
-        table[i].UPDATE_DATE = table[i].UPDATE_DATE.toISOString().split('T')[0];
+        table[i].POST_DATE = convertDateFormmat(table[i].POST_DATE);
+        table[i].UPDATE_DATE = convertDateFormmat(table[i].UPDATE_DATE);
     }
     return table;
 }
 
 function convertArticleDateFormat(article) {
-    article.POST_DATE = article.POST_DATE.toISOString().split('T')[0];
-    article.UPDATE_DATE = article.UPDATE_DATE.toISOString().split('T')[0];
+    article.POST_DATE = convertDateFormmat(article.POST_DATE);
+    article.UPDATE_DATE = convertDateFormmat(article.UPDATE_DATE);
     return article;
 }
 
 exports.showTable = async () => {
-    let table = await query("SELECT * FROM BOARD;");
+    let table = await query("SELECT * FROM BOARD ORDER BY BOARD_NO DESC;");
     table = convertTableDateFormat(table);
     return table;
 }
@@ -44,7 +53,6 @@ exports.insert = async (title, content, author) => {
     const date_obj = new Date();
     let post_date = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
     const update_date = post_date;
-
     // Values to be inserted
     let values = [
         [title, content, post_date, update_date, author]

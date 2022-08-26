@@ -47,7 +47,7 @@ exports.showMain = async (req, res) => {
         page_max:boardObject.page_max, 
         length:boardObject.articles.length, 
         limit:boardObject.limit, 
-        range_min:boardObject.range_min, 
+        range_min:boardObject.range_min,
         range_max:boardObject.range_max
     });
 }

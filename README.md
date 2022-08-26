@@ -15,9 +15,13 @@
 ## How to run
 • You need to rename `.env.forGitHub` file to `.env` before run this project.
 
+### Aug 26, 2022
+• Board - Fixed time difference issue. <br>
+• Board - Now a new article sees first on the board(descending order by article number). <br>
+
 ### Aug 25, 2022
 • Board - edit feature available now. <br>
-
+• Board - Fixing time difference issue. <br>
 
 ### Aug 24, 2022
 • Error handling. <br>

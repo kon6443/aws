@@ -15,6 +15,15 @@ app.set('view engine', 'ejs');
     
 const dbMySQLModel = require('../../models/boardDBController');
 
+
+function detectKeystroke(search, titles) {
+    let result = [];
+    for(let i=0;i<titles.length;i++) {
+        if(titles[i].includes(search)) result.push(titles[i]);
+    }
+    return result;
+}
+
 async function getBoardItems(page, limit) {
     page = Math.max(1, parseInt(page));
     limit = Math.max(1, parseInt(limit));
@@ -52,7 +61,8 @@ exports.showMain = async (req, res) => {
     });
 }
 
-exports.showPost = async (req, res) => {
+exports.showPost = async (req, res, next) => {
+    if(req.query.keyStroke) return next();
     const user = req.decoded;
     if(user) {
         const article_num = req.params.id;
@@ -61,6 +71,19 @@ exports.showPost = async (req, res) => {
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
     }
+}
+
+exports.autoComplete = async (req, res) => {
+    console.log(req.query.search);
+    if(req.query.search) return next();
+    const keyStroke = req.query.keyStroke;
+    let titles = await dbMySQLModel.getAllTitles();
+    const result = await detectKeystroke(keyStroke, titles);
+    return res.status(200).send(result).end();
+}
+
+exports.searchByTitle = async (req, res) => {
+    console.log(req.query.search);
 }
 
 // Writing page.

@@ -38,6 +38,12 @@ exports.showTable = async () => {
     return table;
 }
 
+exports.getAllTitles = async () => {
+    let titles = await query("SELECT TITLE FROM BOARD ORDER BY BOARD_NO DESC;");
+    for(let i=0;i<titles.length;i++) titles[i] = titles[i].TITLE;
+    return titles;
+}
+
 exports.showArticleByNum = async (article_num) => {
     const sql = "SELECT * FROM BOARD WHERE BOARD_NO="+article_num+";";
     let article = await query(sql);

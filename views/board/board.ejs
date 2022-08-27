@@ -15,39 +15,42 @@
 	
 	<body>
 		<div class="navbar">
-			<a class="active" href="/">Onam Kwon</a> 
+			<a class="active" href="/">Home</a> 
 			<a href="/dev">Dev</a> 
 			<a href="/private">Private</a> 
-			<a href="/about">About</a>
+			<a href="/user">My page</a>
 		</div>  
 		<div class="wrapper">
 			<ul class="item-list mySelf">
 				<ul class="about">
-					<article class="about-text">
-                        <div>
-                            <h1>Board</h1>
-                            <table id="board">
-                                <tr>
-                                    <th style="height: 6vh; width: 15%;"> Article Number </th>
-                                    <th style="height: 6vh;"> Title </th>
-                                    <th style="height: 6vh; width: 10%;"> Posted date </th>
-                                    <th style="height: 6vh; width: 10%;"> Author </th>
-                                </tr>
-                                <% for(let i=range_min; i< range_max; i++) { %>
-                                    <tr>
-                                        <td style="height: 5vh;"><%= articles[i].BOARD_NO %></td>
-                                        <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>"><%= articles[i].TITLE %></a></td>
-                                        <td style="height: 5vh;"><%= articles[i].POST_DATE %></td>
-                                        <td style="height: 5vh;"><%= articles[i].AUTHOR %></td>
-                                    </tr>
-                                <% } %>
-                            </table >
-                        </div>
-                        <right>
-                            <button type="button" id="new" onclick="location.href='/board/write'">New</button>
-                        </right>
+                    <div>
+                        <h1 style="display: inline-block;">Board</h1> 
+                        <div >
+                            <input type="text" list="titles" id="search" name="search" placeholder="Title: " oninput="detectKeystroke()" style="display: inline-block;"/>
+                            <datalist id="titles">
 
-                        <center>
+                            </datalist>
+                            <button type="button" id="searchButton" onclick="search()">Search</button> <br><br>
+                        </div>
+                        <table id="board">
+                            <tr>
+                                <th style="height: 6vh; width: 15%;"> Article Number </th>
+                                <th style="height: 6vh;"> Title </th>
+                                <th style="height: 6vh; width: 10%;"> Posted date </th>
+                                <th style="height: 6vh; width: 10%;"> Author </th>
+                            </tr>
+                            <% for(let i=range_min; i< range_max; i++) { %>
+                                <tr>
+                                    <td style="height: 5vh;"><%= articles[i].BOARD_NO %></td>
+                                    <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>"><%= articles[i].TITLE %></a></td>
+                                    <td style="height: 5vh;"><%= articles[i].POST_DATE %></td>
+                                    <td style="height: 5vh;"><%= articles[i].AUTHOR %></td>
+                                </tr>
+                            <% } %>
+                        </table >
+                    </div>
+                    <button type="button" id="new" onclick="location.href='/board/write'">New</button>
+                    <center>
                         <nav class="col-8">
                             <% 
                                 var offset = 2;
@@ -70,12 +73,43 @@
                                 </li>
                             </ul>
                         </nav>
-                        </center>
-					</article>
+                    </center>
 				</ul>
 			</ul>
 		</div>
         <script>
+            function search() {
+                const search = document.getElementById('search').value;
+                $.ajax({
+                    type: "get",
+                    url: '/board/:search',
+                    data: {search:search},
+                    dataType:'json',
+                    success: function(res) {
+                        window.location.href = '/board/';
+                    }
+                });
+            }
+            function detectKeystroke() {
+                const keyStroke = document.getElementById('search').value;
+                if(keyStroke==='') {
+                    $("#titles").empty();
+                    return ;
+                }
+                $.ajax({
+                    type: "get",
+                    url: '/board/:keyStroke',
+                    data: {keyStroke:keyStroke},
+                    dataType:'json',
+                    success: function(res) {
+                        let temp = '';
+                        for(let i=0;i<res.length;i++) {
+                            temp += `<option value="${res[i]}" id="title">`;
+                        }
+                        $('#titles').empty().append(temp);
+                    }
+                });
+            }
             function signOut() {
                 $.ajax({
                     type: "delete",
@@ -89,7 +123,10 @@
             } 
         </script>
         <style>
-            #new {
+            .ribht {
+                float: right;
+            }
+            #new, {
                 float: right;
                 margin-right: 3%;
             }
@@ -103,7 +140,7 @@
                 border: 1px solid;
                 text-align: center;
             }
-            #new {
+            #new, #searchButton {
                 margin-top: 2%;
                 width: 19%;
                 height: 34px;

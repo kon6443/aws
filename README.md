@@ -11,6 +11,7 @@
 • Board - Comments <br>
 • Admin account <br>
 • Grop chat(invitation) <br>
+• Board - search box and auto complete <br>
 
 ## How to run
 • You need to rename `.env.forGitHub` file to `.env` before run this project.
@@ -18,6 +19,7 @@
 ### Aug 26, 2022
 • Board - Fixed time difference issue. <br>
 • Board - Now a new article sees first on the board(descending order by article number). <br>
+• Board - Working on article search by title. <br>
 
 ### Aug 25, 2022
 • Board - edit feature available now. <br>

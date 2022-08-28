@@ -17,9 +17,9 @@
 
 ## Used skill stacks
 • NodeJS:  <br>
-&nbsp; ▪︎ Express, socket.io, bcrypt, dotenv, cookie-parser, ejs, jsonwebtoken, mongoose, MySQL, python-shell, ajax. <br>
+&emsp; ▪︎ Express, socket.io, bcrypt, dotenv, cookie-parser, ejs, jsonwebtoken, mongoose, MySQL, python-shell, ajax. <br>
 • Python:  <br>
-&nbsp; ▪︎ sqlite. <br>
+&emsp; ▪︎ sqlite. <br>
 
 ### Aug 28, 2022
 • Board - Search by title available now. <br>

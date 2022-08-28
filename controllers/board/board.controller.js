@@ -15,8 +15,14 @@ app.set('view engine', 'ejs');
     
 const dbMySQLModel = require('../../models/boardDBController');
 
+function getUniqueElements(array) {
+    let unique = array.filter((element, index) => {
+        return array.indexOf(element) === index;
+    });
+    return unique;
+}
 
-function detectKeystroke(search, titles) {
+function getTitlesIncludeString(titles, search) {
     let result = [];
     for(let i=0;i<titles.length;i++) {
         if(titles[i].includes(search)) result.push(titles[i]);
@@ -24,21 +30,18 @@ function detectKeystroke(search, titles) {
     return result;
 }
 
-async function getBoardItems(page, limit) {
+async function getPageItems(article_num, page, limit) {
     page = Math.max(1, parseInt(page));
     limit = Math.max(1, parseInt(limit));
     page = !isNaN(page)?page:1;
     limit = !isNaN(limit)?limit:10;
-    const articles = await dbMySQLModel.showTable();
-    let article_total = articles.length;
-    let page_max = Math.ceil(article_total/limit);
+    let page_max = Math.ceil(article_num/limit);
     let range_max;
     const range_min = (page-1)*limit;
-    (page === page_max) ? (range_max = articles.length) : (range_max = page*limit)
+    (page === page_max) ? (range_max = article_num) : (range_max = page*limit)
     const obj = {
         page:page, 
-        limit:limit, 
-        articles:Object(articles),
+        limit:limit,
         page_max:page_max, 
         range_min:range_min, 
         range_max:range_max
@@ -47,22 +50,45 @@ async function getBoardItems(page, limit) {
 }
 
 // Main login page.
-exports.showMain = async (req, res) => {
-    let { page, limit } = req.query;
-    const boardObject = await getBoardItems(page, limit);
+exports.showMain = async (req, res, next) => {
+    if(req.query.search) return next();
+    let { search, page, limit } = req.query;
+    const articles = await dbMySQLModel.showTable();
+    const boardObject = await getPageItems(articles.length, page, limit);
     return res.render(path.join(__dirname, '../../views/board/board'), {
-        articles:boardObject.articles, 
+        articles:articles, 
         page_current:boardObject.page, 
         page_max:boardObject.page_max, 
-        length:boardObject.articles.length, 
+        length:articles.length, 
         limit:boardObject.limit, 
         range_min:boardObject.range_min,
-        range_max:boardObject.range_max
+        range_max:boardObject.range_max,
+        search:search
+    });
+}
+
+exports.searchByTitle = async (req, res) => {
+    let { search, page, limit } = req.query;
+    let articles = await dbMySQLModel.getMatchingArticles(search);
+    if(articles.length === 0) {
+        return res.send("<script>alert('No matching article.'); window.location.href = '/board';</script>");
+    }
+    const boardObject = await getPageItems(articles.length, page, limit);
+    return res.render(path.join(__dirname, '../../views/board/board'), {
+        articles:articles,
+        page_current:boardObject.page,
+        page_max:boardObject.page_max, 
+        length:articles.length, 
+        limit:boardObject.limit, 
+        range_min:boardObject.range_min,
+        range_max:boardObject.range_max,
+        search:search
     });
 }
 
 exports.showPost = async (req, res, next) => {
     if(req.query.keyStroke) return next();
+    if(req.query.search) return next();
     const user = req.decoded;
     if(user) {
         const article_num = req.params.id;
@@ -73,17 +99,12 @@ exports.showPost = async (req, res, next) => {
     }
 }
 
-exports.autoComplete = async (req, res) => {
-    console.log(req.query.search);
+exports.autoComplete = async (req, res, next) => {
     if(req.query.search) return next();
     const keyStroke = req.query.keyStroke;
-    let titles = await dbMySQLModel.getAllTitles();
-    const result = await detectKeystroke(keyStroke, titles);
+    const titles = await dbMySQLModel.getAllTitles();
+    const result = await getTitlesIncludeString(titles, keyStroke);
     return res.status(200).send(result).end();
-}
-
-exports.searchByTitle = async (req, res) => {
-    console.log(req.query.search);
 }
 
 // Writing page.

@@ -59,17 +59,17 @@
                             %>
                             <ul class="pagination pagination-sm justify-content-center align-items-center h-100 mb-0">            
                                 <li class="page-item <%= previousBtnEnabled?'':'disabled' %>">
-                                    <a class="page-link" href="/board?page=<%= page_current-1 %>&limit=<%= limit %>" <%= previousBtnEnabled?'':'tabindex=-1' %>>«</a>
+                                    <a class="page-link" href="/board?page=<%= page_current-1 %>&limit=<%= limit %>&search=<%= search %>" <%= previousBtnEnabled?'':'tabindex=-1' %>>«</a>
                                 </li>
                                 <% for(i=1;i<=page_max;i++){ %>
                                     <% if(i==1 || i==page_max || (i>=page_current-offset && i<=page_current+offset)){ %>
-                                        <li class="page-item <%= page_current==i?'active':'' %>"><a class="page-link" href="/board?page=<%= i %>&limit=<%= limit %>"> <%= i %> </a></li>
+                                        <li class="page-item <%= page_current==i?'active':'' %>"><a class="page-link" href="/board?page=<%= i %>&limit=<%= limit %>&search=<%= search %>"> <%= i %> </a></li>
                                     <% } else if(i==2 || i==page_max-1){ %>
                                         <li><a class="page-link">...</a></li>
                                     <% } %>
                                 <% } %>
                                 <li class="page-item <%= nextBtnEnabled?'':'disabled' %>">
-                                    <a class="page-link" href="/board?page=<%= page_current+1 %>&limit=<%= limit %>" <%= nextBtnEnabled?'':'tabindex=-1' %>>»</a>
+                                    <a class="page-link" href="/board?page=<%= page_current+1 %>&limit=<%= limit %>&search=<%= search %>" <%= nextBtnEnabled?'':'tabindex=-1' %>>»</a>
                                 </li>
                             </ul>
                         </nav>
@@ -80,15 +80,8 @@
         <script>
             function search() {
                 const search = document.getElementById('search').value;
-                $.ajax({
-                    type: "get",
-                    url: '/board/:search',
-                    data: {search:search},
-                    dataType:'json',
-                    success: function(res) {
-                        window.location.href = '/board/';
-                    }
-                });
+                window.location.href = "/board?search="+search+"&page=<%= page_current %>&limit=<%= limit %>";
+                // window.location.href = '/board?search='+search;
             }
             function detectKeystroke() {
                 const keyStroke = document.getElementById('search').value;

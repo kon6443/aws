@@ -12,10 +12,10 @@ const auth = require("../controllers/authMiddleware");
 router.use('/', auth);
 
 router.get('/', boardMiddleWare.showMain);
+router.get('/', boardMiddleWare.searchByTitle);
 router.get('/write', boardMiddleWare.boardWrite);
 router.get('/:id', boardMiddleWare.showPost);
 router.get('/:keyStroke', boardMiddleWare.autoComplete);
-router.get('/:search', boardMiddleWare.searchByTitle);
 router.delete('/:id', boardMiddleWare.deleteArticle);
 router.post('/article', boardMiddleWare.insertArticle);
 router.get('/article/:id', boardMiddleWare.editArticle);

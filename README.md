@@ -1,11 +1,11 @@
 # This repository has been made to practice MVC pattern with NodeJS and AWS EC2.
 
 ## Implemented
-• Board - Posting, editing, deleting. => Signing in required. <br>
+• Board - Posting, editing, deleting, searching by title, board screen page. <br>
 • Web chat. <br>
 • Applied MVC pattern, trying to make a clean and good looking code. <br>
 • Sign up, sign in, sign out. <br>
-• CRUD REST API <br>
+• RESTful <br>
 
 ## Planing to implement
 • Board - Comments <br>
@@ -13,7 +13,13 @@
 • Grop chat(invitation) <br>
 
 ## How to run
-• You need to rename `.env.forGitHub` file to `.env` before run this project.
+• In order to run this project, you need to rename `.env.forGitHub` file to `.env` and initialize those values. <br>
+
+## Used skill stacks
+• NodeJS:  <br>
+    ▪︎ Express, socket.io, bcrypt, dotenv, cookie-parser, ejs, jsonwebtoken, mongoose, MySQL, python-shell, ajax. <br>
+• Python:  <br>
+    ▪︎ sqlite. <br>
 
 ### Aug 28, 2022
 • Board - Search by title available now. <br>

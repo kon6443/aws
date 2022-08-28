@@ -18,6 +18,7 @@
 ### Aug 28, 2022
 • Board - Search by title available now. <br>
 • Optimizing. <br>
+• Modified UI. <br>
 
 ### Aug 27, 2022
 • Board - Working on article search by title. <br>

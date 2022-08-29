@@ -22,6 +22,9 @@
 ### Python: 
 &emsp; • sqlite. <br>
 
+### Aug 29, 2022
+• Code organizing. <br>
+
 ### Aug 28, 2022
 • Board - Search by title available now. <br>
 • Optimizing. <br>

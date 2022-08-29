@@ -1,4 +1,4 @@
-// login.controller.js
+// board.controller.js
 
 const express = require("express");
 const app = express();
@@ -14,13 +14,6 @@ const path = require('path');
 app.set('view engine', 'ejs');
     
 const dbMySQLModel = require('../../models/boardDBController');
-
-function getUniqueElements(array) {
-    let unique = array.filter((element, index) => {
-        return array.indexOf(element) === index;
-    });
-    return unique;
-}
 
 function getTitlesIncludeString(titles, search) {
     let result = [];
@@ -52,11 +45,15 @@ async function getPageItems(article_num, page, limit) {
 // Main login page.
 exports.showMain = async (req, res, next) => {
     if(req.query.search) return next();
+    let user;
+    if(!req.decoded) user = 'Guest';
+    else user = req.decoded.id;
     let { search, page, limit } = req.query;
     const articles = await dbMySQLModel.showTable();
     const boardObject = await getPageItems(articles.length, page, limit);
     return res.render(path.join(__dirname, '../../views/board/board'), {
         articles:articles, 
+        user: user,
         page_current:boardObject.page, 
         page_max:boardObject.page_max, 
         length:articles.length, 

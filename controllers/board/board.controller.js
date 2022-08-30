@@ -23,21 +23,18 @@ function getTitlesIncludeString(titles, search) {
     return result;
 }
 
-async function getPageItems(article_num, page, limit) {
+async function getPageItems(articles_length, page, limit) {
     page = Math.max(1, parseInt(page));
     limit = Math.max(1, parseInt(limit));
     page = !isNaN(page)?page:1;
     limit = !isNaN(limit)?limit:10;
-    let page_max = Math.ceil(article_num/limit);
-    let range_max;
-    const range_min = (page-1)*limit;
-    (page === page_max) ? (range_max = article_num) : (range_max = page*limit)
+    let last_page = Math.ceil(articles_length/limit);
     const obj = {
-        page:page, 
-        limit:limit,
-        page_max:page_max, 
-        range_min:range_min, 
-        range_max:range_max
+        page: page, 
+        limit: limit,
+        last_page: last_page,
+        range_min: (page-1)*limit, 
+        range_max: (page === last_page) ? (articles_length) : (page*limit)
     }
     return obj;
 }
@@ -45,22 +42,19 @@ async function getPageItems(article_num, page, limit) {
 // Main login page.
 exports.showMain = async (req, res, next) => {
     if(req.query.search) return next();
-    let user;
-    if(!req.decoded) user = 'Guest';
-    else user = req.decoded.id;
     let { search, page, limit } = req.query;
     const articles = await dbMySQLModel.showTable();
     const boardObject = await getPageItems(articles.length, page, limit);
     return res.render(path.join(__dirname, '../../views/board/board'), {
-        articles:articles, 
-        user: user,
-        page_current:boardObject.page, 
-        page_max:boardObject.page_max, 
-        length:articles.length, 
-        limit:boardObject.limit, 
-        range_min:boardObject.range_min,
-        range_max:boardObject.range_max,
-        search:search
+        articles: articles, 
+        user: (req.decoded) ? (req.decoded.id) : ('Guest'),
+        page_current: boardObject.page, 
+        last_page: boardObject.last_page, 
+        length: articles.length, 
+        limit: boardObject.limit, 
+        range_min: boardObject.range_min,
+        range_max: boardObject.range_max,
+        search: search
     });
 }
 
@@ -72,14 +66,15 @@ exports.searchByTitle = async (req, res) => {
     }
     const boardObject = await getPageItems(articles.length, page, limit);
     return res.render(path.join(__dirname, '../../views/board/board'), {
-        articles:articles,
-        page_current:boardObject.page,
-        page_max:boardObject.page_max, 
-        length:articles.length, 
-        limit:boardObject.limit, 
-        range_min:boardObject.range_min,
-        range_max:boardObject.range_max,
-        search:search
+        articles: articles,
+        user: (req.decoded) ? (req.decoded.id) : ('Guest'),
+        page_current: boardObject.page,
+        last_page: boardObject.last_page, 
+        length: articles.length, 
+        limit: boardObject.limit, 
+        range_min: boardObject.range_min,
+        range_max: boardObject.range_max,
+        search: search
     });
 }
 

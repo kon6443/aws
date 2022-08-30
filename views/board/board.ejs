@@ -44,10 +44,10 @@
                             </tr>
                             <% for(let i=range_min; i< range_max; i++) { %>
                                 <tr>
-                                    <td style="height: 5vh;"><%= articles[i].BOARD_NO %></td>
-                                    <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>"><%= articles[i].TITLE %></a></td>
-                                    <td style="height: 5vh;"><%= articles[i].POST_DATE %></td>
-                                    <td style="height: 5vh;"><%= articles[i].AUTHOR %></td>
+                                    <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>" style="color: white; text-decoration: none;"><%= articles[i].BOARD_NO %></a></td>
+                                    <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>" style="color: white; text-decoration: none;"><%= articles[i].TITLE %></a></td>
+                                    <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>" style="color: white; text-decoration: none;"><%= articles[i].POST_DATE %></a></td>
+                                    <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>" style="color: white; text-decoration: none;"><%= articles[i].AUTHOR %></a></td>
                                 </tr>
                             <% } %>
                         </table >
@@ -58,16 +58,16 @@
                             <% 
                                 var offset = 2;
                                 var previousBtnEnabled = page_current>1;
-                                var nextBtnEnabled = page_current< page_max; 
+                                var nextBtnEnabled = page_current< last_page; 
                             %>
                             <ul class="pagination pagination-sm justify-content-center align-items-center h-100 mb-0">            
                                 <li class="page-item <%= previousBtnEnabled?'':'disabled' %>">
                                     <a class="page-link" href="/board?page=<%= page_current-1 %>&limit=<%= limit %>&search=<%= search %>" <%= previousBtnEnabled?'':'tabindex=-1' %>>«</a>
                                 </li>
-                                <% for(i=1;i<=page_max;i++){ %>
-                                    <% if(i==1 || i==page_max || (i>=page_current-offset && i<=page_current+offset)){ %>
+                                <% for(i=1;i<=last_page;i++){ %>
+                                    <% if(i==1 || i==last_page || (i>=page_current-offset && i<=page_current+offset)){ %>
                                         <li class="page-item <%= page_current==i?'active':'' %>"><a class="page-link" href="/board?page=<%= i %>&limit=<%= limit %>&search=<%= search %>"> <%= i %> </a></li>
-                                    <% } else if(i==2 || i==page_max-1){ %>
+                                    <% } else if(i==2 || i==last_page-1){ %>
                                         <li><a class="page-link">...</a></li>
                                     <% } %>
                                 <% } %>

@@ -22,6 +22,10 @@
 ### Python: 
 &emsp; • sqlite. <br>
 
+### Aug 30, 2022
+• Code organizing. <br>
+• Removed junk code and renamed some variables. <br>
+
 ### Aug 29, 2022
 • Code organizing. <br>
 • Removed junk code and renamed some variables. <br>

@@ -1,4 +1,4 @@
-// boardDBController.js
+// boardCommentDB.js
 // connecting MySQL
 
 const conn = require('../models/connectMySQL');

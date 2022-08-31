@@ -13,7 +13,7 @@ const path = require('path');
 // allows you to ejs view engine.
 app.set('view engine', 'ejs');
     
-const dbMySQLModel = require('../../models/boardDBController');
+const boardDB = require('../../models/boardDBController');
 
 function getTitlesIncludeString(titles, search) {
     let result = [];
@@ -43,7 +43,7 @@ async function getPageItems(articles_length, page, limit) {
 exports.showMain = async (req, res, next) => {
     if(req.query.search) return next();
     let { search, page, limit } = req.query;
-    const articles = await dbMySQLModel.showTable();
+    const articles = await boardDB.showTable();
     const boardObject = await getPageItems(articles.length, page, limit);
     return res.render(path.join(__dirname, '../../views/board/board'), {
         articles: articles, 
@@ -60,7 +60,7 @@ exports.showMain = async (req, res, next) => {
 
 exports.searchByTitle = async (req, res) => {
     let { search, page, limit } = req.query;
-    let articles = await dbMySQLModel.getMatchingArticles(search);
+    let articles = await boardDB.getMatchingArticles(search);
     if(articles.length === 0) {
         return res.send("<script>alert('No matching article.'); window.location.href = '/board';</script>");
     }
@@ -84,7 +84,7 @@ exports.showPost = async (req, res, next) => {
     const user = req.decoded;
     if(user) {
         const article_num = req.params.id;
-        let article = await dbMySQLModel.showArticleByNum(article_num);
+        let article = await boardDB.showArticleByNum(article_num);
         return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article});
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
@@ -94,7 +94,7 @@ exports.showPost = async (req, res, next) => {
 exports.autoComplete = async (req, res, next) => {
     if(req.query.search) return next();
     const keyStroke = req.query.keyStroke;
-    const titles = await dbMySQLModel.getAllTitles();
+    const titles = await boardDB.getAllTitles();
     const result = await getTitlesIncludeString(titles, keyStroke);
     return res.status(200).send(result).end();
 }
@@ -114,7 +114,7 @@ exports.insertArticle = async (req, res) => {
     const { title, content } = req.body;
     if(user) {
         const author = user.id;
-        await dbMySQLModel.insert(title, content, author);
+        await boardDB.insert(title, content, author);
         return res.status(200).send('Article has been posted.').end(); 
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
@@ -124,9 +124,9 @@ exports.insertArticle = async (req, res) => {
 exports.deleteArticle = async (req, res) => {
     const user = req.decoded;
     const { article_num } = req.body;
-    const article = await dbMySQLModel.showArticleByNum(article_num);
+    const article = await boardDB.showArticleByNum(article_num);
     if(user.id === article.AUTHOR) {
-        await dbMySQLModel.deleteByNum(article_num);
+        await boardDB.deleteByNum(article_num);
         return res.status(200).send('Article has been removed.').end(); 
     } else {
         return res.status(200).send('Account not matched.').end();
@@ -136,7 +136,7 @@ exports.deleteArticle = async (req, res) => {
 exports.editArticle = async (req, res) => {
     const user = req.decoded;
     const article_num = req.params.id;
-    const article = await dbMySQLModel.showArticleByNum(article_num);
+    const article = await boardDB.showArticleByNum(article_num);
     if(user.id === article.AUTHOR) {
         return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
     }
@@ -147,9 +147,9 @@ exports.submitEditedArticle = async (req, res) => {
     const article_num = req.body.id;
     const title = req.body.title;
     const content = req.body.content;
-    let article = await dbMySQLModel.showArticleByNum(article_num);
+    let article = await boardDB.showArticleByNum(article_num);
     const date_obj = new Date();
     article.UPDATE_DATE = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
-    await dbMySQLModel.editArticle(article_num, title, content, article.UPDATE_DATE);
+    await boardDB.editArticle(article_num, title, content, article.UPDATE_DATE);
     return res.status(200).send('Your article has been editied.');
 }

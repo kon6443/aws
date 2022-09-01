@@ -22,6 +22,9 @@
 ### Python: 
 &emsp; • sqlite. <br>
 
+### Sep 01, 2022
+• Board - Working on comment feature. <br>
+
 ### Aug 31, 2022
 • Board - Working on comment feature. <br>
 • Renamed some variables. <br>

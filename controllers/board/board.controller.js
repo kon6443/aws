@@ -14,6 +14,7 @@ const path = require('path');
 app.set('view engine', 'ejs');
     
 const boardDB = require('../../models/boardDBController');
+const boardCommentDB = require('../../models/boardCommentDB');
 
 function getTitlesIncludeString(titles, search) {
     let result = [];
@@ -85,6 +86,7 @@ exports.showPost = async (req, res, next) => {
     if(user) {
         const article_num = req.params.id;
         let article = await boardDB.showArticleByNum(article_num);
+        let comments = await boardCommentDB.getComments(article_num);
         return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article});
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));

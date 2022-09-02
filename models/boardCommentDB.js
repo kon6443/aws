@@ -39,6 +39,14 @@ exports.showTable = async () => {
 exports.getComments = async (article_num) => {
     const sql = "SELECT * FROM COMMENT WHERE article_num='"+article_num+"';";
     let comments = await query(sql);
-    console.log(comments);
     return comments
+}
+
+exports.insertComment = async (article_num) => {
+    // insert into comment (comment_num, article_num, author, time, class, comment_order, group_num) VALUES (1, 24, 'prac', '2022-09-02', 1, 1, 1);
+    const sql = `INSERT INTO COMMENT (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
+    let values = [
+        [article_num, author, time, classs, comment_order, group_num, content]
+    ];
+    await conn.query(sql, [values]);
 }

@@ -56,6 +56,22 @@
                         </div>
 
                         <div class="row box">
+                            <textarea id="comment" rows="10%" cols="100%" /></textarea>
+                        </div>
+                        <% for(let i=0;i< length;i++) { %>
+                        <div class="row box" style="font-size: 25px;">
+                            <div class="col box col-3" style="font-size: 20px;">
+                                <a> <%= comments[i].author %> </a> <br>
+                            </div>
+                            <div class="col box col-7" style="font-size: 20px;">
+                                <a> <%= comments[i].time %> </a> <br>
+                            </div>
+                        </div>
+                        <div class="row box" style="font-size: 25px;">
+                            <a> <%= comments[i].content %> </a>
+                        </div>
+                        <% } %>
+                        <div class="row box">
                             <!-- <div class="col box" style="height: 5vh; font-size: 20px;"> -->
                             <div class="col box col-3" style="font-size: 20px;">
                                 <a> Author </a> <br>

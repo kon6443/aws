@@ -87,7 +87,11 @@ exports.showPost = async (req, res, next) => {
         const article_num = req.params.id;
         let article = await boardDB.showArticleByNum(article_num);
         let comments = await boardCommentDB.getComments(article_num);
-        return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article});
+        console.log('0: ', comments[0]);
+        console.log('1: ', comments[1]);
+        console.log(comments.length);
+        console.log(comments[1].content);
+        return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article, comments: comments, length: comments.length});
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
     }

@@ -18,6 +18,7 @@ router.get('/:id', boardMiddleWare.showPost);
 router.get('/:keyStroke', boardMiddleWare.autoComplete);
 router.delete('/:id', boardMiddleWare.deleteArticle);
 router.post('/article', boardMiddleWare.insertArticle);
+router.post('/article/:content', boardMiddleWare.postComment);
 router.get('/article/:id', boardMiddleWare.editArticle);
 router.put('/article/:id', boardMiddleWare.submitEditedArticle);
 

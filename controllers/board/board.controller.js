@@ -87,11 +87,18 @@ exports.showPost = async (req, res, next) => {
         const article_num = req.params.id;
         let article = await boardDB.showArticleByNum(article_num);
         let comments = await boardCommentDB.getComments(article_num);
-        console.log('0: ', comments[0]);
-        console.log('1: ', comments[1]);
-        console.log(comments.length);
-        console.log(comments[1].content);
         return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article, comments: comments, length: comments.length});
+    } else {
+        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+    }
+}
+
+exports.postComment = async (req, res) => {
+    const user = req.decoded;
+    if(user) {
+        const {content, article_num, length} = req.body;
+        await boardCommentDB.insertComment(article_num, user.id, content, length);
+        return res.status(200).send('Comment has been posted.');
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
     }

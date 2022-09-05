@@ -12,6 +12,7 @@
 • Admin account <br>
 • Grop chat(invitation) <br>
 • Preventing duplicated login <br>
+• Error handling <br>
 
 ## How to run
 • In order to run this project, you need to rename `.env.forGitHub` file to `.env` and initialize those values. <br>

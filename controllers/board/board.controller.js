@@ -146,6 +146,18 @@ exports.deleteArticle = async (req, res) => {
     }
 }
 
+exports.deleteComment = async (req, res) => {
+    const user = req.decoded;
+    const { article_num, comment_num } = req.body;
+    const article = await boardDB.showArticleByNum(article_num);
+    if(user.id === article.AUTHOR) {
+        await boardCommentDB.deleteComment(article_num, comment_num);
+        return res.status(200).send('Comment has been removed.').end();
+    } else {
+        return res.status(200).send('Account not matched.').end();
+    }
+}
+
 exports.editArticle = async (req, res) => {
     const user = req.decoded;
     const article_num = req.params.id;

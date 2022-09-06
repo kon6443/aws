@@ -61,3 +61,8 @@ exports.insertComment = async (article_num, author, content, length) => {
     ];
     await conn.query(sql, [values]);
 }
+
+exports.deleteComment = async (article_num, comment_num) => {
+    const sql = `update comment set author='deleted', content='deleted', time=NULL  where article_num=${article_num} and comment_num=${comment_num};`;
+    await conn.query(sql);
+}

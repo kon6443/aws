@@ -89,7 +89,7 @@
                             </div>
                             <div class="col box col-md-2" style="font-size: 10px;">
                                 <center>
-                                    <button type="button" id="commentsButton" onclick="()">Delete comment</button>
+                                    <button type="button" id="commentsButton" onclick="deleteComment(<%= comments[i].comment_num %>)">Delete comment</button>
                                 </center>
                             </div>
                         </div>
@@ -101,6 +101,21 @@
             </div>
 		</div>
         <script>
+            function deleteComment(comment_num) {
+                const article_num = <%= article.BOARD_NO %>;
+                $.ajax({
+                    type: "delete",
+                    url: '/board/:id/:comment',
+                    data: {article_num: article_num, comment_num: comment_num},
+                    dataType:'text',
+                    success: function(res) {
+                        alert(res);
+                        if(res === 'Comment has been removed.') {
+                            location.reload();
+                        }
+                    }
+                });
+            }
             function postComment() {
                 const article_num = <%= article.BOARD_NO %>;
                 const length = <%= length %>;

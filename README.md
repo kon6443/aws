@@ -23,6 +23,9 @@
 ### Python: 
 &emsp; • sqlite. <br>
 
+### Sep 06, 2022
+• Board - Comment deletion available now. <br>
+
 ### Sep 03, 2022
 • Board - Comment viewable, not support comment reply yet. <br>
 • Board - Comment post available now. <br>

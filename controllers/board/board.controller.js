@@ -108,6 +108,7 @@ exports.postReply = async (req, res) => {
     const user = req.decoded;
     if(user) {
         const { article_num, comment_num, content } = req.body;
+        await boardCommentDB.insertReply(article_num, comment_num, content);
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
     }

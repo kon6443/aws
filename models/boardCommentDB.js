@@ -7,6 +7,12 @@ const util = require('util');
 // node native promisify
 const query = util.promisify(conn.query).bind(conn);
 
+async function getMaxGroupNum(article_num) {
+    const sql = `select max(comment.group_num) as maxGroupNum from board left join comment on board.BOARD_NO=comment.article_num where board.BOARD_NO=${article_num};`;
+    const temp = await query(sql);
+    return temp[0].maxGroupNum;
+}
+
 function convertDateFormat(date) {
     date = date.toLocaleString('default', {year:'numeric', month:'2-digit', day:'2-digit'});
     let year = date.substr(6,4);
@@ -54,12 +60,22 @@ exports.insertComment = async (article_num, author, content, length) => {
     // insert into comment (article_num, author, time, class, comment_order, group_num, content) VALUES (24, 'prac', '2022-09-02', 1, 1, 1, 'this is a comment content');
     const sql = `INSERT INTO COMMENT (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
     const time = getTime();
-    const depth =  group_num = 0;
+    const depth = 0;
+    const maxGroupNum = await getMaxGroupNum(article_num);
+    const group_num = maxGroupNum + 1;
     comment_order = parseInt(length) + 1;
     let values = [
         [article_num, author, time, depth, comment_order, group_num, content]
     ];
     await conn.query(sql, [values]);
+}
+
+exports.insertReply = async (article_num, comment_num, content) => {
+    const time = getTime();
+    // let values = [
+    //     [article_num, author, time, depth, comment_order, group_num, content]
+    // ];
+    // await conn.query(sql, [values]);
 }
 
 exports.deleteComment = async (article_num, comment_num) => {

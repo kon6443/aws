@@ -104,6 +104,15 @@ exports.postComment = async (req, res) => {
     }
 }
 
+exports.postReply = async (req, res) => {
+    const user = req.decoded;
+    if(user) {
+        const { article_num, comment_num, content } = req.body;
+    } else {
+        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+    }
+}
+
 exports.autoComplete = async (req, res, next) => {
     if(req.query.search) return next();
     const keyStroke = req.query.keyStroke;

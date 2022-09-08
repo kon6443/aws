@@ -151,8 +151,8 @@
                 const article_num = <%= article.BOARD_NO %>;
                 $.ajax({
                     type: "delete",
-                    url: '/board/:id/:comment',
-                    data: {article_num: article_num, comment_num: comment_num},
+                    url: '/board/:comment',
+                    data: {comment_num: comment_num},
                     dataType:'text',
                     success: function(res) {
                         alert(res);

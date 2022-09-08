@@ -94,8 +94,7 @@ exports.getCommentAuthorByNum = async (comment_num) => {
     return commentAuthor[0].author;
 }
 
-exports.deleteComment = async (article_num, comment_num) => {
-    // const sql = `update comment set author='deleted', content='deleted', time=NULL  where article_num=${article_num} and comment_num=${comment_num};`;
+exports.deleteComment = async (comment_num) => {
     const sql = `update comment set author='deleted', content='deleted', time=NULL where comment_num=${comment_num};`;
     await conn.query(sql);
 }

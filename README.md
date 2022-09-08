@@ -2,7 +2,7 @@
 
 ## Implemented
 • Board:  <br>
-    &emsp; Posting, editing, deleting, searching by title, board screen page, comment, comment reply. <br>
+    &emsp;▪︎ Posting, editing, deleting, searching by title, board screen page, comment, comment reply. <br>
 • Web chat. <br>
 • Applied MVC pattern, trying to make a clean and good looking code. <br>
 • Sign up, sign in, sign out. <br>

@@ -65,47 +65,50 @@
                                 </center>
                             </div>
                         </div>
-
+                        <br>
                         <% for(let i=0;i< length;i++) { %>
-                            
-
-                        <div class="row box" style="font-size: 25px;">
-                            <div class="col box col-3" style="font-size: 20px;">
-                                <a> <%= comments[i].author %> </a> <br>
-                            </div>
-                            <div class="col box col-9" style="font-size: 20px;">
-                                <a> <%= comments[i].time %> </a> <br>
-                            </div>
-                        </div>
-                        <div class="row box" style="font-size: 25px;">
-                            <div class="col box col-md-6" style="font-size: 25px;">
-                                <a> <%= comments[i].content %> </a>
-                            </div>
-                            <div class="col box col-md-2" style="font-size: 10px;">
-                                <button type="button" id="commentsButton" onclick="reply(<%= comments[i].comment_num %>)">Reply</button>
-                            </div>
-                            <div class="col box col-md-2" style="font-size: 10px;">
-                                <center>
-                                    <button type="button" id="commentsButton" onclick="edit()">Edit</button>
-                                </center>
-                            </div>
-                            <div class="col box col-md-2" style="font-size: 10px;">
-                                <center>
-                                    <button type="button" id="commentsButton" onclick="deleteComment(<%= comments[i].comment_num %>)">Delete</button>
-                                </center>
-                            </div>
-                        </div>
-
-                        <div id="replyText<%= comments[i].comment_num %>" class="row box" style="display: none;">
-                            <div class="row box">
-                                <div class="col box col-md-9" style="font-size: 15px;" >
-                                    <textarea id="replyContent<%= comments[i].comment_num %>" style="width: 100%;"></textarea>
+                            <div class="row box" style="font-size: 25px;">
+                                <div class="col box col-3" style="font-size: 20px;">
+                                    <a> <%= comments[i].author %> </a> <br>
                                 </div>
-                                <div class="col box col-md-3" >
-                                    <button type="button" id="commentsButton" onclick="submitReply('<%= user.id %>', <%= comments[i].group_num %>, <%= comments[i].comment_num %>)" style="width: 100%;">Submit</button>
+                                <div class="col box col-9" style="font-size: 15px;">
+                                    <a> <%= comments[i].time %> </a> <br>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row box" style="font-size: 25px;">
+                                <div class="col box col-md-12" style="font-size: 25px; height: 5vh;">
+                                    <a> <%= comments[i].content %> </a>
+                                </div>
+                            </div>
+                            <% if((i+1==length) || (comments[i+1].comment_order==1)) { %>
+                                <div class="row box" style="font-size: 25px;">
+                                    <div class="col box col-md-6" style="font-size: 25px;"></div>
+                                    <div class="col box col-md-2" style="font-size: 10px;">
+                                        <button type="button" id="commentsButton" onclick="reply(<%= comments[i].comment_num %>)">Reply</button>
+                                    </div>
+                                    <div class="col box col-md-2" style="font-size: 10px;">
+                                        <center>
+                                            <button type="button" id="commentsButton" onclick="edit()">Edit</button>
+                                        </center>
+                                    </div>
+                                    <div class="col box col-md-2" style="font-size: 10px;">
+                                        <center>
+                                            <button type="button" id="commentsButton" onclick="deleteComment(<%= comments[i].comment_num %>)">Delete</button>
+                                        </center>
+                                    </div>
+                                </div>
+                                <div id="replyText<%= comments[i].comment_num %>" class="row box" style="display: none;">
+                                    <div class="row box">
+                                        <div class="col box col-md-9" style="font-size: 15px;" >
+                                            <textarea id="replyContent<%= comments[i].group_num %>" style="width: 100%;"></textarea>
+                                        </div>
+                                        <div class="col box col-md-3" >
+                                            <button type="button" id="commentsButton" onclick="submitReply('<%= user.id %>', <%= comments[i].group_num %>)" style="width: 100%;">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br><br>
+                            <% } %>
                         <% } %>
                     </div>
                         <button type="button" id="delete" onclick="deleteArticle()">Delete</button>
@@ -115,9 +118,9 @@
             
 		</div>
         <script>
-            function submitReply(user, group_num, comment_num) {
-                const content = document.getElementById('replyContent'+comment_num).value;
-                document.getElementById('replyContent'+comment_num).value = '';
+            function submitReply(user, group_num) {
+                const content = document.getElementById('replyContent'+group_num).value;
+                document.getElementById('replyContent'+group_num).value = '';
                 $.ajax({
                     type: "post",
                     url: '/board/article/:group/:content',

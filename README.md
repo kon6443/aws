@@ -1,7 +1,8 @@
 # This repository has been made to practice MVC pattern with NodeJS and AWS EC2.
 
 ## Implemented
-• Board - Posting, editing, deleting, searching by title, board screen page. <br>
+• Board:  <br>
+    &emsp; Posting, editing, deleting, searching by title, board screen page, comment, comment reply. <br>
 • Web chat. <br>
 • Applied MVC pattern, trying to make a clean and good looking code. <br>
 • Sign up, sign in, sign out. <br>
@@ -22,6 +23,9 @@
 &emsp; • Express, socket.io, bcrypt, dotenv, cookie-parser, ejs, jsonwebtoken, mongoose, MySQL, python-shell, ajax. <br>
 ### Python: 
 &emsp; • sqlite. <br>
+
+### Sep 08, 2022
+• Board - Comment reply available now. <br>
 
 ### Sep 06, 2022
 • Board - Comment deletion available now. <br>

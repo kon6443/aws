@@ -105,10 +105,11 @@ exports.postComment = async (req, res) => {
 }
 
 exports.postReply = async (req, res) => {
-    const user = req.decoded;
-    if(user) {
-        const { article_num, comment_num, content } = req.body;
-        await boardCommentDB.insertReply(article_num, comment_num, content);
+    const author = req.decoded.id;
+    if(author) {
+        const { article_num, group_num, content } = req.body;
+        await boardCommentDB.insertReply(article_num, author, group_num, content);
+        return res.status(200).send('Reply has been posted.');
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
     }

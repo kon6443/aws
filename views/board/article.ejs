@@ -65,7 +65,10 @@
                                 </center>
                             </div>
                         </div>
+
                         <% for(let i=0;i< length;i++) { %>
+                            
+
                         <div class="row box" style="font-size: 25px;">
                             <div class="col box col-3" style="font-size: 20px;">
                                 <a> <%= comments[i].author %> </a> <br>
@@ -92,13 +95,14 @@
                                 </center>
                             </div>
                         </div>
+
                         <div id="replyText<%= comments[i].comment_num %>" class="row box" style="display: none;">
                             <div class="row box">
                                 <div class="col box col-md-9" style="font-size: 15px;" >
                                     <textarea id="replyContent<%= comments[i].comment_num %>" style="width: 100%;"></textarea>
                                 </div>
                                 <div class="col box col-md-3" >
-                                    <button type="button" id="commentsButton" onclick="submitReply('<%= user.id %>', <%= comments[i].comment_num %>)" style="width: 100%;">Submit</button>
+                                    <button type="button" id="commentsButton" onclick="submitReply('<%= user.id %>', <%= comments[i].group_num %>, <%= comments[i].comment_num %>)" style="width: 100%;">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -106,22 +110,24 @@
                     </div>
                         <button type="button" id="delete" onclick="deleteArticle()">Delete</button>
                         <button type="button" id="edit" onclick="editArticle()">Edit</button>
-                </div>
+                    </div>
             </div>
+            
 		</div>
         <script>
-            function submitReply(user, comment_num) {
+            function submitReply(user, group_num, comment_num) {
                 const content = document.getElementById('replyContent'+comment_num).value;
                 document.getElementById('replyContent'+comment_num).value = '';
                 $.ajax({
                     type: "post",
-                    url: '/board/article/:comment/:content',
-                    data: {article_num: <%= article.BOARD_NO %>, comment_num: comment_num, content: content},
+                    url: '/board/article/:group/:content',
+                    data: {article_num: <%= article.BOARD_NO %>, group_num: group_num, content: content},
                     dataType:'text',
                     success: function(res) {
-                        alert(res);
-                        if(res === 'Comment has been removed.') {
+                        if(res == 'Reply has been posted.') {
                             location.reload();
+                        } else {
+                            alert('Something went wrong.');
                         }
                     }
                 });
@@ -161,7 +167,6 @@
                     dataType:'text',
                     success: function(res) {
                         if(res == 'Comment has been posted.') {
-                            console.log('1');
                             location.reload();
                         } else {
                             alert('Something went wrong.');

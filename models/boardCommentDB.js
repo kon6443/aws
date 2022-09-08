@@ -7,10 +7,16 @@ const util = require('util');
 // node native promisify
 const query = util.promisify(conn.query).bind(conn);
 
-async function getMaxGroupNum(article_num) {
+async function getNewCommentOrder(article_num, group_num) {
+    const sql = `select max(comment_order) as maxCommentOrder from comment where article_num=${article_num} and group_num=${group_num};`;
+    const return_val = await query(sql);
+    return return_val[0].maxCommentOrder + 1;
+}
+
+async function getNewGroupNum(article_num) {
     const sql = `select max(comment.group_num) as maxGroupNum from board left join comment on board.BOARD_NO=comment.article_num where board.BOARD_NO=${article_num};`;
-    const temp = await query(sql);
-    return temp[0].maxGroupNum;
+    const return_val = await query(sql);
+    return return_val[0].maxGroupNum + 1;
 }
 
 function convertDateFormat(date) {
@@ -51,7 +57,8 @@ exports.showTable = async () => {
 }
 
 exports.getComments = async (article_num) => {
-    const sql = "SELECT * FROM COMMENT WHERE article_num='"+article_num+"';";
+    // const sql = "SELECT * FROM COMMENT WHERE article_num='"+article_num+"';";
+    const sql = `select * from comment where article_num=${article_num} order by group_num, comment_order asc;`
     let comments = await query(sql);
     return comments
 }
@@ -61,21 +68,24 @@ exports.insertComment = async (article_num, author, content, length) => {
     const sql = `INSERT INTO COMMENT (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
     const time = getTime();
     const depth = 0;
-    const maxGroupNum = await getMaxGroupNum(article_num);
-    const group_num = maxGroupNum + 1;
-    comment_order = parseInt(length) + 1;
+    const group_num = await getNewGroupNum(article_num);
+    // const comment_order = parseInt(length) + 1;
+    const comment_order = await getNewCommentOrder(article_num, group_num);
     let values = [
         [article_num, author, time, depth, comment_order, group_num, content]
     ];
     await conn.query(sql, [values]);
 }
 
-exports.insertReply = async (article_num, comment_num, content) => {
+exports.insertReply = async (article_num, author, group_num, content) => {
+    const sql = `INSERT INTO COMMENT (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
     const time = getTime();
-    // let values = [
-    //     [article_num, author, time, depth, comment_order, group_num, content]
-    // ];
-    // await conn.query(sql, [values]);
+    const depth = 1;
+    const comment_order = await getNewCommentOrder(article_num, group_num);
+    let values = [
+        [article_num, author, time, depth, comment_order, group_num, content]
+    ];
+    await conn.query(sql, [values]);
 }
 
 exports.deleteComment = async (article_num, comment_num) => {

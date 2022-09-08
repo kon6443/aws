@@ -158,10 +158,10 @@ exports.deleteArticle = async (req, res) => {
 }
 
 exports.deleteComment = async (req, res) => {
-    const user = req.decoded;
+    const user = req.decoded.id;
     const { article_num, comment_num } = req.body;
-    const article = await boardDB.showArticleByNum(article_num);
-    if(user.id === article.AUTHOR) {
+    const commentAuthor = await boardCommentDB.getCommentAuthorByNum(comment_num);
+    if(user === commentAuthor) {
         await boardCommentDB.deleteComment(article_num, comment_num);
         return res.status(200).send('Comment has been removed.').end();
     } else {

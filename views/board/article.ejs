@@ -76,25 +76,26 @@
                                 </div>
                             </div>
                             <div class="row box" style="font-size: 25px;">
-                                <div class="col box col-md-12" style="font-size: 25px; height: 5vh;">
+                                <div class="col box col-md-8" style="font-size: 25px; height: 5vh;">
                                     <a> <%= comments[i].content %> </a>
+                                </div>
+                                <div class="col box col-md-2" style="font-size: 10px;">
+                                    <center>
+                                        <button type="button" id="commentsButton" onclick="edit()">Edit</button>
+                                    </center>
+                                </div>
+                                <div class="col box col-md-2" style="font-size: 10px;">
+                                    <center>
+                                        <button type="button" id="commentsButton" onclick="deleteComment(<%= comments[i].comment_num %>)">Delete</button>
+                                    </center>
                                 </div>
                             </div>
                             <% if((i+1==length) || (comments[i+1].comment_order==1)) { %>
                                 <div class="row box" style="font-size: 25px;">
-                                    <div class="col box col-md-6" style="font-size: 25px;"></div>
+                                    <div class="col box col-md-5" style="font-size: 25px;"></div>
                                     <div class="col box col-md-2" style="font-size: 10px;">
+                                    <div class="col box col-md-5" style="font-size: 25px;"></div>
                                         <button type="button" id="commentsButton" onclick="reply(<%= comments[i].comment_num %>)">Reply</button>
-                                    </div>
-                                    <div class="col box col-md-2" style="font-size: 10px;">
-                                        <center>
-                                            <button type="button" id="commentsButton" onclick="edit()">Edit</button>
-                                        </center>
-                                    </div>
-                                    <div class="col box col-md-2" style="font-size: 10px;">
-                                        <center>
-                                            <button type="button" id="commentsButton" onclick="deleteComment(<%= comments[i].comment_num %>)">Delete</button>
-                                        </center>
                                     </div>
                                 </div>
                                 <div id="replyText<%= comments[i].comment_num %>" class="row box" style="display: none;">
@@ -118,6 +119,9 @@
             
 		</div>
         <script>
+            function edit() {
+                alert('edit button has been clicked.');
+            }
             function submitReply(user, group_num) {
                 const content = document.getElementById('replyContent'+group_num).value;
                 document.getElementById('replyContent'+group_num).value = '';

@@ -104,6 +104,18 @@ exports.postComment = async (req, res) => {
     }
 }
 
+exports.editComment = async (req, res) => {
+    const user = req.decoded.id;
+    const { comment_num, content } = req.body;
+    const commentAuthor = await boardCommentDB.getCommentAuthorByNum(comment_num);
+    if(user === commentAuthor) {
+        await boardCommentDB.editCommentByNum(comment_num, content);
+        return res.status(200).send('Comment has been updated.').end();
+    } else {
+        return res.status(200).send('Account not matched.').end();
+    }
+}
+
 exports.postReply = async (req, res) => {
     const author = req.decoded.id;
     if(author) {

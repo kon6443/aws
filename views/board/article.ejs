@@ -79,24 +79,42 @@
                                 <div class="col box col-md-8" style="font-size: 25px; height: 5vh;">
                                     <a> <%= comments[i].content %> </a>
                                 </div>
-                                <div class="col box col-md-2" style="font-size: 10px;">
-                                    <center>
-                                        <button type="button" id="commentsButton" onclick="edit()">Edit</button>
-                                    </center>
-                                </div>
-                                <div class="col box col-md-2" style="font-size: 10px;">
-                                    <center>
+                                <% if(comments[i].content == 'deleted') { %>
+                                    <div class="col box col-md-2" style="font-size: 10px;">
+                                        <button type="button" id="commentsButton" onclick="edit()" disabled>Edit</button>
+                                    </div>
+                                    <div class="col box col-md-2" style="font-size: 10px;">
+                                        <button type="button" id="commentsButton" onclick="deleteComment(<%= comments[i].comment_num %>)" disabled>Delete</button>
+                                    </div>
+                                <% } else { %>
+                                    <div class="col box col-md-2" style="font-size: 10px;">
+                                        <button type="button" id="commentsButton" onclick="edit(<%= comments[i].comment_num %>)">Edit</button>
+                                    </div>
+                                    <div class="col box col-md-2" style="font-size: 10px;">
                                         <button type="button" id="commentsButton" onclick="deleteComment(<%= comments[i].comment_num %>)">Delete</button>
-                                    </center>
-                                </div>
+                                    </div>
+                                    
+                                    <div id="editComment<%= comments[i].comment_num %>" class="row box" style="display: none;">
+                                        <div class="row box">
+                                            <div class="col box col-md-9" style="font-size: 15px;" >
+                                                <textarea id="editContent<%= comments[i].comment_num %>" style="width: 100%;" ><%= comments[i].content %></textarea>
+                                            </div>
+                                            <div class="col box col-md-3" >
+                                                <button type="button" id="commentsButton" onclick="submitEditedComment(<%= comments[i].comment_num %>)" style="width: 100%;">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <% } %>
+
                             </div>
                             <% if((i+1==length) || (comments[i+1].comment_order==1)) { %>
                                 <div class="row box" style="font-size: 25px;">
                                     <div class="col box col-md-5" style="font-size: 25px;"></div>
                                     <div class="col box col-md-2" style="font-size: 10px;">
-                                    <div class="col box col-md-5" style="font-size: 25px;"></div>
                                         <button type="button" id="commentsButton" onclick="reply(<%= comments[i].comment_num %>)">Reply</button>
                                     </div>
+                                    <div class="col box col-md-5" style="font-size: 25px;"></div>
                                 </div>
                                 <div id="replyText<%= comments[i].comment_num %>" class="row box" style="display: none;">
                                     <div class="row box">
@@ -119,8 +137,30 @@
             
 		</div>
         <script>
-            function edit() {
-                alert('edit button has been clicked.');
+            function submitEditedComment(comment_num) {
+                const content = document.getElementById('editContent'+comment_num).value;
+                document.getElementById('editContent'+comment_num).value = '';
+                $.ajax({
+                    type: "put",
+                    url: '/board/:comment/:content',
+                    data: {comment_num: comment_num, content: content},
+                    dataType:'text',
+                    success: function(res) {
+                        if(res === 'Comment has been updated.') {
+                            location.reload();
+                        } else {
+                            alert('Something went wrong.');
+                        }
+                    }
+                });
+            }
+            function edit(comment_num) {
+                var x = document.getElementById('editComment'+comment_num);
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
             }
             function submitReply(user, group_num) {
                 const content = document.getElementById('replyContent'+group_num).value;

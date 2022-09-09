@@ -77,6 +77,11 @@ exports.insertComment = async (article_num, author, content, length) => {
     await conn.query(sql, [values]);
 }
 
+exports.editCommentByNum = async (comment_num, content) => {
+    const query = `UPDATE comment SET content='${content}' WHERE comment_num=${comment_num};`
+    await conn.query(query);
+}
+
 exports.insertReply = async (article_num, author, group_num, content) => {
     const sql = `INSERT INTO COMMENT (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
     const time = getTime();

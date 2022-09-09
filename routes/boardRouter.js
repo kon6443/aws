@@ -20,6 +20,7 @@ router.delete('/:id', boardMiddleWare.deleteArticle);
 router.delete('/:comment', boardMiddleWare.deleteComment);
 router.post('/article', boardMiddleWare.insertArticle);
 router.post('/article/:content', boardMiddleWare.postComment);
+router.put('/:comment/:content', boardMiddleWare.editComment);
 router.post('/article/:group/:content', boardMiddleWare.postReply);
 router.get('/article/:id', boardMiddleWare.editArticle);
 router.put('/article/:id', boardMiddleWare.submitEditedArticle);

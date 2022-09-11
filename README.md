@@ -9,7 +9,6 @@
 • RESTful <br>
 
 ## Planing to implement
-• Board - Comments <br>
 • Admin account <br>
 • Grop chat(invitation) <br>
 • Preventing duplicated login <br>

@@ -1,4 +1,4 @@
 FROM mysql
 
-env_file: 
-  - .env
+#env_file: 
+  #- .env

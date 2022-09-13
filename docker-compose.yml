@@ -5,15 +5,21 @@ services:
     restart: unless-stopped
     env_file: 
       - .env
-    container_name: mysql
+    container_name: mysql_db
     ports:
       - 3306:3306
     environment:
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_CONTAINER_NAME=${MYSQL_CONTAINER_NAME}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      #- MYSQL_USER=${MYSQL_USER}
+      #- MYSQL_DATABASE=${MYSQL_DATABASE}
+      #- MYSQL_CONTAINER_NAME=${MYSQL_CONTAINER_NAME}
+      #- MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=password
+      #- MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    command: # 명령어 실행
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    #volumes: 
+      #- /Users/jmlim/datadir:/usr/local/var/mysql # -v 옵션 (다렉토리 마운트 설정)
   server:
     depends_on:
       - mysql

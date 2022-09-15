@@ -12,13 +12,18 @@ const conn = mysql.createConnection({
     database: 'board_db'
 });
 
-conn.connect((err) => {
-    if(err) {
-        console.log(err);
-        throw err;
-    } else {
-        console.log('MySQL connected!');
-    }
-});
+// const conn = async () => {
+//     try {
+//         const connection = await mysql.createConnection({
+//             host: "localhost",
+//             user: process.env.SQL_USER,
+//             password: process.env.SQL_PASSWORD,
+//             database: 'board_db'
+//         });
+//         console.log('MySQL has been connected.');
+//     } catch(err) {
+//         console.log(err);
+//     }
+// };
 
 module.exports = conn;

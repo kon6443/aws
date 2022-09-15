@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  mysql:
+  mysqlDB:
     image: mysql
     restart: unless-stopped
     env_file: 
@@ -13,16 +13,18 @@ services:
       #- MYSQL_DATABASE=${MYSQL_DATABASE}
       #- MYSQL_CONTAINER_NAME=${MYSQL_CONTAINER_NAME}
       #- MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_ROOT_PASSWORD='password'
+      - MYSQL_USER=kon6443
+      - MYSQL_PASSWORD=password 
+      - MYSQL_ROOT_PASSWORD=password
       #- MYSQL_PASSWORD=${MYSQL_PASSWORD}
     command: # 명령어 실행
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     volumes: 
-      - ../docker_db:/var/lib/docker/volumes/db/  # -v 옵션 (다렉토리 마운트 설정)
+      - db:/var/lib/mysql  # -v 옵션 (다렉토리 마운트 설정)
   server:
     depends_on:
-      - mysql
+      - mysqlDB
     ports:
       - 80:80
     build: .
@@ -31,4 +33,4 @@ services:
     stdin_open: true
     tty: true
 volumes:
-    mysql:
+    db:

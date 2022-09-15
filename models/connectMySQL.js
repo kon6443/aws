@@ -12,6 +12,13 @@ const conn = mysql.createConnection({
     database: 'board_db'
 });
 
-conn.connect();
+conn.connect((err) => {
+    if(err) {
+        console.log(err);
+        throw err;
+    } else {
+        console.log('MySQL connected!');
+    }
+});
 
 module.exports = conn;

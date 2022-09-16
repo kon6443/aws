@@ -14,7 +14,7 @@ async function getNewCommentOrder(article_num, group_num) {
 }
 
 async function getNewGroupNum(article_num) {
-    const sql = `select max(comment.group_num) as maxGroupNum from board left join comment on board.BOARD_NO=comment.article_num where board.BOARD_NO=${article_num};`;
+    const sql = `select max(comment.group_num) as maxGroupNum from BOARD left join comment on BOARD.BOARD_NO=comment.article_num where BOARD.BOARD_NO=${article_num};`;
     const return_val = await query(sql);
     return return_val[0].maxGroupNum + 1;
 }
@@ -65,7 +65,7 @@ exports.getComments = async (article_num) => {
 
 exports.insertComment = async (article_num, author, content, length) => {
     // insert into comment (article_num, author, time, class, comment_order, group_num, content) VALUES (24, 'prac', '2022-09-02', 1, 1, 1, 'this is a comment content');
-    const sql = `INSERT INTO COMMENT (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
+    const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
     const time = getTime();
     const depth = 0;
     const group_num = await getNewGroupNum(article_num);
@@ -83,7 +83,7 @@ exports.editCommentByNum = async (comment_num, content) => {
 }
 
 exports.insertReply = async (article_num, author, group_num, content) => {
-    const sql = `INSERT INTO COMMENT (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
+    const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
     const time = getTime();
     const depth = 1;
     const comment_order = await getNewCommentOrder(article_num, group_num);

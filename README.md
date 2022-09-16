@@ -23,6 +23,9 @@
 ### Python: 
 &emsp; • sqlite. <br>
 
+### Sep 16, 2022
+• Dockerized. <br>
+
 ### Sep 09, 2022
 • Board - comment edit available now. <br>
 

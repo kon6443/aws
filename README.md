@@ -19,11 +19,11 @@
 
 ## Used skill stacks
 ### docker-compose
-    &emsp; • `docker-compose`: Consists of Node container and MySQL container. <br>
+&emsp; • `docker-compose`: Consists of Node container and MySQL container. <br>
 ### NodeJS 
-    &emsp; • Express, socket.io, bcrypt, dotenv, cookie-parser, ejs, jsonwebtoken, mongoose, MySQL, python-shell, ajax. <br>
+&emsp; • Express, socket.io, bcrypt, dotenv, cookie-parser, ejs, jsonwebtoken, mongoose, MySQL, python-shell, ajax. <br>
 ### Python 
-    &emsp; • sqlite. <br>
+&emsp; • sqlite. <br>
 
 ### Sep 16, 2022
 • Dockerized. <br>

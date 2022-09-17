@@ -25,6 +25,9 @@
 ### Python 
 &emsp; • sqlite. <br>
 
+### Sep 17, 2022
+• Published. <br>
+
 ### Sep 16, 2022
 • Dockerized. <br>
 

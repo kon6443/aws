@@ -4,9 +4,9 @@ const express = require("express");
 const router = express.Router();
 
 // Importing controller
-const userMiddleWare = require('../controllers/user/user.controller');
+const userMiddleWare = require('./user.controller');
 
-const auth = require("../controllers/authMiddleware");
+const auth = require("../../models/authentication/authMiddleware");
 router.use('/', auth);
 
 router.get('/', userMiddleWare.showMain);

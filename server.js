@@ -23,12 +23,12 @@ const connectSocket = require('./controllers/chat/connectSocket');
 const { connectMongoDB } = require('./models/connectMongoDB');
 
 // Routers.
-const homeRouter = require('./routes/homeRouter');
-const game2048Router = require('./routes/2048Router');
-const gameTetrisRouter = require('./routes/tetrisRouter');
-const userRouter = require('./routes/userRouter');
-const chatRouter = require('./routes/chatRouter');
-const boardRouter = require('./routes/boardRouter');
+const homeRouter = require('./controllers/home/homeRouter');
+const game2048Router = require('./controllers/2048/2048Router');
+const gameTetrisRouter = require('./controllers/tetris/tetrisRouter');
+const userRouter = require('./controllers/user/userRouter');
+const chatRouter = require('./controllers/chat/chatRouter');
+const boardRouter = require('./controllers/board/boardRouter');
 
 const port = 80;
 const server = app.listen(port, function() {

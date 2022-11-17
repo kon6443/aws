@@ -4,9 +4,9 @@ const express = require("express");
 const router = express.Router();
 
 // Importing controller
-const boardMiddleWare = require('../controllers/board/board.controller');
+const boardMiddleWare = require('./board.controller');
 
-const auth = require("../controllers/authMiddleware");
+const auth = require("../../models/authentication/authMiddleware");
 
 // path: /board/
 router.use('/', auth);

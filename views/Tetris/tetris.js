@@ -421,7 +421,6 @@ function rotateTetromino() {
       }
     }
   }
-  console.log("rotateTetromino currentRotateIndex: ", currentRotateIndex);
   showTetromino();
 }
 

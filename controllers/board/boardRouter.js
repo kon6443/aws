@@ -3,8 +3,8 @@
 const express = require("express");
 const router = express.Router();
 
-// Importing controller
-const boardMiddleWare = require('./board.controller');
+// Importing service
+const boardMiddleWare = require('./boardService');
 
 const auth = require("../../models/authentication/authMiddleware");
 

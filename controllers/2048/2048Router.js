@@ -4,7 +4,7 @@ const app = express();
 const router = express.Router();
 // const path = require('path');
 
-const game2048MiddleWare = require('./2048.controller');
+const game2048MiddleWare = require('./2048Service');
 
 // importing body-parser to create bodyParser object
 const bodyParser = require('body-parser');

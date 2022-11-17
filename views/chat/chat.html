@@ -24,64 +24,43 @@
 			<ul class="item-list">
 				<ul class="about">
                     <center>
-                        <form id="singin">
-                            <h1>Sign in is required to enter a chatroom</h1>
-                            <div class="field">
-                                <label for="signinID">ID:</label>
-                                <input type="text" id="signinID" name="signinID" placeholder="Enter your fullname" /><br><br>
-                            </div>
-                            <div class="field">
-                                <label for="signinPW">PW:</label>
-                                <input type="text" id="signinPW" name="signinPW" placeholder="Enter your password" /><br><br>
-                            </div>
-                            <button id="button" type="button" onclick="signInAjax()">Log in</button><br><br>
-                        </form>
-                        
-                        <form id="signup">
-                            <h1>Simple sign up here if you don't have an account</h1>
-                            <div class="field">
-                                <label for="id">ID:</label>
-                                <input type="text" id="id" name="id" placeholder="Enter your fullname" /><br><br>
-                            </div>
-                            <div class="field">
-                                <label for="pw">Address:</label>
-                                <input type="text" id="address" name="address" placeholder="Enter your address" /><br><br>
-                            </div>
-                            <div class="field">
-                                <label for="pw">PW:</label>
-                                <input type="text" id="pw" name="pw" placeholder="Enter your password" /><br><br>
-                            </div>
-							<div class="field">
-                                <label for="pwc">PW confirmation:</label>
-                                <input type="text" id="pwc" name="pwc" placeholder="PW confirmation" /><br><br>
-                            </div>
-                            <button id="button" type="button" onclick="SignUpAjax()">Submit</button><br><br>
-                        </form>
+                    <form id="signup">
+                        <h1>Sign up</h1>
+                        <div class="field">
+                            <label for="id">ID:</label>
+                            <input type="text" id="id" name="id" placeholder="Enter your fullname" /><br><br>
+                        </div>
+                        <div class="field">
+                            <label for="pw">Address:</label>
+                            <input type="text" id="address" name="address" placeholder="Enter your address" /><br><br>
+                        </div>
+                        <div class="field">
+                            <label for="pw">PW:</label>
+                            <input type="text" id="pw" name="pw" placeholder="Enter your password" /><br><br>
+                        </div>
+                        <div class="field">
+                            <label for="pwc">PW confirmation:</label>
+                            <input type="text" id="pwc" name="pwc" placeholder="PW confirmation" /><br><br>
+                        </div>
+                        <button id="button" type="button" onclick="SignUpAjax()">Submit</button><br><br>
+                    </form>
+                    <form id="singin">
+                        <h1>Sign in</h1>
+                        <div class="field">
+                            <label for="signinID">ID:</label>
+                            <input type="text" id="signinID" name="signinID" placeholder="Enter your fullname" /><br><br>
+                        </div>
+                        <div class="field">
+                            <label for="signinPW">PW:</label>
+                            <input type="text" id="signinPW" name="signinPW" placeholder="Enter your password" /><br><br>
+                        </div>
+                        <button id="button" type="button" onclick="signInAjax()">Log in</button><br><br>
+                    </form>
                     </center>
 				</ul>
 			</ul>			
 		</div>
-        <script src="/socket.io/socket.io.js"></script>
         <script>
-            function signInAjax() {
-                const signinID = document.getElementById("signinID").value;
-                const signinPW = document.getElementById("signinPW").value;
-                document.getElementById("signinID").value = "";
-                document.getElementById("signinPW").value = "";
-                $.ajax({
-                    type: "post",
-                    url: '/user/:id/:pw',
-                    data: {id:signinID,pw:signinPW},
-                    dataType:'text',
-                    success: function(res) {
-                        if(res.length == 0) {
-                            location.reload();
-                        } else {
-                            alert(res);
-                        }
-                    }
-                });
-            }
             function SignUpAjax() {
                 const id = document.getElementById("id").value;
                 const address = document.getElementById("address").value;
@@ -102,43 +81,34 @@
                 });
             }
 
-            $("#signinPW").on("keyup", function () {
-                if(window.event.keyCode==13 && $(this).val()!=""){
-                    signInAjax();
-                }
-            });
+            function signInAjax() {
+                const id = document.getElementById("signinID").value;
+                const pw = document.getElementById("signinPW").value;
+                document.getElementById("signinID").value = "";
+                document.getElementById("signinPW").value = "";
+                $.ajax({
+                    type: "post",
+                    url: '/user/:id/:pw',
+                    data: {id:id,pw:pw},
+                    dataType:'text',
+                    success: function(res) {
+                        if(res.length == 0) {
+                            location.reload();
+                        } else {
+                            alert(res);
+                        }
+                    }
+                });
+            }
+
             $("#pwc").on("keyup", function () {
                 if(window.event.keyCode==13 && $(this).val()!=""){
                     SignUpAjax();
                 }
             });
-
-            // receiving a message
-            socket.on('msg', function (data) {
-            // socket.on('msg', function (data) {
-                var msgLine = $('<div class="msgLine">');
-                var msgBox = $('<div class="msgBox">');
-                msgBox.append(data);
-                msgBox.css('display', 'inline-block');
-                msgLine.append(msgBox);
-                $('#chatContent').append(msgLine);
-                // auto scorll down when a user send something
-                chatContent.scrollTop = chatContent.scrollHeight;
-            });
-
-            // sending a message
-            $("#myChat").on("keyup", function () {
-                if (window.event.keyCode==13 && $(this).val()!="") {
-                    var msgLine = $('<div class="msgLine">');
-                    var msgBox = $('<div class="msgBox">');
-                    msgBox.append($(this).val());
-                    msgBox.css('display', 'inline-block');
-                    msgLine.css('text-align', 'right');
-                    msgLine.append(msgBox);
-                    $('#chatContent').append(msgLine);
-                    socket.emit('msg', $(this).val());
-                    $(this).val("");
-                    chatContent.scrollTop = chatContent.scrollHeight;
+            $("#signinPW").on("keyup", function () {
+                if(window.event.keyCode==13 && $(this).val()!=""){
+                    signInAjax();
                 }
             });
         </script>
@@ -151,73 +121,6 @@
                 background: black;
                 color: white;
                 display: inline-block;
-            }
-            * {
-                box-sizing: border-box;
-            }
-            .msgLine {
-                margin: 15px;
-            }
-            .msgBox {
-                border: 1px solid black;
-                background: black;
-                padding: 2px 5px;
-                border-radius: 10px;
-            }
-            #chatContent {
-                border: 1px solid #000;
-                width: 100%;
-                height: 200px;
-                margin-bottom: 10px;
-                overflow-y: auto;
-            }
-            #myChat {
-                width: 100%;
-            }
-            #msg, #myChat {
-                width: 80%;
-                height: 32px;
-                border-radius: 8px;
-            }
-            #send {
-                width: 16%;
-                height: 34px;
-                border-radius: 50px;
-                background: black;
-                color: white;
-            }
-
-
-            .msgLine2 {
-                margin: 15px;
-            }
-            .msgBox2 {
-                border: 1px solid black;
-                background: black;
-                padding: 2px 5px;
-                border-radius: 10px;
-            }
-            #chatContent2 {
-                border: 1px solid #000;
-                width: 100%;
-                height: 200px;
-                margin-bottom: 10px;
-                overflow-y: auto;
-            }
-            #myChat2 {
-                width: 100%;
-            }
-            #msg2, #myChat2 {
-                width: 80%;
-                height: 32px;
-                border-radius: 8px;
-            }
-            #send2 {
-                width: 16%;
-                height: 34px;
-                border-radius: 50px;
-                background: black;
-                color: white;
             }
         </style>
 		<!-- Option 1: Bootstrap Bundle with Popper -->

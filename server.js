@@ -41,6 +41,7 @@ connectMongoDB();
 app.use('/', homeRouter);
 app.use('/2048', game2048Router);
 app.use('/tetris', gameTetrisRouter);
-app.use('/user', userRouter);
-app.use('/chat', chatRouter);
+
 app.use('/board', boardRouter);
+app.use('/chat', chatRouter);
+app.use('/user', userRouter);

@@ -1,10 +1,10 @@
-// board.controller.js
-
+// boardService.js
 const express = require("express");
 const app = express();
 
 // importing body-parser to create bodyParser object
 const bodyParser = require('body-parser');
+
 // allows you to use req.body var when you use http post method.
 app.use(bodyParser.urlencoded({ extended: true }));
 

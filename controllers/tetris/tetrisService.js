@@ -1,4 +1,4 @@
-// tetris.controller.js
+// tetrisService.js
 
 const path = require('path');
 

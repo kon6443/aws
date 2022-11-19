@@ -1,4 +1,4 @@
-// login.controller.js
+// userService.js
 
 const express = require("express");
 const app = express();
@@ -11,10 +11,10 @@ app.set('view engine', 'ejs');
 // importing user schema.
 const User = require('../../models/user');
 
-const userValidateCheck = require("../../controllers/userValidateCheck");
-const encryptPassword = require("../../controllers/encryptPassword");
-const loginCheck = require("../../controllers/loginCheck");
-const issueToken = require("../../controllers/issueToken");
+const userValidateCheck = require("../userValidateCheck");
+const encryptPassword = require("../encryptPassword");
+const loginCheck = require("../loginCheck");
+const issueToken = require("../issueToken");
 
 // Main login page.
  exports.showMain = (req, res) => {

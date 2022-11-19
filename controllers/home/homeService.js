@@ -1,4 +1,4 @@
-// home.controller.js
+// homeServer.js
 
 const path = require('path');
 

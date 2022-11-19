@@ -1,10 +1,10 @@
-// loginRouter.js
+// userRouter.js
 
 const express = require("express");
 const router = express.Router();
 
-// Importing controller
-const userMiddleWare = require('./user.controller');
+// Importing userService
+const userMiddleWare = require('./userService');
 
 const auth = require("../../models/authentication/authMiddleware");
 router.use('/', auth);

@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 // Importing service
-const boardMiddleWare = require('./boardService');
+const boardMiddleWare = require('../../models/board/boardService');
 
 const auth = require("../../models/authentication/authMiddleware");
 

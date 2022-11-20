@@ -3,8 +3,8 @@
 const express = require("express");
 const router = express.Router();
 
-// Importing controller
-const chatMiddleWare = require('./chatService');
+// Importing chat service
+const chatMiddleWare = require('../../models/chat/chatService');
 const auth = require("../../models/authentication/authMiddleware");
 
 router.use('/', auth);

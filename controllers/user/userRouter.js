@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 // Importing userService
-const userMiddleWare = require('./userService');
+const userMiddleWare = require('../../models/user/userService');
 
 const auth = require("../../models/authentication/authMiddleware");
 router.use('/', auth);

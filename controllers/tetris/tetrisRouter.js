@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const router = express.Router();
 
-const tetrisMiddleWare = require('./tetrisService');
+const tetrisMiddleWare = require('../../models/tetris/tetrisService');
 
 app.use(express.static(__dirname + '/public'));
 

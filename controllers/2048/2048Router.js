@@ -4,7 +4,7 @@ const app = express();
 const router = express.Router();
 // const path = require('path');
 
-const game2048MiddleWare = require('./2048Service');
+const game2048MiddleWare = require('../../models/2048/2048Service');
 
 // importing body-parser to create bodyParser object
 const bodyParser = require('body-parser');
@@ -15,9 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');  
 
 router.get('/', game2048MiddleWare.displayGame);
-
 router.get('/:score', game2048MiddleWare.checkNewRecord);
-
 router.post('/:name/:score/:maxtile', game2048MiddleWare.saveRecord);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 
 const findUser = require('../models/findUser');
+const findUser = require('../findUser');
 
 module.exports = async function(id, address, pw, pwc) {
     if(!id) return 'Please type your ID.';

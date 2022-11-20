@@ -9,12 +9,14 @@ const path = require('path');
 app.set('view engine', 'ejs');
 
 // importing user schema.
-const User = require('../../models/user');
+const User = require('../DTO/user');
 
-const userValidateCheck = require("../userValidateCheck");
-const encryptPassword = require("../encryptPassword");
-const loginCheck = require("../loginCheck");
-const issueToken = require("../issueToken");
+const userDAO = require('./userDAO');
+
+// const userValidateCheck = require("../jwt/userValidateCheck");
+// const encryptPassword = require("../jwt/encryptPassword");
+// const loginCheck = require("../jwt/loginCheck");
+// const issueToken = require("../jwt/issueToken");
 
 // Main login page.
  exports.showMain = (req, res) => {
@@ -29,12 +31,18 @@ const issueToken = require("../issueToken");
 // Sign up.
 exports.signUp = async (req, res) => {
     const { id, address, pw, pwc } = req.body;
-    const errorFlag = await userValidateCheck(id, address, pw, pwc);
-    if(errorFlag) { // user typed something wrong.
-        return res.status(200).send(errorFlag);
-    }
+
+    // const errorFlag = await userValidateCheck(id, address, pw, pwc);
+    const errorFlag = await userDAO.checkValidation(id, address, pw, pwc);
+
+    // user typed something wrong.
+    if(errorFlag) return res.status(200).send(errorFlag);
+
     const user = new User(req.body);
-    user.pw = await encryptPassword(user.pw);
+
+    // user.pw = await encryptPassword(user.pw);
+    user.pw = await userDAO.encryptPassword(user.pw);
+
     user.save();
     return res.status(200).send('Your account has been created successfully, you can now log in.');
 }
@@ -42,9 +50,15 @@ exports.signUp = async (req, res) => {
 // Sing in.
 exports.signIn = async (req, res) => {
     const { id, pw } = req.body;
-    const userConfirmed = await loginCheck(id, pw);
+
+    // const userConfirmed = await loginCheck(id, pw);
+    const userConfirmed = await userDAO.loginCheck(id, pw);
+    
     if(userConfirmed) {
-        const token = await issueToken(id);
+
+        // const token = await issueToken(id);
+        const token = await userDAO.issueToken(id);
+
         return res
             .cookie('user', token,{maxAge: 30 * 60 * 1000}) // 1000 is a sec
             .end();

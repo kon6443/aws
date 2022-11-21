@@ -1,25 +1,25 @@
-// boardCommentDB.js
-// connecting MySQL
+// boardCommentDAO.js
 
-const conn = require('../models/connectMySQL');
+// connecting MySQL
+const conn = require('../connectMySQL');
 
 const util = require('util');
 // node native promisify
 const query = util.promisify(conn.query).bind(conn);
 
-async function getNewCommentOrder(article_num, group_num) {
+exports.getNewCommentOrder = async (article_num, group_num) => {
     const sql = `select max(comment_order) as maxCommentOrder from comment where article_num=${article_num} and group_num=${group_num};`;
     const return_val = await query(sql);
     return return_val[0].maxCommentOrder + 1;
 }
 
-async function getNewGroupNum(article_num) {
+exports.getNewGroupNum = async (article_num) => {
     const sql = `select max(comment.group_num) as maxGroupNum from BOARD left join comment on BOARD.BOARD_NO=comment.article_num where BOARD.BOARD_NO=${article_num};`;
     const return_val = await query(sql);
     return return_val[0].maxGroupNum + 1;
 }
 
-function convertDateFormat(date) {
+exports.convertDateFormat = (date) => {
     date = date.toLocaleString('default', {year:'numeric', month:'2-digit', day:'2-digit'});
     let year = date.substr(6,4);
     let month = date.substr(0,2);
@@ -28,17 +28,17 @@ function convertDateFormat(date) {
     return convertedDate;
 }
 
-function convertTableDateFormat(table) {
+exports.convertTableDateFormat = (table) => {
     for(let i=0;i<table.length;i++) {
-        table[i].POST_DATE = convertDateFormat(table[i].POST_DATE);
-        table[i].UPDATE_DATE = convertDateFormat(table[i].UPDATE_DATE);
+        table[i].POST_DATE = this.convertDateFormat(table[i].POST_DATE);
+        table[i].UPDATE_DATE = this.convertDateFormat(table[i].UPDATE_DATE);
     }
     return table;
 }
 
-function convertArticleDateFormat(article) {
-    article.POST_DATE = convertDateFormat(article.POST_DATE);
-    article.UPDATE_DATE = convertDateFormat(article.UPDATE_DATE);
+exports.convertArticleDateFormat = (article) => {
+    article.POST_DATE = this.convertDateFormat(article.POST_DATE);
+    article.UPDATE_DATE = this.convertDateFormat(article.UPDATE_DATE);
     return article;
 }
 
@@ -52,7 +52,7 @@ function getTime() {
 
 exports.showTable = async () => {
     let table = await query("SELECT * FROM BOARD ORDER BY BOARD_NO DESC;");
-    table = convertTableDateFormat(table);
+    table = this.convertTableDateFormat(table);
     return table;
 }
 
@@ -68,9 +68,9 @@ exports.insertComment = async (article_num, author, content, length) => {
     const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
     const time = getTime();
     const depth = 0;
-    const group_num = await getNewGroupNum(article_num);
+    const group_num = await this.getNewGroupNum(article_num);
     // const comment_order = parseInt(length) + 1;
-    const comment_order = await getNewCommentOrder(article_num, group_num);
+    const comment_order = await this.getNewCommentOrder(article_num, group_num);
     let values = [
         [article_num, author, time, depth, comment_order, group_num, content]
     ];
@@ -86,7 +86,7 @@ exports.insertReply = async (article_num, author, group_num, content) => {
     const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
     const time = getTime();
     const depth = 1;
-    const comment_order = await getNewCommentOrder(article_num, group_num);
+    const comment_order = await this.getNewCommentOrder(article_num, group_num);
     let values = [
         [article_num, author, time, depth, comment_order, group_num, content]
     ];

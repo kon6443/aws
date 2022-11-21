@@ -13,10 +13,33 @@ const path = require('path');
 // allows you to ejs view engine.
 app.set('view engine', 'ejs');
     
-const boardDB = require('../../models/boardDBController');
-const boardCommentDB = require('../../models/boardCommentDB');
+const boardDAO = require('./boardDAO');
+const boardCommentDAO = require('./boardCommentDAO');
 
-function getTitlesIncludeString(titles, search) {
+exports.convertDateFormat = (date) => {
+    date = date.toLocaleString('default', {year:'numeric', month:'2-digit', day:'2-digit'});
+    let year = date.substr(6,4);
+    let month = date.substr(0,2);
+    let day = date.substr(3,2);
+    let convertedDate = `${year}-${month}-${day}`;
+    return convertedDate;
+}
+
+exports.convertTableDateFormat = (table) => {
+    for(let i=0;i<table.length;i++) {
+        table[i].POST_DATE = this.convertDateFormat(table[i].POST_DATE);
+        table[i].UPDATE_DATE = this.convertDateFormat(table[i].UPDATE_DATE);
+    }
+    return table;
+}
+
+exports.convertArticleDateFormat = (article) => {
+    article.POST_DATE = this.convertDateFormat(article.POST_DATE);
+    article.UPDATE_DATE = this.convertDateFormat(article.UPDATE_DATE);
+    return article;
+}
+
+exports.getTitlesIncludeString = async (titles, search) => {
     let result = [];
     for(let i=0;i<titles.length;i++) {
         if(titles[i].includes(search)) result.push(titles[i]);
@@ -24,7 +47,7 @@ function getTitlesIncludeString(titles, search) {
     return result;
 }
 
-async function getPageItems(articles_length, page, limit) {
+ exports.getPageItems = async (articles_length, page, limit) => {
     page = Math.max(1, parseInt(page));
     limit = Math.max(1, parseInt(limit));
     page = !isNaN(page)?page:1;
@@ -40,12 +63,16 @@ async function getPageItems(articles_length, page, limit) {
     return obj;
 }
 
+/**
+ * ===============================================================================================================================
+ */
 // Main login page.
 exports.showMain = async (req, res, next) => {
     if(req.query.search) return next();
     let { search, page, limit } = req.query;
-    const articles = await boardDB.showTable();
-    const boardObject = await getPageItems(articles.length, page, limit);
+    let articles = await boardDAO.getAllTables();
+    articles = this.convertTableDateFormat(articles);
+    const boardObject = await this.getPageItems(articles.length, page, limit);
     return res.render(path.join(__dirname, '../../views/board/board'), {
         articles: articles, 
         user: (req.decoded) ? (req.decoded.id) : ('Guest'),
@@ -61,11 +88,12 @@ exports.showMain = async (req, res, next) => {
 
 exports.searchByTitle = async (req, res) => {
     let { search, page, limit } = req.query;
-    let articles = await boardDB.getMatchingArticles(search);
+    let articles = await boardDAO.getMatchingArticles(search);
+    articles = this.convertTableDateFormat(articles);
     if(articles.length === 0) {
         return res.send("<script>alert('No matching article.'); window.location.href = '/board';</script>");
     }
-    const boardObject = await getPageItems(articles.length, page, limit);
+    const boardObject = await this.getPageItems(articles.length, page, limit);
     return res.render(path.join(__dirname, '../../views/board/board'), {
         articles: articles,
         user: (req.decoded) ? (req.decoded.id) : ('Guest'),
@@ -85,8 +113,9 @@ exports.showPost = async (req, res, next) => {
     const user = req.decoded;
     if(user) {
         const article_num = req.params.id;
-        let article = await boardDB.showArticleByNum(article_num);
-        let comments = await boardCommentDB.getComments(article_num);
+        let article = await boardDAO.showArticleByNum(article_num);
+        article = this.convertArticleDateFormat(article);
+        let comments = await boardCommentDAO.getComments(article_num);
         return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article, comments: comments, length: comments.length});
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
@@ -97,7 +126,7 @@ exports.postComment = async (req, res) => {
     const user = req.decoded;
     if(user) {
         const {content, article_num, length} = req.body;
-        await boardCommentDB.insertComment(article_num, user.id, content, length);
+        await boardCommentDAO.insertComment(article_num, user.id, content, length);
         return res.status(200).send('Comment has been posted.');
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
@@ -107,9 +136,9 @@ exports.postComment = async (req, res) => {
 exports.editComment = async (req, res) => {
     const user = req.decoded.id;
     const { comment_num, content } = req.body;
-    const commentAuthor = await boardCommentDB.getCommentAuthorByNum(comment_num);
+    const commentAuthor = await boardCommentDAO.getCommentAuthorByNum(comment_num);
     if(user === commentAuthor) {
-        await boardCommentDB.editCommentByNum(comment_num, content);
+        await boardCommentDAO.editCommentByNum(comment_num, content);
         return res.status(200).send('Comment has been updated.').end();
     } else {
         return res.status(200).send('Account not matched.').end();
@@ -120,7 +149,7 @@ exports.postReply = async (req, res) => {
     const author = req.decoded.id;
     if(author) {
         const { article_num, group_num, content } = req.body;
-        await boardCommentDB.insertReply(article_num, author, group_num, content);
+        await boardCommentDAO.insertReply(article_num, author, group_num, content);
         return res.status(200).send('Reply has been posted.');
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
@@ -130,7 +159,7 @@ exports.postReply = async (req, res) => {
 exports.autoComplete = async (req, res, next) => {
     if(req.query.search) return next();
     const keyStroke = req.query.keyStroke;
-    const titles = await boardDB.getAllTitles();
+    const titles = await boardDAO.getAllTitles();
     const result = await getTitlesIncludeString(titles, keyStroke);
     return res.status(200).send(result).end();
 }
@@ -150,7 +179,7 @@ exports.insertArticle = async (req, res) => {
     const { title, content } = req.body;
     if(user) {
         const author = user.id;
-        await boardDB.insert(title, content, author);
+        await boardDAO.insert(title, content, author);
         return res.status(200).send('Article has been posted.').end(); 
     } else {
         return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
@@ -161,9 +190,10 @@ exports.deleteArticle = async (req, res, next) => {
     if(req.body.comment_num) return next();
     const user = req.decoded;
     const { article_num } = req.body;
-    const article = await boardDB.showArticleByNum(article_num);
+    let article = await boardDAO.showArticleByNum(article_num);
+    article = this.convertArticleDateFormat(article);
     if(user.id === article.AUTHOR) {
-        await boardDB.deleteByNum(article_num);
+        await boardDAO.deleteByNum(article_num);
         return res.status(200).send('Article has been removed.').end(); 
     } else {
         return res.status(200).send('Account not matched.').end();
@@ -173,9 +203,9 @@ exports.deleteArticle = async (req, res, next) => {
 exports.deleteComment = async (req, res) => {
     const user = req.decoded.id;
     const { comment_num } = req.body;
-    const commentAuthor = await boardCommentDB.getCommentAuthorByNum(comment_num);
+    const commentAuthor = await boardCommentDAO.getCommentAuthorByNum(comment_num);
     if(user === commentAuthor) {
-        await boardCommentDB.deleteComment(comment_num);
+        await boardCommentDAO.deleteComment(comment_num);
         return res.status(200).send('Comment has been removed.').end();
     } else {
         return res.status(200).send('Account not matched.').end();
@@ -185,7 +215,8 @@ exports.deleteComment = async (req, res) => {
 exports.editArticle = async (req, res) => {
     const user = req.decoded;
     const article_num = req.params.id;
-    const article = await boardDB.showArticleByNum(article_num);
+    let article = await boardDAO.showArticleByNum(article_num);
+    article = convertArticleDateFormat(article);
     if(user.id === article.AUTHOR) {
         return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
     }
@@ -196,9 +227,10 @@ exports.submitEditedArticle = async (req, res) => {
     const article_num = req.body.id;
     const title = req.body.title;
     const content = req.body.content;
-    let article = await boardDB.showArticleByNum(article_num);
+    let article = await boardDAO.showArticleByNum(article_num);
+    article = convertArticleDateFormat(article);
     const date_obj = new Date();
     article.UPDATE_DATE = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
-    await boardDB.editArticle(article_num, title, content, article.UPDATE_DATE);
+    await boardDAO.editArticle(article_num, title, content, article.UPDATE_DATE);
     return res.status(200).send('Your article has been editied.');
 }

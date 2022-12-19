@@ -1,4 +1,4 @@
-// homeServer.js
+// homeService.js
 
 const path = require('path');
 

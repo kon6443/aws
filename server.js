@@ -29,6 +29,7 @@ const gameTetrisRouter = require('./controllers/tetris/tetrisRouter');
 const userRouter = require('./controllers/user/userRouter');
 const chatRouter = require('./controllers/chat/chatRouter');
 const boardRouter = require('./controllers/board/boardRouter');
+const testRouter = require('./controllers/test/testRouter');
 
 const port = 80;
 const server = app.listen(port, function() {
@@ -45,3 +46,4 @@ app.use('/tetris', gameTetrisRouter);
 app.use('/board', boardRouter);
 app.use('/chat', chatRouter);
 app.use('/user', userRouter);
+app.use('/test', testRouter);

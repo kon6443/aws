@@ -8,5 +8,6 @@ router.use('/', auth);
 
 // Home page.
 router.get('/', homeMiddleWare.showHome);
+router.use(homeMiddleWare.errorHandler);
 
 module.exports = router;

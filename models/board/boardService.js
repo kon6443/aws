@@ -16,6 +16,10 @@ app.set('view engine', 'ejs');
 const boardDAO = require('./boardDAO');
 const boardCommentDAO = require('./boardCommentDAO');
 
+/**
+ * ====== Methods ===========================================================================================================
+ */
+
 exports.convertDateFormat = (date) => {
     date = date.toLocaleString('default', {year:'numeric', month:'2-digit', day:'2-digit'});
     let year = date.substr(6,4);
@@ -160,7 +164,7 @@ exports.autoComplete = async (req, res, next) => {
     if(req.query.search) return next();
     const keyStroke = req.query.keyStroke;
     const titles = await boardDAO.getAllTitles();
-    const result = await getTitlesIncludeString(titles, keyStroke);
+    const result = await this.getTitlesIncludeString(titles, keyStroke);
     return res.status(200).send(result).end();
 }
 
@@ -233,4 +237,10 @@ exports.submitEditedArticle = async (req, res) => {
     article.UPDATE_DATE = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
     await boardDAO.editArticle(article_num, title, content, article.UPDATE_DATE);
     return res.status(200).send('Your article has been editied.');
+}
+
+exports.errorHandler = (err, req, res, next) => {
+    if(err.message==='Invalid user') {
+        res.render(path.join(__dirname, '../../views/board/board'));
+    }
 }

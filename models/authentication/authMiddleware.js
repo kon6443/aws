@@ -10,10 +10,9 @@ module.exports = (req, res, next) => {
         return next();
     }
     // autorized failed
-    catch (error) {
+    catch (err) {
         // Token has been expired
-        if (error.name === 'TokenExpiredError') {
-            console.log('auth TokenExpiredError');
+        if (err.name === 'TokenExpiredError') {
             next();
             // return res.status(419).json({
             //     code: 419,
@@ -21,8 +20,7 @@ module.exports = (req, res, next) => {
             // }); 
         }
         // JsonWebTokenError
-        if (error.name === 'JsonWebTokenError') {
-            // console.log('JsonWebTokenError');
+        if (err.name === 'JsonWebTokenError') {
             next();
             // return res.status(401).json({
             //     code: 401,

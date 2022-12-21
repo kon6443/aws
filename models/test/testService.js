@@ -2,16 +2,25 @@
 
 const path = require('path');
 
-const sayHello = require('../../tests/app.spec').sayHello;
+// const sayHello = require('../../tests/prac.spec').sayHello;
 
-exports.showTest = (req, res) => {    
-    // describe('App test!', function () {
-    //     it('sayHello should return hello', function (done) {
-    //         if(sayHello() === 'hello') {
-    //             done();
-    //         }
-    //     });
-    // });
+exports.showTest = (req, res, next) => {    
+    try {
+        let param = req.param.var;
+        if(!param) {
+            throw new Error('Parameter error');
+        }
+    } catch(e) {
+        next(e);
+    } finally {
+        return res.sendFile(path.join(__dirname, '../../views/test/test.html'));
+    }
+}
 
-    return res.sendFile(path.join(__dirname, '../../views/test/test.html'));
+exports.errorHandler = (err, req, res, next) => {
+    console.log(err);
+    if(err.message==='Parameter error') {
+        console.log(err);
+        res.status(400).json({ message: "Parameter error" });
+    }
 }

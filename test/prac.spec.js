@@ -1,10 +1,5 @@
 const assert = require('assert');
-
-// module.exports = {
-//   sayHello: function () {
-//     return 'hello';
-//   }
-// }
+const chai = require('chai');
 
 describe("pow", function() {
     it("n squared of a given number", function() {

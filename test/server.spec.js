@@ -1,11 +1,11 @@
 const request = require('supertest');
 const expect = require('chai').expect;
-const server = require('../server'); 
+const app = require('../app'); 
 
 describe('API Endpoint Test', () => {
   describe('GET /test', () => {
     it('response with html', (done) => {
-      request(server)
+      request(app)
         .get('/test/')
         .expect('Content-Type','text/html; charset=UTF-8')
         .expect(200)
@@ -23,7 +23,7 @@ describe('API Endpoint Test', () => {
     it('User confirming', (done) => {
       console.log();
       console.log('User confirming...');
-      request(server)
+      request(app)
         .post('/user/:id/:pw')
         .send({id:'one', pw:'one'})
         .set('Content-Type', 'application/json')

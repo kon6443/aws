@@ -1,80 +1,69 @@
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let should = chai.should();
-let server = require('../server'); 
-
-chai.use(chaiHttp);
+const request = require('supertest');
+const expect = require('chai').expect;
+const server = require('../server'); 
 
 describe('API Endpoint Test', () => {
-  describe('GET request on /test', () => {
-    it('should return test.html file', (done) => {
-      chai.request(server)
-      .get('/test')
-      .end((err, res) => {
-        res.should.have.status(200);
-        done();
-      });
+  describe('GET /test', () => {
+    it('response with html', (done) => {
+      request(server)
+        .get('/test/')
+        .expect('Content-Type','text/html; charset=UTF-8')
+        .expect(200)
+        .end((err, res) => {
+          if(err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
     });
   });
 
-//   describe('POST request on /user with data', () => {
-//     it('should return 201', (done) => {
-//       let params = {
-//         userId: '123'
-//       };
+  describe('POST /user/:id/:pw', () => {
+    it('User confirming', (done) => {
+      console.log();
+      console.log('User confirming...');
+      request(server)
+        .post('/user/:id/:pw')
+        .send({id:'one', pw:'one'})
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .end((err, req, res) => {
+          console.log('body: ', req.body);
+          if(err) {
+            done(err);
+          } else {
+            done();
+          }
+        });
 
-//       chai.request(server)
-//       .post('/user')
-//       .send(params)
-//       .end((err, res) => {
-//         res.should.have.status(201);
-//         res.body.status.should.equal('success');
-//         res.body.userId.should.equal(params.userId);
-//         done();
-//       });
-//     });
-//   });
+      // const userConfirmed = await this.loginCheck(id, pw);
+      // expect(userConfirmed).to.be.equal(1);
+    });
 
-//   describe('PUT request on /user with data', () => {
-//     it('should return update data', (done) => {
-//       let params = {
-//         data: 'abc'
-//       };
+    // it('Issuing a token.', async (done) => {
+    //   const token = await this.issueToken(id);
+    //   res
+    //     .cookie('user', token,{maxAge: 30 * 60 * 1000}) // 1000 is a sec
+    //     .end();
 
-//       chai.request(server)
-//       .put('/user/123')
-//       .send(params)
-//       .end((err, res) => {
-//         res.should.have.status(200);
-//         res.body.status.should.equal('updated');
-//         res.body.data.should.equal('abc');
-//         done();
-//       });
-//     });
-//   });
+    //   expect(typeof(token)).to.be.equal(typeof(String));
+    // });
 
-//   describe('DELETE request on /user', () => {
-//     it('should return deleted userId', (done) => {
-//       chai.request(server)
-//       .delete('/user/123')
-//       .end((err, res) => {
-//         res.should.have.status(200);
-//         res.body.status.should.equal('deleted');
-//         res.body.userId.should.equal('123');
-//         done();
-//       });
-//     });
-//   });
 
-//   describe('request on unknown uri', () => {
-//     it('should return 404', (done) => {
-//       chai.request(server)
-//       .get('/nowhere')
-//       .end((err, res) => {
-//         res.should.have.status(404);
-//         done();
-//       });
-//     });
-//   });
+    // it('Sending a user token.', async (done) => {
+    //   request(server)
+    //     .post('/user/:id/:pw')
+    //     .expect()
+    //     .end((err, res) => {
+    //       if(err) {
+    //         done(err);
+    //       } else {
+    //         done();
+    //       }
+    //     });
+    // });
+    
+  });
 
 });

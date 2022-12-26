@@ -5,16 +5,18 @@ const path = require('path');
 // const sayHello = require('../../tests/prac.spec').sayHello;
 
 exports.showTest = (req, res, next) => {    
-    try {
-        let param = req.param.var;
-        if(!param) {
-            throw new Error('Parameter error');
-        }
-    } catch(e) {
-        next(e);
-    } finally {
-        return res.sendFile(path.join(__dirname, '../../views/test/test.html'));
-    }
+    res.status(200).sendFile(path.join(__dirname, '../../views/test/test.html'));
+
+    // try {
+    //     let param = req.param.var;
+    //     if(!param) {
+    //         throw new Error('Parameter error');
+    //     }
+    // } catch(e) {
+    //     next(e);
+    // } finally {
+    //     return res.status(200).sendFile(path.join(__dirname, '../../views/test/test.html'));
+    // }
 }
 
 exports.errorHandler = (err, req, res, next) => {

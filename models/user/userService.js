@@ -95,6 +95,8 @@ exports.signUp = async (req, res) => {
 // Sing in.
 exports.signIn = async (req, res) => {
     const { id, pw } = req.body;
+    console.log('this is a post method.');
+    console.log('id: ',id, ', pw: ', pw);
     const userConfirmed = await this.loginCheck(id, pw);
     if(userConfirmed) {
         const token = await this.issueToken(id);

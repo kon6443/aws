@@ -25,6 +25,9 @@
 ### Python 
 &emsp; • sqlite. <br>
 
+### Dec 27, 2022
+• Working on TDD. <br>
+
 ### Sep 17, 2022
 • Published. <br>
 

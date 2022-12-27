@@ -92,6 +92,7 @@
                     data: {id:id,pw:pw},
                     dataType:'text',
                     success: function(res) {
+                        console.log('done: ', res);
                         if(res.length == 0) {
                             location.reload();
                         } else {

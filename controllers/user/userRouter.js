@@ -3,6 +3,11 @@
 const express = require("express");
 const router = express.Router();
 
+// importing body-parser to create bodyParser object
+const bodyParser = require('body-parser');
+// allows you to use req.body var when you use http post method.
+router.use(bodyParser.urlencoded({ extended: true }));
+
 // Importing userService
 const userMiddleWare = require('../../models/user/userService');
 

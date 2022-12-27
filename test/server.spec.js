@@ -20,23 +20,27 @@ describe('API Endpoint Test', () => {
   });
 
   describe('POST /user/:id/:pw', () => {
-    it('User confirming', (done) => {
-      console.log();
-      console.log('User confirming...');
-      request(app)
-        .post('/user/:id/:pw')
-        .send({id:'one', pw:'one'})
-        .set('Content-Type', 'application/json')
-        .set('Accept', 'application/json')
-        .end((err, req, res) => {
-          console.log('body: ', req.body);
-          if(err) {
-            done(err);
-          } else {
-            done();
-          }
-        });
-
+    it('User confirming', async function() {
+      this.timeout(50000);
+      var payload = {id:"one",pw:"one"};
+      payload = JSON.stringify(payload);
+      try {
+        const res = await request(app)
+        .post('/user/:id/:pw/')
+        // .set('Content-Type', 'application/json')
+        // .set('Content-Type', 'string')
+        .send(payload)
+        // .expect('Content-Type', '/json/')
+        .expect(200);
+      } catch(e) {
+        console.log(e);
+      }
+      
+      // console.log('1');
+      // console.log('body: ', res.body);
+      // const cookie = res.headers('user');
+      // console.log(cookie);
+      
       // const userConfirmed = await this.loginCheck(id, pw);
       // expect(userConfirmed).to.be.equal(1);
     });

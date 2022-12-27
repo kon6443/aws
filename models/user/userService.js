@@ -44,7 +44,9 @@ exports.comparePassword = async (typedPw, dbPw) => {
 }
 
 exports.loginCheck = async (id, clientTypedPw) => {
+    console.log('1-1');
     const user = await userDAO.findById(id);
+    console.log('1-2');
     if(user==null) return false;
     const userConfirmed = await bcrypt.compare(clientTypedPw, user.pw); 
     return userConfirmed;
@@ -94,10 +96,17 @@ exports.signUp = async (req, res) => {
 
 // Sing in.
 exports.signIn = async (req, res) => {
-    const { id, pw } = req.body;
-    console.log('this is a post method.');
-    console.log('id: ',id, ', pw: ', pw);
+    // const { id, pw } = req.body;
+    var param = req.body;
+    try {
+        param = JSON.parse(Object.keys(param)[0]);
+    } catch(err) {
+        // console.log(err);
+    }
+    const {id, pw} = param;
+    console.log('1');
     const userConfirmed = await this.loginCheck(id, pw);
+    console.log('2');
     if(userConfirmed) {
         const token = await this.issueToken(id);
         return res

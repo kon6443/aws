@@ -1,5 +1,5 @@
 const request = require('supertest');
-const expect = require('chai').expect;
+// const expect = require('chai').expect;
 const path = require('path');
 const mongoose = require('mongoose');
 
@@ -29,7 +29,7 @@ beforeAll(async () => {
   });
 });
 
-describe('Basic Get method test', () => {
+describe('CRUD API testing', () => {
   describe('GET /test', () => {
     it('response with html', (done) => {
       request(app)
@@ -66,15 +66,19 @@ describe('Basic Get method test', () => {
     });
 
     it('Verifying a token', async () => {
-      console.log('Cookies: ', cookies,);
-      const test = await request(app)
+      const res = await request(app)
         .get('/user/')
         .set('Cookie', cookies)
         .expect(200);
-      // console.log(test);
-      // expect(test.body.user.id).toBe('one');
+      expect(res.text.includes(`<div class="login">`)).toEqual(true);
     });
     
+    it('Removing token', async () => {
+      const res = await request(app)
+        .delete('/logout/');
+      expect(res.headers['set-cookie']).toEqual(undefined);
+    });
+
   });
 });
 

@@ -25,6 +25,9 @@
 ### Python 
 &emsp; • sqlite. <br>
 
+### Jan 15, 2023
+• Working on login with Kakao. <br>
+
 ### Dec 29, 2022
 • Jest CRUD API TDD. <br>
 

@@ -1,27 +1,18 @@
 const request = require('supertest');
-// const expect = require('chai').expect;
 const path = require('path');
 const mongoose = require('mongoose');
 
 // calling enviroment variable from .env file
-// require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-const app = require('../app'); 
-
-// Cookies.
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
+const app = require('../app');
 
 beforeAll(async () => {
+  /**
+   * Connecting MongoDB once the test has been started.
+   */
   await mongoose.connect(
-    process.env.MONGO_URI,
-    {
-      // useNewUrlPaser: true,
-      // useUnifiedTofology: true,
-      // useCreateIndex: true,
-      // useFindAndModify: false,
-    }
+    process.env.MONGO_URI
   )
   .then(() => console.log('MongoDB conected...'))
   .catch((err) => {
@@ -46,18 +37,16 @@ describe('CRUD API testing', () => {
     });
   });
 
-  describe('POST /user/:id/:pw', () => {
+  describe('JWT token test', () => {
+    // In order to use cookies in more than one `it` methods. 
     var cookies;
-
     it('Issuing a token', async function() {
-      // this.timeout(50000);
       var payload = {id:"one",pw:"one"};
       payload = JSON.stringify(payload);
       try {
         var res = await request(app)
         .post('/user/:id/:pw/')
         .send(payload)
-        // .expect('set-cookie', 'Expires=Wed');
         .expect(200);
       } catch(e) {
         console.log(e);
@@ -83,5 +72,8 @@ describe('CRUD API testing', () => {
 });
 
 afterAll(async () => {
+  /**
+   * Closing MongoDB.
+   */
   await mongoose.connection.close();
 });

@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 
 const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
 
 // allows you to ejs view engine.
 app.set('view engine', 'ejs');
@@ -71,10 +72,11 @@ exports.issueToken = async (id, address) => {
 // Main login page.
  exports.showMain = (req, res) => {
     const user = req.decoded;
+    const request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI;
     if(user) {
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/user/user.html'));
+        return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
 }
 

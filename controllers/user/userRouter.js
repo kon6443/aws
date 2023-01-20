@@ -8,6 +8,9 @@ const bodyParser = require('body-parser');
 // allows you to use req.body var when you use http post method.
 router.use(bodyParser.urlencoded({ extended: true }));
 
+const path = require('path');
+path.join(__dirname, 'public');
+
 // Importing userService
 const userMiddleWare = require('../../models/user/userService');
 
@@ -17,6 +20,8 @@ router.use('/', auth);
 router.get('/', userMiddleWare.showMain);
 router.post('/:id/:address/:pw/:pwc', userMiddleWare.signUp);
 router.post('/:id/:pw', userMiddleWare.signIn);
+
+// router.get('/auth/kakao/callback', userMiddleWare.getAuthorizationCode);
 router.delete('/logout', userMiddleWare.signOut);
 
 module.exports = router;

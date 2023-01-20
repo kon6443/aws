@@ -7,6 +7,6 @@ exports.showMain = (req, res) => {
     if(user) {
         return res.render(path.join(__dirname, '../../views/chat/chat'), {header:user.id + "'s message"});
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/chat/chat.html'));
+        return res.sendFile(path.join(__dirname, '../../views/user/loginPage.html'));
     }
 };

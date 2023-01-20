@@ -174,7 +174,9 @@ exports.boardWrite = (req, res) => {
     if(user) {
         return res.render(path.join(__dirname, '../../views/board/boardWrite'), {user:user});
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+        console.log('a');
+        const request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI;
+        return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
 }
 
@@ -186,7 +188,7 @@ exports.insertArticle = async (req, res) => {
         await boardDAO.insert(title, content, author);
         return res.status(200).send('Article has been posted.').end(); 
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+        return res.sendFile(path.join(__dirname, '../../views/user/loginPage.html'));
     }
 }
 

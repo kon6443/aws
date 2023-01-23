@@ -70,6 +70,9 @@ exports.getTitlesIncludeString = async (titles, search) => {
 /**
  * ===============================================================================================================================
  */
+
+var request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI;
+
 // Main login page.
 exports.showMain = async (req, res, next) => {
     if(req.query.search) return next();
@@ -122,7 +125,7 @@ exports.showPost = async (req, res, next) => {
         let comments = await boardCommentDAO.getComments(article_num);
         return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article, comments: comments, length: comments.length});
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+        return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
 }
 
@@ -133,7 +136,7 @@ exports.postComment = async (req, res) => {
         await boardCommentDAO.insertComment(article_num, user.id, content, length);
         return res.status(200).send('Comment has been posted.');
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+        return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
 }
 
@@ -156,7 +159,7 @@ exports.postReply = async (req, res) => {
         await boardCommentDAO.insertReply(article_num, author, group_num, content);
         return res.status(200).send('Reply has been posted.');
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/board/login.html'));
+        return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
 }
 
@@ -174,8 +177,6 @@ exports.boardWrite = (req, res) => {
     if(user) {
         return res.render(path.join(__dirname, '../../views/board/boardWrite'), {user:user});
     } else {
-        console.log('a');
-        const request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI;
         return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
 }
@@ -188,7 +189,7 @@ exports.insertArticle = async (req, res) => {
         await boardDAO.insert(title, content, author);
         return res.status(200).send('Article has been posted.').end(); 
     } else {
-        return res.sendFile(path.join(__dirname, '../../views/user/loginPage.html'));
+        return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
 }
 

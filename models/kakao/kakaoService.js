@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 exports.getToken = async (AUTHORIZE_CODE) => {
     const options = {
-        uri: process.env.TOKEN_URI,
+        uri: process.env.TOKEN_URI+'?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI,
         method: 'POST',
         /**
          * form means that `content-type : x-www-form-urlencoded`.
@@ -22,6 +22,18 @@ exports.getToken = async (AUTHORIZE_CODE) => {
         },
         json: true
     }
-    const body = await rp(options);
-    return body;
+    return await rp(options);
+}
+
+exports.getUserInfo = async (access_token) => {
+    const options = {
+        uri: 'https://kapi.kakao.com/v2/user/me',
+        method: 'GET',
+        headers: {
+            "Content-Type": 'application/x-www-form-urlencoded;charset=utf-8',
+            "Authorization": "Bearer "+access_token
+        },
+        json: true
+    };
+    return await rp(options);
 }

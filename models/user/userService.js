@@ -72,10 +72,10 @@ exports.issueToken = async (id, address) => {
 // Main login page.
  exports.showMain = (req, res) => {
     const user = req.decoded;
-    const request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI;
     if(user) {
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     } else {
+        const request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI+'&prompt=login';
         return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
 }

@@ -4,7 +4,6 @@ const kakao = require('../kakao/kakaoService');
 
 const path = require('path');
 const rp = require('request-promise');
-const { access } = require('fs');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
 
@@ -21,6 +20,15 @@ exports.showHome = (req, res, next) => {
     }
 }
 
+exports.requestAuthorizationCode = async (req, res, next) => {
+    try {
+        const kakaoAuthURL = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI+'&prompt=login';
+        return res.status(302).redirect(kakaoAuthURL);
+    } catch(err) {
+        return next(err);
+    }
+}
+
 exports.getAuthorizationCode = async (req, res, next) => {
     const AUTHORIZE_CODE = req.query['code'];
     try {
@@ -29,32 +37,35 @@ exports.getAuthorizationCode = async (req, res, next) => {
             id_token,
             refresh_token
         } = await kakao.getToken(AUTHORIZE_CODE);
-        // req.access_token = access_token;
-        // req.id_token = id_token;
-        // req.refresh_token = refresh_token;
     } catch(err) {
         next(err);
     }
     try {
         const body = await kakao.getUserInfo(access_token);
-        console.log(body);
-        console.log(body.properties.nickname);
-        console.log(body.properties.profile_image);
-        req.nickname = body.properties.nickname;
-        req.profile_image = body.properties.profile_image;
-        return next();
+        const nickname = body.properties.nickname;
+        const profile_image = body.properties.profile_image;
+
+        console.log('nickname:', nickname);
+        console.log('profile_image:', profile_image);
+        return res.status(200).redirect('/user').json({
+            nickname: nickname,
+            profile_image: profile_image
+        });
+        return res.json({
+            nickname: nickname,
+            profile_image: profile_image
+        });
     } catch(err) {
         next(err);
     }
-    // return res.redirect('/auth/kakao/access-token');
 }
 
-exports.requestAccessToken = (req, res) => {
-    console.log('requestAccessToken:');
-    console.log(req);
-    // console.log('req.access_token', req.access_token);
-    // console.log('req.id_token', req.id_token);
-    // console.log('req.refresh_token', req.refresh_token);
+exports.requestAccessToken = (req, res, next) => {
+    console.log('-----requestAccessToken function has been called.-----');
+    res.json({
+        nickname: req.nickname,
+        profile_image: req.profile_image
+    });
 }
 
 exports.errorHandler = (err, req, res, next) => {

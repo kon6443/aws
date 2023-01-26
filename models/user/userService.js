@@ -72,10 +72,8 @@ exports.issueToken = async (id, address) => {
 // Main login page.
  exports.showMain = (req, res) => {
     let user = req.decoded;
-    if(req.session!==undefined) {
-        user = req.session.nickname;
-        return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
-    } else if(user) {
+    console.log('session:', req.session.access_token);
+    if(user) {
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     } else {
         const request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI+'&prompt=login';

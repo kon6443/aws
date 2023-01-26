@@ -35,5 +35,8 @@ exports.getUserInfo = async (access_token) => {
         },
         json: true
     };
-    return await rp(options);
+    const body = await rp(options);
+    const nickname = body.properties.nickname;
+    const profile_image = body.properties.profile_image;
+    return {nickname, profile_image};
 }

@@ -10,7 +10,7 @@ router.use('/', auth);
 router.get('/', homeMiddleWare.showHome);
 router.get('/auth/kakao', homeMiddleWare.requestAuthorizationCode);
 router.get('/auth/kakao/callback', homeMiddleWare.getAuthorizationCode);
-router.get('/auth/kakao/callback/:code', homeMiddleWare.requestAccessToken);
+router.get('/auth/kakao/res', homeMiddleWare.requestAccessToken);
 
 router.use(homeMiddleWare.errorHandler);
 

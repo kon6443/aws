@@ -3,8 +3,13 @@
 const express = require('express');
 const app = express();
 
+const session = require('express-session');
+
 app.use(express.static(__dirname + ''));
 app.use(express.static(__dirname + '/public'));
+
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '.env') }); 
 
 // importing body-parser to create bodyParser object
 const bodyParser = require('body-parser');
@@ -17,6 +22,18 @@ app.use(cookieParser());
 
 // Allowing to use ejs view engine.
 app.set('view engine', 'ejs');
+
+app.use(session({
+    // Required option, this value is for security. Ths value has to be hidden. 
+    secret: process.env.SESSION_SECRET,
+    // resave asks that if you want to save even if there is no any changes. 
+    resave: false,
+    /**
+     * Session is not running until it is needed: true
+     * Session is always running: false
+     */
+    saveUninitialized: true
+}));
 
 // Routers.
 const homeRouter = require('./controllers/home/homeRouter');

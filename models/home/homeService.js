@@ -37,20 +37,15 @@ exports.getAuthorizationCode = async (req, res, next) => {
             id_token,
             refresh_token
         } = await kakao.getToken(AUTHORIZE_CODE);
+        req.session.access_token = access_token;
+        req.session.id_token = id_token;
+        req.session.refresh_token = refresh_token;
+        // return res.status(200).redirect('/user');
     } catch(err) {
         next(err);
     }
     try {
-        const body = await kakao.getUserInfo(access_token);
-        const nickname = body.properties.nickname;
-        const profile_image = body.properties.profile_image;
-
-        console.log('nickname:', nickname);
-        console.log('profile_image:', profile_image);
-        return res.status(200).redirect('/user').json({
-            nickname: nickname,
-            profile_image: profile_image
-        });
+        const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
         return res.json({
             nickname: nickname,
             profile_image: profile_image
@@ -60,8 +55,18 @@ exports.getAuthorizationCode = async (req, res, next) => {
     }
 }
 
-exports.requestAccessToken = (req, res, next) => {
-    console.log('-----requestAccessToken function has been called.-----');
+exports.requestAccessToken = async (req, res, next) => {
+    try {
+        const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
+        console.log('res1:', nickname);
+        console.log('res2:', profile_image);
+        return res.json({
+            nickname: nickname,
+            profile_image: profile_image
+        });
+    } catch(err) {
+        next(err);
+    }
     res.json({
         nickname: req.nickname,
         profile_image: req.profile_image

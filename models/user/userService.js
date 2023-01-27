@@ -19,6 +19,9 @@ const bcrypt = require('bcrypt');
 // Importing user data access object.
 const userDAO = require('./userDAO');
 
+const kakao = require('../kakao/kakaoService');
+
+
 // declaring saltRounds to decide cost factor of salt function.
 const saltRounds = 10;
 
@@ -70,15 +73,23 @@ exports.issueToken = async (id, address) => {
  * ===========================================================================================================================
  */
 // Main login page.
- exports.showMain = (req, res) => {
+ exports.showMain = async (req, res) => {
     let user = req.decoded;
-    console.log('session:', req.session.access_token);
+    // jwt login.
     if(user) {
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
-    } else {
-        const request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI+'&prompt=login';
-        return res.render(path.join(__dirname, '../../views/user/loginPage'), {request_url:request_url});
     }
+
+    // Kakao REST API login.
+    if(req.session.access_token !== undefined) {
+        const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
+        user = {
+            id: nickname,
+            address: profile_image
+        };
+        return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
+    }
+    return res.render(path.join(__dirname, '../../views/user/loginPage'));
 }
 
 // Sign up.

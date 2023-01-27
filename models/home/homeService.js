@@ -20,9 +20,12 @@ exports.showHome = (req, res, next) => {
     }
 }
 
-exports.requestAuthorizationCode = async (req, res, next) => {
+exports.authenticate = async (req, res, next) => {
     try {
         const kakaoAuthURL = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI+'&prompt=login';
+        /**
+         * Receiving response from getAuthorizationCode functino below.
+         */
         return res.status(302).redirect(kakaoAuthURL);
     } catch(err) {
         return next(err);
@@ -40,16 +43,7 @@ exports.getAuthorizationCode = async (req, res, next) => {
         req.session.access_token = access_token;
         req.session.id_token = id_token;
         req.session.refresh_token = refresh_token;
-        // return res.status(200).redirect('/user');
-    } catch(err) {
-        next(err);
-    }
-    try {
-        const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
-        return res.json({
-            nickname: nickname,
-            profile_image: profile_image
-        });
+        return res.status(200).redirect('/user');
     } catch(err) {
         next(err);
     }
@@ -58,8 +52,6 @@ exports.getAuthorizationCode = async (req, res, next) => {
 exports.requestAccessToken = async (req, res, next) => {
     try {
         const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
-        console.log('res1:', nickname);
-        console.log('res2:', profile_image);
         return res.json({
             nickname: nickname,
             profile_image: profile_image
@@ -78,6 +70,5 @@ exports.errorHandler = (err, req, res, next) => {
         res.sendFile(path.join(__dirname, '../../views/home/home.html'));
     } else {
         console.log(err);
-        // console.log(err.message);
     }
 }

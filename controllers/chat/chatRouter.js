@@ -10,4 +10,6 @@ const auth = require("../../models/authentication/authMiddleware");
 router.use('/', auth);
 router.get('/', chatMiddleWare.showMain);
 
+router.use(chatMiddleWare.errorHandler);
+
 module.exports = router;

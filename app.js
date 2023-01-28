@@ -13,8 +13,11 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session');
 
 const options = {
-    host: 'localhost',
-    port: 3306
+    host: process.env.SESSION_STORE_HOST,
+    port: process.env.SESSION_STORE_PORT,
+    user: process.env.SESSION_STORE_USER,
+    password: process.env.SESSION_STORE_PASSWORD,
+    database: process.env.SESSION_STORE_DB
 }
 
 const sessionStore = new MySQLStore(options);
@@ -27,7 +30,8 @@ app.use(session({
      * Session is not running until it is needed: true
      * Session is always running: false
      */
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: sessionStore
 }));
 
 // importing body-parser to create bodyParser object

@@ -3,6 +3,8 @@
 const express = require("express");
 const app = express();
 
+const rp = require('request-promise');
+
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
 
@@ -21,6 +23,16 @@ const userDAO = require('./userDAO');
 
 const kakao = require('../kakao/kakaoService');
 
+const MySQLStore = require('express-mysql-session');
+const options = {
+    host: process.env.SESSION_STORE_HOST,
+    port: process.env.SESSION_STORE_PORT,
+    user: process.env.SESSION_STORE_USER,
+    password: process.env.SESSION_STORE_PASSWORD,
+    database: process.env.SESSION_STORE_DB
+}
+
+const sessionStore = new MySQLStore(options);
 
 // declaring saltRounds to decide cost factor of salt function.
 const saltRounds = 10;
@@ -72,6 +84,14 @@ exports.issueToken = async (id, address) => {
 /**
  * ===========================================================================================================================
  */
+
+exports.showMain2 = (req, res) => {
+    console.log(req.session.access_token);
+    req.session.destroy();
+    // console.log(req.session.access_token);
+    return res.render(path.join(__dirname, '../../views/user/loginPage'));
+}
+
 // Main login page.
  exports.showMain = async (req, res) => {
     let user = req.decoded;
@@ -81,7 +101,7 @@ exports.issueToken = async (id, address) => {
     }
 
     // Kakao REST API login.
-    if(req.session.access_token !== undefined) {
+    if(req.session.access_token) {
         const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
         user = {
             id: nickname,
@@ -127,6 +147,30 @@ exports.signIn = async (req, res) => {
 }
 
 // Sign out.
-exports.signOut = (req, res) => {
+exports.signOut = async (req, res, next) => {
+    if(req.session.access_token) {
+        try {
+            const options = {
+                uri: 'https://kapi.kakao.com/v1/user/logout',
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer `+req.session.access_token
+                }
+                // form: {
+                //     Authorization: `Bearer `+req.session.access_token
+                // }
+            }
+            const body = await rp(options);
+            await req.session.destroy();
+            // return res.redirect('/user');
+            return res.status(200).end();
+        } catch(err) {
+            next(err);
+        }
+    }
     return res.clearCookie('user').end();
+}
+
+exports.errorHandler = (err, req, res, next) => {
+    res.json(err);
 }

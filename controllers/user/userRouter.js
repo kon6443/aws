@@ -20,8 +20,7 @@ router.use('/', auth);
 router.get('/', userMiddleWare.showMain);
 router.post('/:id/:address/:pw/:pwc', userMiddleWare.signUp);
 router.post('/:id/:pw', userMiddleWare.signIn);
-
-// router.get('/auth/kakao/callback', userMiddleWare.getAuthorizationCode);
 router.delete('/logout', userMiddleWare.signOut);
+router.use(userMiddleWare.errorHandler);
 
 module.exports = router;

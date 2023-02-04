@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Vehicle information</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="/public/css/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="navbar">
+			<a class="active" href="/">Onam Kwon</a> 
+			<a href="/dev">Dev</a> 
+			<a href="/private">Private</a> 
+			<a href="/user">Login</a>
+		</div> 
+    <ul class="item-list">
+      <form id="singin">
+        <h1>자동차 종합정보 성능점검정보 서비스</h1>
+        <div class="field">
+            <label for="registYy">등록년:</label>
+            <input type="text" id="registYy" name="registYy" placeholder="등록년을 입력해주세요" /><br><br>
+        </div>
+        <div class="field">
+            <label for="registMt">등록월:</label>
+            <input type="text" id="registMt" name="registMt" placeholder="등록월을 입력해주세요" /><br><br>
+        </div>
+        <div class="field">
+          <label for="vhctyAsortCode">차종코드:</label>
+          <input type="text" id="vhctyAsortCode" name="vhctyAsortCode" placeholder="차종코드를 입력해주세요" /><br><br>
+        </div>
+        <div class="field">
+          <label for="registGrcCode">등록지역코드:</label>
+          <input type="text" id="registGrcCode" name="registGrcCode" placeholder="등록지역코드를 입력해주세요" /><br><br>
+        </div>
+        <div class="field">
+          <label for="prye">모델년도:</label>
+          <input type="text" id="prye" name="prye" placeholder="모델년도를 입력해주세요" /><br><br>
+        </div>
+        <button id="button" type="button" onclick="getVehicleInfo()">Submit</button><br><br>
+    </form>
+    </ul>
+  </body>
+  <script>
+    function getVehicleInfo() {
+      const registYy = document.getElementById('registYy').value;
+      const registMt = document.getElementById('registMt').value;
+      const vhctyAsortCode = document.getElementById('vhctyAsortCode').value;
+      const registGrcCode = document.getElementById('registGrcCode').value;
+      const prye = document.getElementById('prye').value;
+      document.getElementById('registYy').value = '';
+      document.getElementById('registMt').value = '';
+      document.getElementById('vhctyAsortCode').value = '';
+      document.getElementById('registGrcCode').value = '';
+      document.getElementById('prye').value = '';
+      $.ajax({
+        type: "get",
+        url: '/vehicle/:registYy/:registMt/:vhctyAsortCode/:registGrcCode/:prye',
+        data: {
+          registYy: registYy,
+          registMt: registMt, 
+          vhctyAsortCode: vhctyAsortCode, 
+          registGrcCode: registGrcCode, 
+          prye: prye
+        },
+        dataType:'json',
+        success: function(res) {
+            window.alert(res);
+        }
+      });
+    }
+    $("#prye").on("keyup", function () {
+      if(window.event.keyCode==13 && $(this).val()!=""){
+          getVehicleInfo();
+      }
+    });
+  </script>
+</html>

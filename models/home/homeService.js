@@ -1,20 +1,29 @@
 // homeService.js
 
 const kakao = require('../kakao/kakaoService');
+const boredAPI = require('../APIs/boredAPI');
 
 const path = require('path');
 const rp = require('request-promise');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
 
-exports.showHome = (req, res, next) => {
+exports.showHome = async (req, res, next) => {
+    const activity = await boredAPI.getActivity();
     try {
-        const user = req.decoded;
-        if(!user) {
-            throw new Error('Invalid user');
-        } else {
-            return res.render(path.join(__dirname, '../../views/home/home'), {user:user});
+        if(req.decoded) {
+            var user = req.decoded;
+        } else if(req.session.access_token) {
+            const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
+            var user = {
+                id: nickname,
+                address: profile_image
+            }
         }
+        if(user) {
+            return res.render(path.join(__dirname, '../../views/home/home'), {user:user, activity: activity});
+        }
+        return res.render(path.join(__dirname, '../../views/home/home_no_user'), {activity: activity});
     } catch(e) {
         return next(e);
     }

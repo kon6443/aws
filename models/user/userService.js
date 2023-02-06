@@ -85,13 +85,6 @@ exports.issueToken = async (id, address) => {
  * ===========================================================================================================================
  */
 
-exports.showMain2 = (req, res) => {
-    console.log(req.session.access_token);
-    req.session.destroy();
-    // console.log(req.session.access_token);
-    return res.render(path.join(__dirname, '../../views/user/loginPage'));
-}
-
 // Main login page.
  exports.showMain = async (req, res) => {
     let user = req.decoded;

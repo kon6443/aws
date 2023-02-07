@@ -105,6 +105,7 @@ exports.issueToken = async (id, address) => {
         };
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     }
+
     return res.render(path.join(__dirname, '../../views/user/loginPage'));
 }
 
@@ -144,26 +145,21 @@ exports.signIn = async (req, res) => {
 
 // Sign out.
 exports.signOut = async (req, res, next) => {
+    // Sign out for Kakao.
     if(req.session.access_token) {
-        try {
-            const options = {
-                uri: 'https://kapi.kakao.com/v1/user/logout',
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer `+req.session.access_token
-                }
-                // form: {
-                //     Authorization: `Bearer `+req.session.access_token
-                // }
-            }
-            const body = await rp(options);
-            await req.session.destroy();
-            // return res.redirect('/user');
-            return res.status(200).end();
-        } catch(err) {
-            next(err);
-        }
+        /**
+         * kakao logout function makes tokens in session DB to be expired.
+         * But they still exist in the session DB as a junk even though the function has expired it.
+         */
+        const body = kakao.logout(req.session.access_token);
+        /**
+         * Deleting junk tokens in the session DB.
+         */
+        req.session.destroy();
+        return res.status(200).end();
     }
+    
+    // Sign out for local account.
     return res.clearCookie('user').end();
 }
 

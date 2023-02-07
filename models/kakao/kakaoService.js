@@ -54,6 +54,9 @@ exports.getUserInfo = async (access_token) => {
 
 /**
  * Kakao REST API 로그아웃
+ * This function expires an access_token and a refresh_token in the session DB.
+ * Not deleting tokens in the session DB. You will also need to delete tokens in session DB.
+ * Kakao account and your service are still connected even though you use this function.
  */
 exports.logout = async (access_token) => {
     const options = {
@@ -65,8 +68,7 @@ exports.logout = async (access_token) => {
         json: true
     }
     try {
-        const body = await rp(options);
-        console.log(body);
+        return await rp(options);
     } catch(err) {
         throw Error(err);
     }

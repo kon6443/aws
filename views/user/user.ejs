@@ -15,7 +15,7 @@
 	
 	<body>
 		<div class="navbar">
-			<a class="active" href="/">Onam Kwon</a> 
+			<a class="active" href="/">Home</a> 
 			<a href="/dev">Dev</a> 
 			<a href="/private">Private</a> 
 			<a href="/user">My page</a>
@@ -30,11 +30,40 @@
                                 You are: logged in. <br>
                                 This is your private page! <br>
                             </h1>
+
+                            <!-- <div class="row box" style="font-size: 25px;">
+                                <div class="col box col-md-6">
+                                </div>
+                                <div class="col box col-md-3">
+                                    <form id="signOut">
+                                        <button type="button" id="logOut" onclick="signOut()">Log out</button><br><br>
+                                    </form>
+                                </div>
+                                <div class="col box col-md-3">
+                                    <form id="/user/kakao-disconnection">
+                                        <button type="button" id="logOut" onclick="disconnectKakao()">Disconnect Kakao</button><br><br>
+                                    </form>
+                                </div>
+                            </div> -->
+
                             <form id="signOut">
                                 <button type="button" id="logOut" onclick="signOut()">Log out</button><br><br>
                             </form>
+                            <form id="/user/kakao-disconnection">
+                                <button type="button" id="logOut" onclick="disconnectKakao()">Disconnect Kakao</button><br><br>
+                            </form>
                         </div>
                         <script>
+                            function disconnectKakao() {
+                                $.ajax({
+                                    type: "delete",
+                                    url: '/user/kakao-disconnection',
+                                    dataType:'json',
+                                    success: function(res) {
+                                        console.log(res);
+                                    }
+                                });
+                            }
                             function signOut() {
                                 $.ajax({
                                     type: "delete",

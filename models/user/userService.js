@@ -32,8 +32,6 @@ const options = {
     database: process.env.SESSION_STORE_DB
 }
 
-const sessionStore = new MySQLStore(options);
-
 // declaring saltRounds to decide cost factor of salt function.
 const saltRounds = 10;
 
@@ -87,13 +85,18 @@ exports.issueToken = async (id, address) => {
 
 // Main login page.
  exports.showMain = async (req, res) => {
-    let user = req.decoded;
+    var user = req.decoded;
     // jwt login.
     if(user) {
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     }
 
     // Kakao REST API login.
+    // console.log('1:', req.session);
+    // kakao.logout(req.session.access_token);
+    // req.session.destroy();
+    // console.log('2:', req.session.access_token);
+
     if(req.session.access_token) {
         const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
         user = {
@@ -162,6 +165,15 @@ exports.signOut = async (req, res, next) => {
         }
     }
     return res.clearCookie('user').end();
+}
+
+exports.disconnetKakao = async (req, res, next) => {
+    try {
+        await kakao.unlink(req.session.access_token);
+        return res.status(200).end();
+    } catch(err) {
+        next(err);
+    }
 }
 
 exports.errorHandler = (err, req, res, next) => {

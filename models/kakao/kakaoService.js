@@ -79,7 +79,6 @@ exports.logout = async (access_token) => {
  * Kakao REST API 연결끊기
  */
 exports.unlink = async (access_token) => {
-    console.log('kakao-disconnection:', access_token);
     const options = {
         uri: 'https://kapi.kakao.com/v1/user/unlink',
         method: 'POST',
@@ -89,8 +88,27 @@ exports.unlink = async (access_token) => {
         json: true
     }
     try {
-        const body = await rp(options);
-        console.log(body);
+        return await rp(options);
+    } catch(err) {
+        throw Error(err);
+    }
+}
+
+
+/**
+ * Kakao REST API 카카오계정과 함께 로그아웃
+ */
+exports.logoutWithKakaoAccount = async () => {
+    const options = {
+        uri: 'https://kauth.kakao.com/oauth/logout?client_id='+process.env.REST_API_KEY+'&logout_redirect_uri='+process.env.LOGOUT_REDIRECT,
+        method: 'GET',
+        // headers: {
+            
+        // },
+        json: true
+    }
+    try {
+        return await rp(options);
     } catch(err) {
         throw Error(err);
     }

@@ -21,7 +21,8 @@ router.get('/', userMiddleWare.showMain);
 router.post('/:id/:address/:pw/:pwc', userMiddleWare.signUp);
 router.post('/:id/:pw', userMiddleWare.signIn);
 router.delete('/logout', userMiddleWare.signOut);
-router.delete('/kakao-disconnection', userMiddleWare.disconnetKakao);
+router.get('/kakao-disconnection', userMiddleWare.disconnectKakao);
+
 router.use(userMiddleWare.errorHandler);
 
 module.exports = router;

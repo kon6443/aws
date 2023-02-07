@@ -163,14 +163,24 @@ exports.signOut = async (req, res, next) => {
     return res.clearCookie('user').end();
 }
 
-exports.disconnetKakao = async (req, res, next) => {
+exports.disconnectKakao = async (req, res, next) => {
     try {
-        await kakao.unlink(req.session.access_token);
-        return res.status(200).end();
+        const body = await kakao.unlink(req.session.access_token);
+        req.session.destroy();
+        return res.status(302).redirect('/user');
     } catch(err) {
-        next(err);
+        throw Error(err);
     }
 }
+
+// exports.disconnectKakao2 = async (req, res, next) => {
+//     try {
+//         const kakaoDisconnectURL = 'https://kauth.kakao.com/oauth/logout?client_id='+process.env.REST_API_KEY+'&logout_redirect_uri='+process.env.LOGOUT_REDIRECT;
+//         return res.status(302).redirect(kakaoDisconnectURL);
+//     } catch(err) {
+//         throw Error(err);
+//     }
+// }
 
 exports.errorHandler = (err, req, res, next) => {
     res.json(err);

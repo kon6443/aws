@@ -23,15 +23,6 @@ const userDAO = require('./userDAO');
 
 const kakao = require('../kakao/kakaoService');
 
-const MySQLStore = require('express-mysql-session');
-const options = {
-    host: process.env.SESSION_STORE_HOST,
-    port: process.env.SESSION_STORE_PORT,
-    user: process.env.SESSION_STORE_USER,
-    password: process.env.SESSION_STORE_PASSWORD,
-    database: process.env.SESSION_STORE_DB
-}
-
 // declaring saltRounds to decide cost factor of salt function.
 const saltRounds = 10;
 
@@ -91,19 +82,28 @@ exports.issueToken = async (id, address) => {
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     }
 
-    // Kakao REST API login.
-    // console.log('1:', req.session);
-    // kakao.logout(req.session.access_token);
     // req.session.destroy();
-    // console.log('2:', req.session.access_token);
-
+    // Kakao REST API login.
     if(req.session.access_token) {
-        const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
-        user = {
-            id: nickname,
-            address: profile_image
-        };
-        return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
+        try {
+            const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
+        } catch(err) {
+            // renewing expired token function not tested yet.
+            const {
+                access_token,
+                id_token
+            } = await kakao.renewExpiredToken(req.session.refresh_token);
+            req.session.access_token = access_token;
+            req.session.id_token = id_token;
+            throw Error(err);
+        } finally {
+            const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
+            user = {
+                id: nickname,
+                address: profile_image
+            };
+            return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
+        }
     }
 
     return res.render(path.join(__dirname, '../../views/user/loginPage'));

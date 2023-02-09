@@ -3,7 +3,7 @@
 const path = require('path');
 const rp = require('request-promise');
 
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 /**
  * Kakao REST API 토큰받기
@@ -97,6 +97,7 @@ exports.unlink = async (access_token) => {
 
 /**
  * Kakao REST API 카카오계정과 함께 로그아웃
+ * 미완성
  */
 exports.logoutWithKakaoAccount = async () => {
     const options = {
@@ -105,6 +106,29 @@ exports.logoutWithKakaoAccount = async () => {
         // headers: {
             
         // },
+        json: true
+    }
+    try {
+        return await rp(options);
+    } catch(err) {
+        throw Error(err);
+    }
+}
+
+/**
+ * Kakao REST API 토큰 갱신하기.
+ * Not tested yet.
+ */
+exports.renewExpiredToken = async (refresh_token) => {
+    const options = {
+        uri: 'https://kauth.kakao.com/oauth/token',
+        method: 'POST',
+        form: {
+            // "Content-Type": 'application/x-www-form-urlencoded',
+            "client_id": process.env.REST_API_KEY,
+            "refresh_token": refresh_token,
+            "client_secret": process.env.CLIENT_SECRET
+        },
         json: true
     }
     try {

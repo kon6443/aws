@@ -21,7 +21,7 @@ const bcrypt = require('bcrypt');
 // Importing user data access object.
 const userDAO = require('./userDAO');
 
-const kakao = require('../kakao/kakaoService');
+const kakaoServiceInstance = require('../kakao/kakaoService');
 
 // declaring saltRounds to decide cost factor of salt function.
 const saltRounds = 10;
@@ -70,44 +70,35 @@ exports.issueToken = async (id, address) => {
 }
 
 
+
+
+exports.getLoggedInUser = async (jwtDecodedUser, kakao_access_token) => {
+    if(jwtDecodedUser) {
+        var user = jwtDecodedUser;
+    } else if(kakao_access_token) {
+        const {nickname, profile_image} = await kakaoServiceInstance.getUserInfo(kakao_access_token);
+        var user = {
+            id: nickname,
+            address: profile_image
+        }
+    }
+    return user;
+}
+
+exports.mongoDBSignUp = async (id, address, pw) => {
+    var user = {
+        id: id,
+        address: address,
+        pw: pw
+    }
+    var user = new User(user);
+    user.pw = await this.encryptPassword(pw);
+    user.save();
+}
+
 /**
  * ===========================================================================================================================
  */
-
-// Main login page.
- exports.showMain = async (req, res) => {
-    var user = req.decoded;
-    // jwt login.
-    if(user) {
-        return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
-    }
-
-    // req.session.destroy();
-    // Kakao REST API login.
-    if(req.session.access_token) {
-        try {
-            const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
-        } catch(err) {
-            // renewing expired token function not tested yet.
-            const {
-                access_token,
-                id_token
-            } = await kakao.renewExpiredToken(req.session.refresh_token);
-            req.session.access_token = access_token;
-            req.session.id_token = id_token;
-            throw Error(err);
-        } finally {
-            const {nickname, profile_image} = await kakao.getUserInfo(req.session.access_token);
-            user = {
-                id: nickname,
-                address: profile_image
-            };
-            return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
-        }
-    }
-
-    return res.render(path.join(__dirname, '../../views/user/loginPage'));
-}
 
 // Sign up.
 exports.signUp = async (req, res) => {
@@ -151,7 +142,7 @@ exports.signOut = async (req, res, next) => {
          * kakao logout function makes tokens in session DB to be expired.
          * But they still exist in the session DB as a junk even though the function has expired it.
          */
-        const body = kakao.logout(req.session.access_token);
+        const body = kakaoServiceInstance.logout(req.session.access_token);
         /**
          * Deleting junk tokens in the session DB.
          */
@@ -165,7 +156,7 @@ exports.signOut = async (req, res, next) => {
 
 exports.disconnectKakao = async (req, res, next) => {
     try {
-        const body = await kakao.unlink(req.session.access_token);
+        const body = await kakaoServiceInstance.unlink(req.session.access_token);
         req.session.destroy();
         return res.status(302).redirect('/user');
     } catch(err) {
@@ -175,7 +166,7 @@ exports.disconnectKakao = async (req, res, next) => {
 
 // exports.disconnectKakao2 = async (req, res, next) => {
 //     try {
-//         const kakaoDisconnectURL = 'https://kauth.kakao.com/oauth/logout?client_id='+process.env.REST_API_KEY+'&logout_redirect_uri='+process.env.LOGOUT_REDIRECT;
+//         const kakaoDisconnectURL = kakaoServiceInstance.getDisconnectURL();
 //         return res.status(302).redirect(kakaoDisconnectURL);
 //     } catch(err) {
 //         throw Error(err);

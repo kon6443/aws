@@ -5,8 +5,24 @@ const rp = require('request-promise');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
+
+/**
+ * 
+ * @returns Request kakao authentication page. 
+ */
+exports.getAuthenticateURL = () => {
+    const kakaoAuthURL = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI+'&prompt=login';
+    return kakaoAuthURL;
+}
+
+exports.getDisconnectURL = () => {
+    const disconnectionURL = 'https://kauth.kakao.com/oauth/logout?client_id='+process.env.REST_API_KEY+'&logout_redirect_uri='+process.env.LOGOUT_REDIRECT;
+    return disconnectionURL;
+}
+
 /**
  * Kakao REST API 토큰받기
+ * @returns access_token, id_token, refresh_token
  */
 exports.getToken = async (AUTHORIZE_CODE) => {
     const options = {

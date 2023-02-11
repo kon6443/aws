@@ -10,7 +10,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 const auth = require("../../models/authentication/authMiddleware");
 const userServiceInstance = require('../../models/user/userService');
-
+const config = require('../../config/config');
 const path = require('path');
 path.join(__dirname, 'public');
 
@@ -36,10 +36,45 @@ router.post('/:id/:address/:pw/:pwc', async (req, res, next) => {
     return res.status(200).send('Your account has been created successfully, you can now log in.');
 });
 
-router.post('/:id/:pw', userServiceInstance.signIn);
-router.delete('/logout', userServiceInstance.signOut);
-router.get('/kakao-disconnection', userServiceInstance.disconnectKakao);
+router.post('/:id/:pw', async (req, res) => {
+    // userServiceInstance.signIn
 
-router.use(userServiceInstance.errorHandler);
+    const {id, pw} = req.body;
+    const userConfirmed = await userServiceInstance.loginCheck(id, pw);
+    if(userConfirmed) {
+        const token = await userServiceInstance.issueToken(id);
+        return res
+            .cookie('user', token,{maxAge: 30 * 60 * 1000}) // 1000 is a sec
+            .end();
+    } else {
+        return res.status(200).send('Your password is not correct.');
+    }
+});
+
+router.delete('/logout', async (req, res, next) => {
+    // Sign out for Kakao.
+    if(req.session.access_token) {
+        const body = userServiceInstance.kakaoLogout(req.session.access_token);
+        /**
+         * Deleting junk tokens in the session DB.
+         */
+        req.session.destroy();
+        return res.status(200).end();
+    }
+    
+    // Sign out for local account that uses JWT.
+    return res.clearCookie('user').end();
+});
+
+router.get('/kakao-disconnection', async (req, res, next) => {
+    // userServiceInstance.disconnectKakao
+    const body = await userServiceInstance.disconnectKakao(req.session.access_token);
+    req.session.destroy();
+    return res.status(302).redirect('/user');
+});
+
+router.use((err, req, res, next) => {
+    res.json(err);
+});
 
 module.exports = router;

@@ -2,28 +2,25 @@
 
 const express = require('express');
 const app = express();
-
-app.use(express.static(__dirname + ''));
-app.use(express.static(__dirname + '/public'));
-
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '.env') }); 
+const config = require('./config/config');
 
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session');
 
+app.use(express.static(__dirname + ''));
+app.use(express.static(__dirname + '/public'));
+
 const options = {
-    host: process.env.SESSION_STORE_HOST,
-    port: process.env.SESSION_STORE_PORT,
-    user: process.env.SESSION_STORE_USER,
-    password: process.env.SESSION_STORE_PASSWORD,
-    database: process.env.SESSION_STORE_DB
+    host: config.SESSION.STORAGE_HOST,
+    port: config.SESSION.STORAGE_PORT,
+    user: config.SESSION.STORAGE_USER,
+    password: config.SESSION.STORAGE_PASSWORD,
+    database: config.SESSION.STORAGE_DB
 }
 
-const sessionStore = new MySQLStore(options);
 app.use(session({
     // Required option, this value is for security. Ths value has to be hidden. 
-    secret: process.env.SESSION_SECRET,
+    secret: config.SESSION.SECRET,
     // resave asks that if you want to save even if there is no any changes. 
     resave: false,
     /**
@@ -31,7 +28,7 @@ app.use(session({
      * Session is always running: false
      */
     saveUninitialized: true,
-    store: sessionStore
+    store: new MySQLStore(options)
 }));
 
 // importing body-parser to create bodyParser object

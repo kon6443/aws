@@ -5,7 +5,6 @@ const auth = require("../../models/authentication/authMiddleware");
 const homeServiceInstacnce = require('../../models/home/homeService');
 
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
 
 router.use('/', auth);
 

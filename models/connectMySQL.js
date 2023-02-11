@@ -1,14 +1,12 @@
-// connecting MySQL
+// Connecting MySQL
 
-const path = require('path');
 var mysql = require('mysql');
-
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') }); 
+const config = require('../config/config');
 
 const conn = mysql.createConnection({
     host: "localhost",
-    user: process.env.SQL_USER,
-    password: process.env.SQL_PASSWORD,
+    user: config.MYSQL.USER,
+    password: config.MYSQL.PASSWORD,
     database: 'board_db'
 });
 

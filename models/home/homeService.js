@@ -5,9 +5,6 @@ const kakaoAPI = require('../kakao/kakaoService');
 const kakaoServiceInstance = new kakaoAPI();
 const boredAPI = require('../APIs/boredAPI');
 
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
-
 exports.getActivity = async () => {
     return await boredAPI.getActivity();
 }

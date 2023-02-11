@@ -9,8 +9,10 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 
 const auth = require("../../models/authentication/authMiddleware");
-const userServiceInstance = require('../../models/user/userService');
-const config = require('../../config/config');
+const kakaoAPI = require('../../models/kakao/kakaoService');
+const userService = require('../../models/user/userService');
+const userServiceInstance = new userService(new kakaoAPI());
+
 const path = require('path');
 path.join(__dirname, 'public');
 
@@ -29,16 +31,14 @@ router.post('/:id/:address/:pw/:pwc', async (req, res, next) => {
     const { id, address, pw, pwc } = req.body;
     const errorFlag = await userServiceInstance.checkValidation(id, address, pw, pwc);
 
-    // user typed something wrong.
+    // User typed something wrong.
     if(errorFlag) return res.status(200).send(errorFlag);
 
-    userServiceInstance.mongoDBSignUp(id, address, pw);
+    await userServiceInstance.mongoDBSaveUser(id, address, pw);
     return res.status(200).send('Your account has been created successfully, you can now log in.');
 });
 
 router.post('/:id/:pw', async (req, res) => {
-    // userServiceInstance.signIn
-
     const {id, pw} = req.body;
     const userConfirmed = await userServiceInstance.loginCheck(id, pw);
     if(userConfirmed) {
@@ -67,7 +67,6 @@ router.delete('/logout', async (req, res, next) => {
 });
 
 router.get('/kakao-disconnection', async (req, res, next) => {
-    // userServiceInstance.disconnectKakao
     const body = await userServiceInstance.disconnectKakao(req.session.access_token);
     req.session.destroy();
     return res.status(302).redirect('/user');

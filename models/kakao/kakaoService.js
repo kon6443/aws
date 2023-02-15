@@ -1,5 +1,6 @@
 // kakaoService.js
 
+const container = require('typedi').Container;
 const rp = require('request-promise');
 const config = require('../../config/config');
 
@@ -155,5 +156,7 @@ class kakaoAPI {
         }
     }
 }
+
+container.set('kakaoService', new kakaoAPI());
 
 module.exports = kakaoAPI;

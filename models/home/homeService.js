@@ -1,5 +1,6 @@
 // homeService.js
 
+const { Container } = require('typedi');
 // const kakaoServiceInstance = require('../kakao/kakaoService');
 const kakaoAPI = require('../kakao/kakaoService');
 const kakaoServiceInstance = new kakaoAPI();

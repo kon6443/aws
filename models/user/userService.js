@@ -3,6 +3,7 @@
 const express = require("express");
 const app = express();
 const config = require('../../config/config');
+const container = require('typedi').Container;
 
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
@@ -25,12 +26,12 @@ const userRepositoryInstance = new userRepository();
 // const kakaoServiceInstance = new kakaoAPI();
 
 class userService {
-    constructor(kakaoServiceInstance) {
+    constructor(container) {
         // declaring saltRounds to decide cost factor of salt function.
         this.saltRounds = 10;
 
-        this.kakaoServiceInstance = kakaoServiceInstance;
-        this.userRepository = userRepositoryInstance;
+        this.kakaoServiceInstance = container.get('kakaoService');
+        this.userRepository = container.get('userRepository');
     }
 
     async checkValidation(id, address, pw, pwc) {
@@ -109,8 +110,6 @@ class userService {
     }
 }
 
+// container.set('userService', new userService(container));
+
 module.exports = userService;
-
-// // declaring saltRounds to decide cost factor of salt function.
-// const saltRounds = 10;
-

@@ -110,6 +110,6 @@ class userService {
     }
 }
 
-// container.set('userService', new userService(container));
+container.set('userService', new userService(container));
 
 module.exports = userService;

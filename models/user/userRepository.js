@@ -9,8 +9,8 @@ const container = require('typedi').Container;
 const User = require('../DTO/user');
 
 class userRepository {
-    constructor() {
-        this.User = User;
+    constructor(container) {
+        this.User = container.get('User');
     }
     async findById(id) {
         return await User.findOne({id: id});

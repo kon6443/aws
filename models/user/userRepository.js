@@ -5,8 +5,8 @@
 // }
 
 // // importing user schema.
-const container = require('typedi').Container;
-const User = require('../DTO/user');
+// const User = require('../DTO/user');
+const container = require('../container/container');
 
 class userRepository {
     constructor(container) {
@@ -16,7 +16,5 @@ class userRepository {
         return await User.findOne({id: id});
     }
 }
-
-container.set('userRepository', new userRepository());
 
 module.exports = userRepository;

@@ -4,7 +4,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 /**
  * Reason why to use both config file and .env file is to use auto complete feature.
  */
-module.exports = {
+const config = {
     // Mongo DB
     MONGO: {
         URI: process.env.MONGO_URI
@@ -43,3 +43,5 @@ module.exports = {
         SERVICE_DECODE: process.env.PI_SERVICE_DECODE
     }
 }
+
+module.exports = config;

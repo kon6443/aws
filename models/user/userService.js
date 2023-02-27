@@ -3,10 +3,9 @@
 const express = require("express");
 const app = express();
 const config = require('../../config/config');
-const container = require('typedi').Container;
 
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') }); 
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env')});
 
 // allows you to ejs view engine.
 app.set('view engine', 'ejs');
@@ -19,11 +18,9 @@ const jwt = require("jsonwebtoken");
 // importing bcrypt moudle to encrypt user password.
 const bcrypt = require('bcrypt');
 // Importing user data access object.
-const userRepository = require('./userRepository');
-const userRepositoryInstance = new userRepository();
-// const kakaoServiceInstance = require('../kakao/kakaoService');
-// const kakaoAPI = require('../kakao/kakaoService');
-// const kakaoServiceInstance = new kakaoAPI();
+// const userRepository = require('./userRepository');
+// const userRepositoryInstance = new userRepository();
+const container = require('../container/container');
 
 class userService {
     constructor(container) {
@@ -51,13 +48,13 @@ class userService {
         return pw;
     }
     async comparePassword(typedPw, dbPw) {
-        return await bcrypt.compare(typedPw, dbPw); 
+        return await bcrypt.compare(typedPw, dbPw);
     }
 
     async loginCheck(id, clientTypedPw) {
         const user = await this.userRepository.findById(id);
         if(user==null) return false;
-        const userConfirmed = await bcrypt.compare(clientTypedPw, user.pw); 
+        const userConfirmed = await bcrypt.compare(clientTypedPw, user.pw);
         return userConfirmed;
     }
 
@@ -76,11 +73,12 @@ class userService {
     }
 
     async getLoggedInUser(jwtDecodedUser, kakao_access_token) {
+        var user;
         if(jwtDecodedUser) {
-            var user = jwtDecodedUser;
+            user = jwtDecodedUser;
         } else if(kakao_access_token) {
             const {nickname, profile_image} = await this.kakaoServiceInstance.getUserInfo(kakao_access_token);
-            var user = {
+            user = {
                 id: nickname,
                 address: profile_image
             }
@@ -93,10 +91,10 @@ class userService {
             address: address,
             pw: pw
         }
-        var user = new User(user);
+        user = new User(user);
         user.pw = await this.encryptPassword(pw);
         user.save();
-    }  
+    }
 
     /**
      * Sign out for Kakao.
@@ -109,7 +107,5 @@ class userService {
         return await this.kakaoServiceInstance.unlink(kakao_access_token);
     }
 }
-
-container.set('userService', new userService(container));
 
 module.exports = userService;

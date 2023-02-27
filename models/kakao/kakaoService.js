@@ -1,19 +1,22 @@
 // kakaoService.js
 
-const container = require('typedi').Container;
+const container = require('../container/container');
 const rp = require('request-promise');
-const config = require('../../config/config');
+// const config = require('../../config/config');
 
-class kakaoAPI {
+class kakaoService {
     #REST_API_KEY;
     #REDIRECT_URI;
     #LOGOUT_REDIRECT;
-    #CLIENT_SECRET
-    constructor() {
-        this.#REST_API_KEY = config.KAKAO.REST_API_KEY;
-        this.#REDIRECT_URI = config.KAKAO.REDIRECT_URI;
-        this.#LOGOUT_REDIRECT = config.KAKAO.LOGOUT_REDIRECT;
-        this.#CLIENT_SECRET = config.KAKAO.CLIENT_SECRET;
+    #CLIENT_SECRET;
+    #config;
+    constructor(container) {
+        console.log('kakaoAPI constructor has been called.');
+        this.#config = container.get('config');
+        this.#REST_API_KEY = this.#config.KAKAO.REST_API_KEY;
+        this.#REDIRECT_URI = this.#config.KAKAO.REDIRECT_URI;
+        this.#LOGOUT_REDIRECT = this.#config.KAKAO.LOGOUT_REDIRECT;
+        this.#CLIENT_SECRET = this.#config.KAKAO.CLIENT_SECRET;
     }
     getAuthenticateURL() {
         return 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+this.#REST_API_KEY+'&redirect_uri='+this.#REDIRECT_URI+'&prompt=login';
@@ -42,7 +45,7 @@ class kakaoAPI {
                 "client_id": this.#REST_API_KEY, // REST API key value in app setting.
                 "redirect_uri": this.#REDIRECT_URI,  // Redirect_uri value in app setting.
                 "code": AUTHORIZE_CODE,  // AUTHORIZE_CODE that received from the user.
-                "client_secret": this.#CLIENT_SECRET  // In order to enhance security when the authorization server issues a token. 
+                "client_secret": this.#CLIENT_SECRET  // In order to enhance security when the authorization server issues a token.
             },
             json: true
         }
@@ -122,7 +125,7 @@ class kakaoAPI {
             uri: 'https://kauth.kakao.com/oauth/logout?client_id='+this.#REST_API_KEY+'&logout_redirect_uri='+this.#LOGOUT_REDIRECT,
             method: 'GET',
             // headers: {
-                
+
             // },
             json: true
         }
@@ -157,6 +160,4 @@ class kakaoAPI {
     }
 }
 
-container.set('kakaoService', new kakaoAPI());
-
-module.exports = kakaoAPI;
+module.exports = kakaoService;

@@ -8,8 +8,8 @@ const bodyParser = require('body-parser');
 // allows you to use req.body var when you use http post method.
 router.use(bodyParser.urlencoded({ extended: true }));
 
-const container = require('typedi').Container;
 const auth = require("../../models/authentication/authMiddleware");
+const container = require('../../models/container/container');
 // const kakaoAPI = require('../../models/kakao/kakaoService');
 // const userService = require('../../models/user/userService');
 // const userServiceInstance = new userService(new kakaoAPI());
@@ -19,14 +19,12 @@ const userServiceInstance = container.get('userService');
 const path = require('path');
 path.join(__dirname, 'public');
 
-
-
 router.use('/', auth);
 
 router.get('/', async (req, res) => {
     const jwtDecodedUserInfo = req.decoded;
     const user = await userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
-    
+
     if(user) {
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     }
@@ -67,7 +65,7 @@ router.delete('/logout', async (req, res, next) => {
         req.session.destroy();
         return res.status(200).end();
     }
-    
+
     // Sign out for local account that uses JWT.
     return res.clearCookie('user').end();
 });

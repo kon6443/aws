@@ -17,9 +17,7 @@ const User = require('../DTO/user');
 const jwt = require("jsonwebtoken");
 // importing bcrypt moudle to encrypt user password.
 const bcrypt = require('bcrypt');
-// Importing user data access object.
-// const userRepository = require('./userRepository');
-// const userRepositoryInstance = new userRepository();
+
 const container = require('../container/container');
 
 class userService {
@@ -27,6 +25,7 @@ class userService {
         // declaring saltRounds to decide cost factor of salt function.
         this.saltRounds = 10;
 
+        // Importing user data access object.
         this.kakaoServiceInstance = container.get('kakaoService');
         this.userRepository = container.get('userRepository');
     }

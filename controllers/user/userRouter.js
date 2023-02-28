@@ -9,11 +9,8 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 
 const auth = require("../../models/authentication/authMiddleware");
-const container = require('../../models/container/container');
-// const kakaoAPI = require('../../models/kakao/kakaoService');
-// const userService = require('../../models/user/userService');
-// const userServiceInstance = new userService(new kakaoAPI());
 
+const container = require('../../models/container/container');
 const userServiceInstance = container.get('userService');
 
 const path = require('path');

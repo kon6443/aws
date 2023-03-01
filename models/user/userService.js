@@ -26,6 +26,7 @@ class userService {
         this.saltRounds = 10;
 
         // Importing user data access object.
+        this.User = container.get('User');
         this.kakaoServiceInstance = container.get('kakaoService');
         this.userRepository = container.get('userRepository');
     }
@@ -76,6 +77,7 @@ class userService {
         if(jwtDecodedUser) {
             user = jwtDecodedUser;
         } else if(kakao_access_token) {
+            // console.log('kakao_access_token:', kakao_access_token);
             const {nickname, profile_image} = await this.kakaoServiceInstance.getUserInfo(kakao_access_token);
             user = {
                 id: nickname,
@@ -90,7 +92,7 @@ class userService {
             address: address,
             pw: pw
         }
-        user = new User(user);
+        user = new this.User(user);
         user.pw = await this.encryptPassword(pw);
         user.save();
     }

@@ -1,8 +1,7 @@
 // User.js
 
-const mongoose = require('mongoose'); // declaring mongoose.
-
-const userSchema = mongoose.Schema({  // making a schema called userSchema.
+const userSchema = {  
+  // Structuring a user schema. 
   id: { 
     type: String,
     maxLength: 50,
@@ -18,9 +17,7 @@ const userSchema = mongoose.Schema({  // making a schema called userSchema.
     type: String,
     required: true,
     maxLength: 100,
-  },
-});
+  }
+};
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User; // exporting user schema.
+module.exports = userSchema;

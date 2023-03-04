@@ -42,6 +42,6 @@ const config = {
         SERVICE_ENCODE: process.env.PI_SERVICE_ENCODE,
         SERVICE_DECODE: process.env.PI_SERVICE_DECODE
     }
-}
+};
 
 module.exports = config;

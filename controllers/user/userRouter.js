@@ -21,7 +21,6 @@ router.use('/', auth);
 router.get('/', async (req, res) => {
     const jwtDecodedUserInfo = req.decoded;
     const user = await userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
-
     if(user) {
         return res.render(path.join(__dirname, '../../views/user/user'), {user:user});
     }

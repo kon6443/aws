@@ -15,7 +15,11 @@ const userService = require('../user/userService');
 container.set('User', User);
 container.set('config', config);
 container.set('userRepository', new userRepository(container));
-container.set('kakaoService', new kakaoService());
+const configInstance = container.get('config');
+console.log('container:', configInstance);
+console.log(typeof configInstance);
+// container.set('kakaoService', new kakaoService(configInstance));
+container.set('kakaoService', new kakaoService(container.get('config')));
 container.set('userService', new userService(container));
 
 module.exports = container;

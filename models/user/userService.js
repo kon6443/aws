@@ -10,9 +10,6 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env')});
 // allows you to ejs view engine.
 app.set('view engine', 'ejs');
 
-// importing user schema.
-const User = require('../DTO/user');
-
 // Using jsonwebtoken module.
 const jwt = require("jsonwebtoken");
 // importing bcrypt moudle to encrypt user password.
@@ -21,12 +18,14 @@ const bcrypt = require('bcrypt');
 const container = require('../container/container');
 
 class userService {
+    #config
     constructor(container) {
         // declaring saltRounds to decide cost factor of salt function.
         this.saltRounds = 10;
 
         // Importing user data access object.
         this.User = container.get('User');
+        this.#config = container.get('config');
         this.kakaoServiceInstance = container.get('kakaoService');
         this.userRepository = container.get('userRepository');
     }
@@ -66,7 +65,7 @@ class userService {
         };
         const token = await jwt.sign(
             payload, // payload into jwt.sign method
-            config.JWT.SECRET, // secret key value
+            this.#config.JWT.SECRET, // secret key value
             { expiresIn: "30m" } // token expiration time
         );
         return token;

@@ -1,26 +1,29 @@
 // kakaoService.js
 
 // const container = require('../container/container');
+// const config = container.get('config');
 const rp = require('request-promise');
-const config = require('../../config/config');
+// const config = require('../../config/config');
+// const container = require('../container/container');
 
 class kakaoService {
     #REST_API_KEY;
     #REDIRECT_URI;
     #LOGOUT_REDIRECT;
     #CLIENT_SECRET;
-    constructor() {
+    constructor(config) {
         console.log('kakaoAPI constructor has been called.');
-        // const config = container.get('config');
-        this.#REST_API_KEY = config.KAKAO.REST_API_KEY;
-        this.#REDIRECT_URI = config.KAKAO.REDIRECT_URI;
-        this.#LOGOUT_REDIRECT = config.KAKAO.LOGOUT_REDIRECT;
-        this.#CLIENT_SECRET = config.KAKAO.CLIENT_SECRET;
-        // this.config = container.get('config');
-        // this.#REST_API_KEY = this.config.KAKAO.REST_API_KEY;
-        // this.#REDIRECT_URI = this.config.KAKAO.REDIRECT_URI;
-        // this.#LOGOUT_REDIRECT = this.config.KAKAO.LOGOUT_REDIRECT;
-        // this.#CLIENT_SECRET = this.config.KAKAO.CLIENT_SECRET;
+        // this.#config = container.get('config');
+        // this.#REST_API_KEY = this.#config.KAKAO.REST_API_KEY;
+        // this.#REDIRECT_URI = this.#config.KAKAO.REDIRECT_URI;
+        // this.#LOGOUT_REDIRECT = this.#config.KAKAO.LOGOUT_REDIRECT;
+        // this.#CLIENT_SECRET = this.#config.KAKAO.CLIENT_SECRET;
+        // console.log(config);
+        console.log(typeof config);
+        // this.#REST_API_KEY = kakao.REST_API_KEY;
+        // this.#REDIRECT_URI = kakao.REDIRECT_URI;
+        // this.#LOGOUT_REDIRECT = kakao.LOGOUT_REDIRECT;
+        // this.#CLIENT_SECRET = kakao.CLIENT_SECRET;
     }
     getAuthenticateURL() {
         return 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+this.#REST_API_KEY+'&redirect_uri='+this.#REDIRECT_URI+'&prompt=login';

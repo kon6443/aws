@@ -15,7 +15,8 @@ const userService = require('../user/userService');
 container.set('User', User);
 container.set('config', config);
 container.set('userRepository', new userRepository(container));
-container.set('kakaoService', new kakaoService(container.get('config')));
+// container.set('kakaoService', new kakaoService(container.get('config')));
+container.set('kakaoService', new kakaoService(container));
 container.set('userService', new userService(container));
 
 module.exports = container;

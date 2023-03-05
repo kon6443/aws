@@ -1,20 +1,14 @@
 // kakaoService.js
 
-// const container = require('../container/container');
-// const config = container.get('config');
 const rp = require('request-promise');
-// const config = require('../../config/config');
-// const container = require('../container/container');
 
 class kakaoService {
     #REST_API_KEY;
     #REDIRECT_URI;
     #LOGOUT_REDIRECT;
     #CLIENT_SECRET;
-    constructor(config) {
-        console.log('kakaoAPI constructor has been called.');
-        // console.trace('kakaoService constructor has been called...');
-        console.log(config.KAKAO);
+    constructor(container) {
+        const config = container.get('config');
         this.#REST_API_KEY = config.KAKAO.REST_API_KEY;
         this.#REDIRECT_URI = config.KAKAO.REDIRECT_URI;
         this.#LOGOUT_REDIRECT = config.KAKAO.LOGOUT_REDIRECT;

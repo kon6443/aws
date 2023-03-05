@@ -3,7 +3,7 @@
 const { Container } = require('typedi');
 // const kakaoServiceInstance = require('../kakao/kakaoService');
 const kakaoAPI = require('../kakao/kakaoService');
-const kakaoServiceInstance = new kakaoAPI();
+// const kakaoServiceInstance = new kakaoAPI();
 const boredAPI = require('../APIs/boredAPI');
 
 exports.getActivity = async () => {

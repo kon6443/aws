@@ -1,21 +1,9 @@
 // userService.js
 
-const express = require("express");
-const app = express();
-const config = require('../../config/config');
-
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env')});
-
-// allows you to ejs view engine.
-app.set('view engine', 'ejs');
-
 // Using jsonwebtoken module.
 const jwt = require("jsonwebtoken");
 // importing bcrypt moudle to encrypt user password.
 const bcrypt = require('bcrypt');
-
-const container = require('../container/container');
 
 class userService {
     #config

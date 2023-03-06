@@ -1,36 +1,43 @@
 // homeService.js
 
-const { Container } = require('typedi');
-// const kakaoServiceInstance = require('../kakao/kakaoService');
-const kakaoAPI = require('../kakao/kakaoService');
-// const kakaoServiceInstance = new kakaoAPI();
-const boredAPI = require('../APIs/boredAPI');
-
-exports.getActivity = async () => {
-    return await boredAPI.getActivity();
-}
-
-exports.getAuthenticateURL = () => {
-    return kakaoServiceInstance.getAuthenticateURL();
-}
-
-exports.getLoggedInUser = async (jwtDecodedUser, kakao_access_token) => {
-    if(jwtDecodedUser) {
-        var user = jwtDecodedUser;
-    } else if(kakao_access_token) {
-        const {nickname, profile_image} = await kakaoServiceInstance.getUserInfo(kakao_access_token);
-        var user = {
-            id: nickname,
-            address: profile_image
-        }
+class homeService {
+    constructor(container) {
+        this.boredAPIInstance = container.get('boredAPI');
+        this.kakaoServiceInstance = container.get('kakaoService'); 
+    } 
+    async getActivity() {
+        return await this.boredAPIInstance.getActivity();
     }
-    return user;
+
+    getAuthenticateURL() {
+        return this.kakaoServiceInstance.getAuthenticateURL();
+    }
+
+    async getLoggedInUser(jwtDecodedUser, kakao_access_token) {
+        if(jwtDecodedUser) {
+            var user = jwtDecodedUser;
+        } else if(kakao_access_token) {
+            const {nickname, profile_image} = await this.kakaoServiceInstance.getUserInfo(kakao_access_token);
+            var user = {
+                id: nickname,
+                address: profile_image
+            }
+        }
+        return user;
+    }
+
+    async getTokens(AUTHORIZE_CODE) {
+        const {
+            access_token,
+            id_token,
+            refresh_token
+        } = await this.kakaoServiceInstance.getToken(AUTHORIZE_CODE);
+        return {
+            access_token,
+            id_token,
+            refresh_token
+        }; 
+    }
 }
 
-exports.getTokens = async (AUTHORIZE_CODE) => {
-    return {
-        access_token,
-        id_token,
-        refresh_token
-    } = await kakaoServiceInstance.getToken(AUTHORIZE_CODE);
-}
+module.exports = homeService;

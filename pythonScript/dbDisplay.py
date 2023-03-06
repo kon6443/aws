@@ -43,7 +43,7 @@ def dbShow():
             result.append(['','','',''])
         return_value = json.dumps(result)
         print(return_value)
-    	
+
 
 def main():
     dbShow()

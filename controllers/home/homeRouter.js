@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const path = require('path');
 
 const auth = require("../../models/authentication/authMiddleware");
-const homeServiceInstacnce = require('../../models/home/homeService');
-
-const path = require('path');
+const container = require('../../models/container/container');
+const homeServiceInstacnce = container.get('homeService');
 
 router.use('/', auth);
 

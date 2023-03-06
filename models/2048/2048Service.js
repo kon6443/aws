@@ -46,12 +46,6 @@ class game2048Service {
             args: [score]
         };
         return await this.game2048Repository.callPythonScript(options, this.getPythonFilePath('dbCompare.py')); 
-
-        // PythonShell.PythonShell.run(path.join(__dirname, '../../pythonScript/dbCompare.py'), options, function(err, results) {
-        //     if(err) throw err;
-        //     return results;
-        //     return res.status(200).send(results);
-        // });
     }
     
     async saveRecord(name, score, maxtile) {
@@ -63,55 +57,7 @@ class game2048Service {
             args: [name, score, maxtile]
         };
         return await this.game2048Repository.callPythonScript(options, this.getPythonFilePath('dbPost.py')); 
-
-        // PythonShell.PythonShell.run(path.join(__dirname, '../../pythonScript/dbPost.py'), options, function(err, results) {
-        //     if(err) throw err;
-        //     return results;
-        //     return res.status(200).send(results);
-        // });
     }
 }
 
 module.exports = game2048Service;
-
-// exports.displayGame = (req, res) => {
-//     var options = {
-//         mode: 'json',
-//         pythonPath:'',  
-//         pythonOptions:['-u'],
-//         scriptPath:'',
-//         args: [null]
-//     };
-//     PythonShell.PythonShell.run(path.join(__dirname, '../../pythonScript/dbDisplay.py'), options, function(err, results) {
-//         if(err) throw err;
-//         return res.render(path.join(__dirname, '../../views/2048/2048.ejs'), {rank:results[0]});
-//     });
-// }
-
-
-
-
-
-
-
-
-//     };
-//     PythonShell.PythonShell.run(path.join(__dirname, '../../pythonScript/dbCompare.py'), options, function(err, results) {
-//         if(err) throw err;
-//         return res.status(200).send(results);
-//     });
-// }
-
-// exports.saveRecord = (req, res) => {
-//     var options = {
-//         mode: 'text',
-//         pythonPath:'',  
-//         pythonOptions:['-u'],
-//         scriptPath:'',
-//         args: [req.body.name, req.body.score, req.body.maxtile]
-//     };
-//     PythonShell.PythonShell.run(path.join(__dirname, '../../pythonScript/dbPost.py'), options, function(err, results) {
-//         if(err) throw err;
-//         return res.status(200).send(results);
-//     });
-// }

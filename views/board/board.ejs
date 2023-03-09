@@ -100,7 +100,7 @@
                     success: function(res) {
                         let temp = '';
                         for(let i=0;i<res.length;i++) {
-                            temp += `<option value="${res[i]}" id="title">`;
+                            temp += `<option value="${res[i].TITLE}" id="title">`;
                         }
                         $('#titles').empty().append(temp);
                     }

@@ -70,6 +70,8 @@ class userService {
                 id: nickname,
                 address: profile_image
             }
+        } else {
+            return undefined;
         }
         return user;
     }

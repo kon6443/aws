@@ -21,6 +21,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.5.2",
     "mysql": "^2.18.1",
+    "mysql2": "^3.2.0",
+    "mysql2-promise": "^0.1.4",
     "path": "^0.12.7",
     "python-shell": "^3.0.1",
     "request-promise": "^4.2.6",

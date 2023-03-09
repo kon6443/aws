@@ -1,20 +1,193 @@
 // boardService.js
-const express = require("express");
-const app = express();
 
-// importing body-parser to create bodyParser object
-const bodyParser = require('body-parser');
-
-// allows you to use req.body var when you use http post method.
-app.use(bodyParser.urlencoded({ extended: true }));
-
-const path = require('path');
-
-// allows you to ejs view engine.
-app.set('view engine', 'ejs');
+class boardService {
+    #REQUEST_URL
+    constructor(container) {
+        const config = container.get('config');
+        this.#REQUEST_URL = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+config.KAKAO.REST_API_KEY+'&redirect_uri='+config.KAKAO.REDIRECT_URI; 
+        this.repository = container.get('MySQLRepository');
+    }
+    convertDateFormat(date) {
+        date = date.toLocaleString('default', {year:'numeric', month:'2-digit', day:'2-digit'});
+        let year = date.substr(6,4);
+        let month = date.substr(0,2);
+        let day = date.substr(3,2);
+        let convertedDate = `${year}-${month}-${day}`;
+        return convertedDate;
+    }
     
-const boardDAO = require('./boardDAO');
-const boardCommentDAO = require('./boardCommentDAO');
+    convertTableDateFormat(table) {
+        for(let i=0;i<table.length;i++) {
+            table[i].POST_DATE = this.convertDateFormat(table[i].POST_DATE);
+            table[i].UPDATE_DATE = this.convertDateFormat(table[i].UPDATE_DATE);
+        }
+        return table;
+    }
+    
+    convertArticleDateFormat(article) {
+        article.POST_DATE = this.convertDateFormat(article.POST_DATE);
+        article.UPDATE_DATE = this.convertDateFormat(article.UPDATE_DATE);
+        return article;
+    }
+    
+    async getTitlesIncludeString(titles, search) {
+        let result = [];
+        for(let i=0;i<titles.length;i++) {
+            if(titles[i].TITLE.includes(search)) result.push(titles[i]);
+        }
+        return result;
+    }
+    converToNumber(number, defaultValue) {
+        // Ensuring that the variable value is an integer greater than or equal to 1.
+        number = Math.max(1, parseInt(number)); 
+        // Making sure that the number is always a number, and if it's not, it defaults to 1.
+        number = !isNaN(number) ? number:defaultValue; 
+        return number;
+    }
+    async getPageItems(totalItems, currentPage, itemsPerPage) {
+        currentPage = this.converToNumber(currentPage, 1);
+        itemsPerPage = this.converToNumber(itemsPerPage, 10);
+    
+        const totalPages = Math.ceil(totalItems/itemsPerPage);
+        const startIndex = (currentPage-1) * itemsPerPage;
+        const endIndex = (currentPage===totalPages) ? totalItems-1 : (currentPage*itemsPerPage-1);
+        return {
+            currentPage: currentPage,
+            itemsPerPage: itemsPerPage,
+            totalPages: totalPages,
+            startIndex: startIndex,
+            endIndex: endIndex
+        };
+    }
+
+    /**
+     * ArticlesService
+     */
+    async getAllArticles() {
+        const sql = `SELECT * FROM BOARD ORDER BY BOARD_NO DESC;`;
+        let [articles] = await this.repository.executeQuery(sql);
+        articles = this.convertTableDateFormat(articles);
+        return articles;
+    }
+
+    async searchArticlesByTitle(title) {
+        const sql = `SELECT * FROM BOARD WHERE TITLE LIKE '%${title}%' ORDER BY BOARD_NO DESC;`;
+        let [articles] = await this.repository.executeQuery(sql);
+        articles = this.convertTableDateFormat(articles);
+        return articles;
+    }
+
+    async searchTitleByChar(keyStroke) {
+        const sql = `SELECT TITLE FROM BOARD WHERE TITLE LIKE '%${keyStroke}%' ORDER BY BOARD_NO DESC;`;
+        let [titles] = await this.repository.executeQuery(sql);
+        return titles;
+    }
+
+    async showArticleByNum(article_num) {
+        const sql = `SELECT * FROM BOARD WHERE BOARD_NO=${article_num};`;
+        let [article] = await this.repository.executeQuery(sql);
+        article = this.convertArticleDateFormat(article[0]);
+        return article;
+    }
+
+    async insert(title, content, author) {
+        const sql = `INSERT INTO BOARD (TITLE, content, POST_DATE, UPDATE_DATE, AUTHOR) VALUES ?;`;
+        const date_obj = new Date();
+        const post_date = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
+        const update_date = post_date;
+        let values = [
+            [title, content, post_date, update_date, author]
+        ];
+        const [res] = await this.repository.executeQuery(sql, [values]);
+        return res.affectedRows;
+    }
+
+    async deleteByNum(article_num) {
+        const sql = `DELETE FROM BOARD WHERE BOARD_NO=${article_num};`;
+        const [res] = await this.repository.executeQuery(sql);
+        return res.affectedRows;
+    }
+
+    async editArticle(article_num, title, content, update) {
+        const sql = `UPDATE BOARD SET TITLE=${title}, content=${content}, UPDATE_DATE=${update} WHERE BOARD_NO=${article_num};`;
+        return await this.repository.executeQuery(sql);
+    }
+
+    /**
+     * CommentService
+     */
+
+    async getMaxCommentOrder(article_num, group_num) {
+        const sql = `select max(comment_order) as maxCommentOrder from comment where article_num=${article_num} and group_num=${group_num};`;
+        const return_val = await this.repository.executeQuery(sql);
+        return return_val[0].maxCommentOrder;
+    }
+    
+    async getNewGroupNum(article_num) {
+        const sql = `select max(comment.group_num) as maxGroupNum from BOARD left join comment on BOARD.BOARD_NO=comment.article_num where BOARD.BOARD_NO=${article_num};`;
+        const return_val = await this.repository.executeQuery(sql);
+        return return_val[0].maxGroupNum + 1;
+    }
+    
+    getTime() {
+        const date_obj = new Date();
+        let date = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate()+" ";
+        let time = date_obj.getHours() +":"+ date_obj.getMinutes() +":"+ date_obj.getSeconds();
+        time = date+time;
+        return time;
+    }
+    
+    async getComments(article_num) {
+        // const sql = "SELECT * FROM COMMENT WHERE article_num='"+article_num+"';";
+        const sql = `SELECT * FROM comment WHERE article_num=${article_num} ORDER BY group_num, comment_order ASC;`
+        let [comments] = await this.repository.executeQuery(sql);
+        return comments
+    }
+    
+    async insertCommentasync(article_num, author, content, length) {
+        // insert into comment (article_num, author, time, class, comment_order, group_num, content) VALUES (24, 'prac', '2022-09-02', 1, 1, 1, 'this is a comment content');
+        const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
+        const time = this.getTime();
+        const depth = 0;
+        const group_num = await this.getNewGroupNum(article_num);
+        // const comment_order = parseInt(length) + 1;
+        const comment_order = await this.getMaxCommentOrder(article_num, group_num) + 1;
+        let values = [
+            [article_num, author, time, depth, comment_order, group_num, content]
+        ];
+        return await this.repository.executeQuery(sql, [values]);
+    }
+    
+    async editCommentByNum(comment_num, content) {
+        const query = `UPDATE comment SET content='${content}' WHERE comment_num=${comment_num};`
+        return await this.repository.executeQuery(query);
+    }
+    
+    async insertReply(article_num, author, group_num, content) {
+        const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
+        const time = this.getTime();
+        const depth = 1;
+        const comment_order = await this.getMaxCommentOrder(article_num, group_num) + 1;
+        let values = [
+            [article_num, author, time, depth, comment_order, group_num, content]
+        ];
+        return await this.repository.executeQuery(sql, [values]);
+    }
+    
+    async getCommentAuthorByNum(comment_num) {
+        const sql = `SELECT author FROM comment WHERE comment_num=${comment_num};`;
+        const [[commentAuthor]] = await this.repository.executeQuery(sql);
+        return commentAuthor.author;
+    }
+    
+    async deleteComment(comment_num) {
+        const sql = `UPDATE comment SET author='deleted', content='deleted', time=NULL WHERE comment_num=${comment_num};`;
+        const [res] = await this.repository.executeQuery(sql);
+        return res.affectedRows;
+    }
+}
+
+module.exports = boardService;
 
 /**
  * ====== Methods ===========================================================================================================
@@ -73,6 +246,7 @@ exports.getTitlesIncludeString = async (titles, search) => {
 
 var request_url = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+process.env.REST_API_KEY+'&redirect_uri='+process.env.REDIRECT_URI;
 
+/** 
 // Main login page.
 exports.showMain = async (req, res, next) => {
     if(req.query.search) return next();
@@ -247,3 +421,5 @@ exports.errorHandler = (err, req, res, next) => {
         res.render(path.join(__dirname, '../../views/board/board'));
     }
 }
+
+*/

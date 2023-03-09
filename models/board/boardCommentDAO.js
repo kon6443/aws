@@ -1,7 +1,7 @@
 // boardCommentDAO.js
 
 // connecting MySQL
-const conn = require('../connectMySQL');
+const conn = require('../MySQLRepository');
 
 const util = require('util');
 // node native promisify

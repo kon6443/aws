@@ -17,12 +17,12 @@ class MySQLRepository {
         // this.query = util.promisify(this.pool.query).bind(this.pool); 
     }
 
-    async executeQuery(sql) {
+    async executeQuery(sql, values) {
         let connection = null;
         let res = null;
         try {
             connection = await this.pool.getConnection();
-            res = await connection.query(sql);
+            res = await connection.query(sql, values);
             return res;
         } catch(err) {
             console.log('err:', err);

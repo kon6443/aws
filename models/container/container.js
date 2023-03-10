@@ -18,6 +18,7 @@ const userService = require('../user/userService');
 const boredAPI = require('../APIs/boredAPI');
 const homeService = require('../home/homeService');
 const boardService = require('../board/boardService');
+const BoardController = require('../../controllers/board/boardController');
 
 container.set('User', User);
 container.set('config', config);
@@ -30,6 +31,7 @@ container.set('userService', new userService(container));
 container.set('boredAPI', new boredAPI());
 container.set('homeService', new homeService(container));
 container.set('boardService', new boardService(container));
+container.set('BoardController', new BoardController(container));
 
 module.exports = container;
 

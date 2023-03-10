@@ -7,6 +7,7 @@ class boardService {
         this.#REQUEST_URL = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id='+config.KAKAO.REST_API_KEY+'&redirect_uri='+config.KAKAO.REDIRECT_URI; 
         this.repository = container.get('MySQLRepository');
     }
+
     convertDateFormat(date) {
         date = date.toLocaleString('default', {year:'numeric', month:'2-digit', day:'2-digit'});
         let year = date.substr(6,4);
@@ -118,15 +119,17 @@ class boardService {
      */
 
     async getMaxCommentOrder(article_num, group_num) {
-        const sql = `select max(comment_order) as maxCommentOrder from comment where article_num=${article_num} and group_num=${group_num};`;
-        const return_val = await this.repository.executeQuery(sql);
-        return return_val[0].maxCommentOrder;
+        const sql = `SELECT MAX(comment_order) AS maxCommentOrder FROM comment WHERE article_num=${article_num} AND group_num=${group_num};`;
+        const [res] = await this.repository.executeQuery(sql);
+        res.maxCommentOrder ??= 0;
+        return res.maxCommentOrder;
     }
     
     async getNewGroupNum(article_num) {
-        const sql = `select max(comment.group_num) as maxGroupNum from BOARD left join comment on BOARD.BOARD_NO=comment.article_num where BOARD.BOARD_NO=${article_num};`;
-        const return_val = await this.repository.executeQuery(sql);
-        return return_val[0].maxGroupNum + 1;
+        const sql = `SELECT MAX(comment.group_num) AS maxGroupNum FROM BOARD LEFT JOIN comment ON BOARD.BOARD_NO=comment.article_num WHERE BOARD.BOARD_NO=${article_num};`;
+        const [[res]] = await this.repository.executeQuery(sql);
+        res.maxGroupNum ??= 0;
+        return res.maxGroupNum+1;
     }
     
     getTime() {
@@ -144,23 +147,25 @@ class boardService {
         return comments
     }
     
-    async insertCommentasync(article_num, author, content, length) {
+    async insertComment(article_num, author, content, length) {
         // insert into comment (article_num, author, time, class, comment_order, group_num, content) VALUES (24, 'prac', '2022-09-02', 1, 1, 1, 'this is a comment content');
         const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
         const time = this.getTime();
         const depth = 0;
-        const group_num = await this.getNewGroupNum(article_num);
+        const new_group = await this.getNewGroupNum(article_num);
         // const comment_order = parseInt(length) + 1;
-        const comment_order = await this.getMaxCommentOrder(article_num, group_num) + 1;
+        const comment_order = await this.getMaxCommentOrder(article_num, new_group) + 1;
         let values = [
-            [article_num, author, time, depth, comment_order, group_num, content]
+            [article_num, author, time, depth, comment_order, new_group, content]
         ];
-        return await this.repository.executeQuery(sql, [values]);
+        const [res] = await this.repository.executeQuery(sql, [values]);
+        return res.affectedRows;
     }
     
     async editCommentByNum(comment_num, content) {
         const query = `UPDATE comment SET content='${content}' WHERE comment_num=${comment_num};`
-        return await this.repository.executeQuery(query);
+        const [res] = await this.repository.executeQuery(query);
+        return res.affectedRows;
     }
     
     async insertReply(article_num, author, group_num, content) {
@@ -171,7 +176,8 @@ class boardService {
         let values = [
             [article_num, author, time, depth, comment_order, group_num, content]
         ];
-        return await this.repository.executeQuery(sql, [values]);
+        const [res] = await this.repository.executeQuery(sql, [values]);
+        return res.affectedRows;
     }
     
     async getCommentAuthorByNum(comment_num) {

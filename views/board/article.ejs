@@ -165,6 +165,7 @@
             function submitReply(user, group_num) {
                 const content = document.getElementById('replyContent'+group_num).value;
                 document.getElementById('replyContent'+group_num).value = '';
+                console.log('content:', content);
                 $.ajax({
                     type: "post",
                     url: '/board/article/:group/:content',

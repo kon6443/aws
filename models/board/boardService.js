@@ -120,8 +120,10 @@ class boardService {
 
     async getMaxCommentOrder(article_num, group_num) {
         const sql = `SELECT MAX(comment_order) AS maxCommentOrder FROM comment WHERE article_num=${article_num} AND group_num=${group_num};`;
-        const [res] = await this.repository.executeQuery(sql);
+        const [[res]] = await this.repository.executeQuery(sql);
+        console.log('maxCommentOrder:', res);
         res.maxCommentOrder ??= 0;
+        console.log('maxCommentOrder:', res);
         return res.maxCommentOrder;
     }
     
@@ -176,6 +178,7 @@ class boardService {
         let values = [
             [article_num, author, time, depth, comment_order, group_num, content]
         ];
+        console.log('values:', values);
         const [res] = await this.repository.executeQuery(sql, [values]);
         return res.affectedRows;
     }

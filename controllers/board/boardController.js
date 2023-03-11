@@ -68,6 +68,10 @@ class BoardController {
         const article_num = req.params.id;
         const article = await this.serviceInstance.showArticleByNum(article_num);
         const comments = await this.serviceInstance.getComments(article_num);
+        // console.log('comments:', comments);
+        // for(let i=0;i<comments.length;i++) {
+        //     console.log('comment_order', comments[i].comment_order,', content:', comments[i].content, ', group_num:', comments[i].group_num);
+        // }
         return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article, comments: comments, length: comments.length});
     }
     autoComplete = async (req, res, next) => {
@@ -163,15 +167,12 @@ class BoardController {
             return res.render(path.join(__dirname, '../../views/user/loginPage'));
         }
         const { article_num, group_num, content } = req.body;
-        console.log('1:', article_num,', 2:', group_num,', 3:', content);
-        console.log('body:', req.body);
-    
-        // const affectedRows = await this.serviceInstance.insertReply(article_num, user.id, group_num, content);
-        // console.log('affectedRows:', affectedRows);
+        const affectedRows = await this.serviceInstance.insertReply(article_num, user.id, group_num, content);
+        console.log('affectedRows:', affectedRows);
         if(affectedRows===1) {
-         // return res.status(200).send('Reply has been posted.');
+            return res.status(200).send('Reply has been posted.');
         } else {
-         // return res.render(path.join(__dirname, '../../views/user/loginPage'));
+            return res.status(200).send('Something went wrong.');
         }
     }
     showEditingArticle = async (req, res) => {

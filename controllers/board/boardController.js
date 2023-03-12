@@ -29,6 +29,7 @@ class BoardController {
             search: search
         });
     }
+
     searchArticleTitle = async (req, res) => {
         let { search, page, limit } = req.query;
         let articles = await this.serviceInstance.searchArticlesByTitle(search);
@@ -48,6 +49,7 @@ class BoardController {
             search: search
         });
     }
+
     writeArticle = async (req, res) => {
         const jwtDecodedUserInfo = req.decoded;
         const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
@@ -57,6 +59,7 @@ class BoardController {
             return res.render(path.join(__dirname, '../../views/user/loginPage'));
         }
     }
+    
     showArticle = async (req, res, next) => {
         if(req.query.keyStroke) return next();
         if(req.query.search) return next();
@@ -68,18 +71,16 @@ class BoardController {
         const article_num = req.params.id;
         const article = await this.serviceInstance.showArticleByNum(article_num);
         const comments = await this.serviceInstance.getComments(article_num);
-        // console.log('comments:', comments);
-        // for(let i=0;i<comments.length;i++) {
-        //     console.log('comment_order', comments[i].comment_order,', content:', comments[i].content, ', group_num:', comments[i].group_num);
-        // }
         return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article, comments: comments, length: comments.length});
     }
+
     autoComplete = async (req, res, next) => {
         if(req.query.search) return next();
         const keyStroke = req.query.keyStroke;
         const titles = await this.serviceInstance.searchTitleByChar(keyStroke);
         return res.status(200).send(titles).end();
     }
+
     deleteArticle = async (req, res, next) => {
         if(req.body.comment_num) return next();
         const jwtDecodedUserInfo = req.decoded;
@@ -97,6 +98,7 @@ class BoardController {
         }
     
     }
+
     deleteComment = async (req, res) => {
         const jwtDecodedUserInfo = req.decoded;
         const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
@@ -112,6 +114,7 @@ class BoardController {
             return res.status(200).send('Something went wrong').end();
         }
     }
+
     postArticle = async (req, res) => {
         const jwtDecodedUserInfo = req.decoded;
         const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
@@ -127,6 +130,7 @@ class BoardController {
             return res.status(200).send('Something went wrong').end();
         }
     }
+    
     postComment = async (req, res) => {
         const jwtDecodedUserInfo = req.decoded;
         const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
@@ -142,7 +146,9 @@ class BoardController {
             return res.status(200).send('Something went wrong.');
         }
     }
+
     editComment = async (req, res) => {
+        console.log('editComment function has been called.');
         const jwtDecodedUserInfo = req.decoded;
         const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
         if(!user) {
@@ -160,6 +166,7 @@ class BoardController {
             return res.status(200).send('Something went wrong.').end();
         }
     }
+
     replyComment = async (req, res) => {
         const jwtDecodedUserInfo = req.decoded;
         const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
@@ -168,33 +175,47 @@ class BoardController {
         }
         const { article_num, group_num, content } = req.body;
         const affectedRows = await this.serviceInstance.insertReply(article_num, user.id, group_num, content);
-        console.log('affectedRows:', affectedRows);
         if(affectedRows===1) {
             return res.status(200).send('Reply has been posted.');
         } else {
             return res.status(200).send('Something went wrong.');
         }
     }
+
     showEditingArticle = async (req, res) => {
-        const user = req.decoded;
+        const jwtDecodedUserInfo = req.decoded;
+        const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
+        if(!user) {
+            return res.render(path.join(__dirname, '../../views/user/loginPage'));
+        }
         const article_num = req.params.id;
-        let article = await this.serviceInstance.showArticleByNum(article_num);
-        article = this.serviceInstance.convertArticleDateFormat(article);
-        if(user.id === article.AUTHOR) {
+        const article = await this.serviceInstance.showArticleByNum(article_num);
+        if(user.id===article.AUTHOR) {
             return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
         }
     }
     updateArticle = async (req, res) => {
-        const user = req.decoded;
-        const article_num = req.body.id;
-        const title = req.body.title;
-        const content = req.body.content;
-        let article = await this.serviceInstance.showArticleByNum(article_num);
-        article = this.serviceInstance.convertArticleDateFormat(article);
+        console.log('updateArticle funciton has been called.');
+        const jwtDecodedUserInfo = req.decoded;
+        const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, req.session.access_token);
+        if(!user) {
+            return res.render(path.join(__dirname, '../../views/user/loginPage'));
+        }
+        const { id, title, content } = req.body;
+        // const article_num = req.body.id;
+        // const title = req.body.title;
+        // const content = req.body.content;
+        let article = await this.serviceInstance.showArticleByNum(id);
+        console.log('article before update:', article);
         const date_obj = new Date();
         article.UPDATE_DATE = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
-        await this.serviceInstance.editArticle(article_num, title, content, article.UPDATE_DATE);
-        return res.status(200).send('Your article has been editied.');
+        console.log('article after update:', article);
+        // const affectedRows = await this.serviceInstance.editArticle(id, title, content, article.UPDATE_DATE);
+        // if(affectedRows===1) {
+        //     return res.status(200).send('Your article has been editied.');
+        // } else {
+        //     return res.status(200).send('Something went wrong.');
+        // }
     }
 }
 

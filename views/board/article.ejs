@@ -137,13 +137,15 @@
             
 		</div>
         <script>
-            function submitEditedComment(comment_num) {
-                const content = document.getElementById('editContent'+comment_num).value;
-                document.getElementById('editContent'+comment_num).value = '';
+            function submitEditedComment(id) {
+                const content = document.getElementById('editContent'+id).value;
+                document.getElementById('editContent'+id).value = '';
+                const resourceType = 'comment';
+                console.log('id:', id);
                 $.ajax({
                     type: "put",
-                    url: '/board/:comment/:content',
-                    data: {comment_num: comment_num, content: content},
+                    url: `/board/${resourceType}/${id}`,
+                    data: {content: content},
                     dataType:'text',
                     success: function(res) {
                         if(res === 'Comment has been updated.') {
@@ -204,14 +206,15 @@
                 });
             }
             function postComment() {
-                const article_num = <%= article.BOARD_NO %>;
-                const length = <%= length %>;
-                const comment = document.getElementById('comment').value;
+                const id = <%= article.BOARD_NO %>;
+                const content = document.getElementById('comment').value;
                 document.getElementById('comment').value = '';
+                const resourceType = 'comment';
+                console.log('id:', id);
                 $.ajax({
                     type: "post",
-                    url: '/board/article/:content',
-                    data: {content: comment, article_num: article_num, length: length},
+                    url: `/board/${resourceType}/${id}`,
+                    data: {content: content},
                     dataType:'text',
                     success: function(res) {
                         if(res == 'Comment has been posted.') {

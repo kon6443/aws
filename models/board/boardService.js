@@ -109,9 +109,12 @@ class boardService {
         return res.affectedRows;
     }
 
-    async editArticle(article_num, title, content, update) {
-        const sql = `UPDATE BOARD SET TITLE=${title}, content=${content}, UPDATE_DATE=${update} WHERE BOARD_NO=${article_num};`;
-        return await this.repository.executeQuery(sql);
+    async updateArticle(article_num, title, content) {
+        const time = this.getTime(); 
+        const sql = 'UPDATE BOARD SET TITLE=?, content=?, UPDATE_DATE=? WHERE BOARD_NO=?;';
+        const values = [title, content, time, article_num];
+        const [res] = await this.repository.executeQuery(sql, values);
+        return res.changedRows;
     }
 
     /**
@@ -147,14 +150,13 @@ class boardService {
         return comments
     }
     
-    async insertComment(article_num, author, content, length) {
-        // insert into comment (article_num, author, time, class, comment_order, group_num, content) VALUES (24, 'prac', '2022-09-02', 1, 1, 1, 'this is a comment content');
+    async insertComment(article_num, author, content) {
         const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
         const time = this.getTime();
         const depth = 0;
         const new_group = await this.getNewGroupNum(article_num);
         // const comment_order = parseInt(length) + 1;
-        const comment_order = await this.getMaxCommentOrder(article_num, new_group) + 1;
+        const comment_order = await this.getMaxCommentOrder(article_num, new_group)+1;
         let values = [
             [article_num, author, time, depth, comment_order, new_group, content]
         ];

@@ -53,9 +53,10 @@
                             function postArticle() {
                                 const title = document.getElementById("title").value;
                                 const content = document.getElementById("content").value;
+                                const resourceType = 'article';
                                 $.ajax({
                                     type: "post",
-                                    url: '/board/article',
+                                    url: `/board/${resourceType}`,
                                     data: {title: title, content:content},
                                     dataType:'text',
                                     success: function(res) {

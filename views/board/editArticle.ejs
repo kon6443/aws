@@ -51,13 +51,14 @@
                         </div>
                         <script>
                             function submitEditiedArticle() {
+                                const resourceType = 'article'
                                 const id = '<%= article.BOARD_NO %>';
                                 const title = document.getElementById("title").value;
                                 const content = document.getElementById("content").value;
                                 $.ajax({
                                     type: "put",
-                                    url: '/board/article/:id',
-                                    data: {id:id, title: title, content:content},
+                                    url: `/board/${resourceType}/${id}`,
+                                    data: {title: title, content:content},
                                     dataType:'text',
                                     success: function(res) {
                                         alert(res);

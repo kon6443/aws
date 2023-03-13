@@ -13,11 +13,10 @@ router.use('/', auth);
 
 router.get('/', BoardControllerInstance.showMain);
 router.get('/', BoardControllerInstance.searchArticleTitle);
-router.get('/write', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.writeArticle);
-router.get('/:id', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.showArticle);
+router.get('/write', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.displayArticleForm);
+router.get('/:id', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.displayArticle);
 router.get('/:keyStroke', BoardControllerInstance.autoComplete);
-router.delete('/:id', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.deleteArticle);
-router.delete('/:comment', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.deleteComment);
+router.delete('/:resourceType/:id', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.deleteResource);
 router.post('/:resourceType/:id?', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.postResource);
 router.put('/:resourceType/:id', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.updateResource);
 router.post('/article/:group/:content', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.replyComment);

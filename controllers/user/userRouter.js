@@ -12,6 +12,7 @@ const auth = require("../../models/authentication/authMiddleware");
 
 const container = require('../../models/container/container');
 const userServiceInstance = container.get('userService');
+const FilterInstance = container.get('Filter');
 
 const path = require('path');
 path.join(__dirname, 'public');

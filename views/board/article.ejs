@@ -122,7 +122,7 @@
                                             <textarea id="replyContent<%= comments[i].group_num %>" style="width: 100%;"></textarea>
                                         </div>
                                         <div class="col box col-md-3" >
-                                            <button type="button" id="commentsButton" onclick="submitReply('<%= user.id %>', <%= comments[i].group_num %>)" style="width: 100%;">Submit</button>
+                                            <button type="button" id="commentsButton" onclick="submitReply('<%= user.id %>', <%= comments[i].group_num %>, <%= article.BOARD_NO %>)" style="width: 100%;">Submit</button>
                                         </div>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                             <% } %>
                         <% } %>
                     </div>
-                        <button type="button" id="delete" onclick="deleteArticle()">Delete</button>
+                        <button type="button" id="delete" onclick="deleteArticle(<%= article.BOARD_NO %>)">Delete</button>
                         <button type="button" id="edit" onclick="editArticle()">Edit</button>
                     </div>
             </div>
@@ -164,14 +164,14 @@
                     x.style.display = "none";
                 }
             }
-            function submitReply(user, group_num) {
+            function submitReply(user, group_num, id) {
                 const content = document.getElementById('replyContent'+group_num).value;
                 document.getElementById('replyContent'+group_num).value = '';
-                console.log('content:', content);
+                const resourceType = 'reply';
                 $.ajax({
                     type: "post",
-                    url: '/board/article/:group/:content',
-                    data: {article_num: <%= article.BOARD_NO %>, group_num: group_num, content: content},
+                    url: `/board/${resourceType}/${id}`,
+                    data: {group_num: group_num, content: content},
                     dataType:'text',
                     success: function(res) {
                         if(res == 'Reply has been posted.') {
@@ -190,12 +190,13 @@
                     x.style.display = "none";
                 }
             }
-            function deleteComment(comment_num) {
-                const article_num = <%= article.BOARD_NO %>;
+            function deleteComment(id) {
+                // const article_num = <%= article.BOARD_NO %>;
+                const resourceType = 'comment';
                 $.ajax({
                     type: "delete",
-                    url: '/board/:comment',
-                    data: {comment_num: comment_num},
+                    url: `/board/${resourceType}/${id}`,
+                    data: {},
                     dataType:'text',
                     success: function(res) {
                         alert(res);
@@ -210,7 +211,6 @@
                 const content = document.getElementById('comment').value;
                 document.getElementById('comment').value = '';
                 const resourceType = 'comment';
-                console.log('id:', id);
                 $.ajax({
                     type: "post",
                     url: `/board/${resourceType}/${id}`,
@@ -225,12 +225,13 @@
                     }
                 });
             }
-            function deleteArticle() {
-                const article_num = <%= article.BOARD_NO %>;
+            function deleteArticle(id) {
+                // const article_num = <%= article.BOARD_NO %>;
+                const resourceType = 'article';
                 $.ajax({
                     type: "delete",
-                    url: '/board/:id',
-                    data: {article_num: article_num},
+                    url: `/board/${resourceType}/${id}`,
+                    data: {},
                     dataType:'text',
                     success: function(res) {
                         alert(res);

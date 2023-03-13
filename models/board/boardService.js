@@ -174,7 +174,7 @@ class boardService {
         const sql = `INSERT INTO comment (article_num, author, time, class, comment_order, group_num, content) VALUES ?;`;
         const time = this.getTime();
         const depth = 1;
-        const comment_order = await this.getMaxCommentOrder(article_num, group_num) + 1;
+        const comment_order = await this.getMaxCommentOrder(article_num, group_num)+1;
         let values = [
             [article_num, author, time, depth, comment_order, group_num, content]
         ];

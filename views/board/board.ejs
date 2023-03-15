@@ -42,14 +42,22 @@
                                 <th style="height: 6vh; width: 10%;"> Posted date </th>
                                 <th style="height: 6vh; width: 10%;"> Author </th>
                             </tr>
-                            <% for(let i=boardObject.startIndex; i< boardObject.endIndex; i++) { %>
+                            <!-- <% for(let i=pagination.startIndex; i<=pagination.endIndex && articles[i]; i++) { %>
                                 <tr>
                                     <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>" style="color: white; text-decoration: none;"><%= articles[i].BOARD_NO %></a></td>
                                     <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>" style="color: white; text-decoration: none;"><%= articles[i].TITLE %></a></td>
                                     <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>" style="color: white; text-decoration: none;"><%= articles[i].POST_DATE %></a></td>
                                     <td style="height: 5vh;"><a href="/board/<%= articles[i].BOARD_NO %>" style="color: white; text-decoration: none;"><%= articles[i].AUTHOR %></a></td>
                                 </tr>
-                            <% } %>
+                            <% } %> -->
+                            <% articles.forEach((article) => { %>
+                                <tr>
+                                    <td style="height: 5vh;"><a href="/board/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.BOARD_NO %></a></td>
+                                    <td style="height: 5vh;"><a href="/board/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.TITLE %></a></td>
+                                    <td style="height: 5vh;"><a href="/board/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.POST_DATE %></a></td>
+                                    <td style="height: 5vh;"><a href="/board/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.AUTHOR %></a></td>
+                                </tr>
+                            <% }); %>
                         </table >
                     </div>
                     <button type="button" id="new" onclick="location.href='/board/write'">New</button>
@@ -57,22 +65,22 @@
                         <nav class="col-8">
                             <% 
                                 var offset = 2;
-                                var previousBtnEnabled = boardObject.currentPage>1;
-                                var nextBtnEnabled = boardObject.currentPage< boardObject.totalPages; 
+                                var previousBtnEnabled = pagination.currentPage>1;
+                                var nextBtnEnabled = pagination.currentPage< pagination.totalPages; 
                             %>
                             <ul class="pagination pagination-sm justify-content-center align-items-center h-100 mb-0">            
                                 <li class="page-item <%= previousBtnEnabled?'':'disabled' %>">
-                                    <a class="page-link" href="/board?page=<%= boardObject.currentPage-1 %>&limit=<%= boardObject.itemsPerPage %>&search=<%= search %>" <%= previousBtnEnabled?'':'tabindex=-1' %>>«</a>
+                                    <a class="page-link" href="/board?current-page=<%= pagination.currentPage-1 %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>" <%= previousBtnEnabled?'':'tabindex=-1' %>>«</a>
                                 </li>
-                                <% for(i=1;i<=boardObject.totalPages;i++){ %>
-                                    <% if(i==1 || i==boardObject.totalPages || (i>=boardObject.currentPage-offset && i<=boardObject.currentPage+offset)){ %>
-                                        <li class="page-item <%= boardObject.currentPage==i?'active':'' %>"><a class="page-link" href="/board?page=<%= i %>&limit=<%= boardObject.itemsPerPage %>&search=<%= search %>"> <%= i %> </a></li>
-                                    <% } else if(i==2 || i==boardObject.totalPages-1){ %>
+                                <% for(i=1;i<=pagination.totalPages;i++){ %>
+                                    <% if(i==1 || i==pagination.totalPages || (i>=pagination.currentPage-offset && i<=pagination.currentPage+offset)){ %>
+                                        <li class="page-item <%= pagination.currentPage==i?'active':'' %>"><a class="page-link" href="/board?current-page=<%= i %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>"> <%= i %> </a></li>
+                                    <% } else if(i==2 || i==pagination.totalPages-1){ %>
                                         <li><a class="page-link">...</a></li>
                                     <% } %>
                                 <% } %>
                                 <li class="page-item <%= nextBtnEnabled?'':'disabled' %>">
-                                    <a class="page-link" href="/board?page=<%= boardObject.currentPage+1 %>&limit=<%= boardObject.itemsPerPage %>&search=<%= search %>" <%= nextBtnEnabled?'':'tabindex=-1' %>>»</a>
+                                    <a class="page-link" href="/board?current-page=<%= pagination.currentPage+1 %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>" <%= nextBtnEnabled?'':'tabindex=-1' %>>»</a>
                                 </li>
                             </ul>
                         </nav>
@@ -83,19 +91,20 @@
         <script>
             function search() {
                 const search = document.getElementById('search').value;
-                window.location.href = "/board?search="+search+"&page=<%= boardObject.currentPage %>&limit=<%= boardObject.itemsPerPage %>";
+                window.location.href = "/board?search="+search;
+                // window.location.href = "/board?search="+search+"&current-page=<%= pagination.currentPage %>&items-per-page=<%= pagination.itemsPerPage %>";
                 // window.location.href = '/board?search='+search;
             }
             function detectKeystroke() {
                 const keyStroke = document.getElementById('search').value;
-                if(keyStroke==='') {
+                if(keyStroke==="") {
                     $("#titles").empty();
                     return ;
                 }
                 $.ajax({
-                    type: "get",
-                    url: '/board/:keyStroke',
-                    data: {keyStroke:keyStroke},
+                    type: "GET",
+                    url: `/board/auto-completion?keyStroke=${keyStroke}`,
+                    data: {},
                     dataType:'json',
                     success: function(res) {
                         let temp = '';

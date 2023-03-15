@@ -10,33 +10,18 @@ class BoardController {
         this.userServiceInstance = container.get('userService');
     }
 
-    // Main page.
-    showMain = async (req, res, next) => {
-        if(req.query.search) return next();
-        let { search, page, limit } = req.query;
-        console.log('search:', search,', page:', page,', limit:', limit);
-        let articles = await this.serviceInstance.getAllArticles();
-        const boardObject = await this.serviceInstance.getPageItems(articles.length, page, limit);
-        return res.render(path.join(__dirname, '../../views/board/board'), {
-            articles: articles, 
-            user: (req.decoded) ? (req.decoded.id) : ('Guest'),
-            boardObject: boardObject,
-            search: search
-        });
-    }
-
-    searchArticleTitle = async (req, res) => {
-        let { search, page, limit } = req.query;
-        let articles = await this.serviceInstance.searchArticlesByTitle(search);
+    handleMainRequest = async (req, res, next) => {
+        const user = req.user;
+        const { search, 'current-page': currentPage, 'items-per-page': itemsPerPage } = req.query;
+        const { articles, pagination } = await this.serviceInstance.getPaginatedArticlesByTitle(search, currentPage, itemsPerPage);
         if(articles.length===0) {
             return res.status(200).send('There is no matching result.').end();
         }
-        const boardObject = await this.serviceInstance.getPageItems(articles.length, page, limit);
         return res.render(path.join(__dirname, '../../views/board/board'), {
-            articles: articles,
-            user: (req.decoded) ? (req.decoded.id) : ('Guest'),
-            boardObject: boardObject,
-            search: search
+            articles, 
+            user: (user) ? (user.id) : ('Guest'),
+            pagination,
+            search
         });
     }
 
@@ -45,9 +30,9 @@ class BoardController {
         return res.render(path.join(__dirname, '../../views/board/boardWrite'), {user:user});
     }
     
-    displayArticle = async (req, res, next) => {
-        if(req.query.keyStroke) return next();
-        if(req.query.search) return next();
+    getArticle = async (req, res, next) => {
+        // if(req.query.keyStroke) return next();
+        // if(req.query.search) return next();
         const user = req.user;
         const { id } = req.params;
         const article = await this.serviceInstance.showArticleByNum(id);
@@ -56,8 +41,8 @@ class BoardController {
     }
 
     autoComplete = async (req, res, next) => {
-        if(req.query.search) return next();
-        const keyStroke = req.query.keyStroke;
+        // if(req.query.search) return next();
+        const { keyStroke } = req.query;
         const titles = await this.serviceInstance.searchTitleByChar(keyStroke);
         return res.status(200).send(titles).end();
     }
@@ -132,17 +117,6 @@ class BoardController {
             }
             default:
                 return res.status(400).send('Invalid resource type.');
-        }
-    }
-
-    replyComment = async (req, res) => {
-        const user = req.user;
-        const { article_num, group_num, content } = req.body;
-        const affectedRows = await this.serviceInstance.insertReply(article_num, user.id, group_num, content);
-        if(affectedRows===1) {
-            return res.status(200).send('Reply has been posted.');
-        } else {
-            return res.status(200).send('Something went wrong.');
         }
     }
 

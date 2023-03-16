@@ -18,15 +18,15 @@ class userService {
         this.userRepository = container.get('userRepository');
     }
 
-    async checkValidation(id, address, pw, pwc) {
+    async validateUserInfo(id, address, pw, pwc) {
         if(!id) return 'Please type your ID.';
         const user = await this.userRepository.findById(id);
-        if(user) return 'User name: ' + user.id + ' already exists';
+        if(user) return `User name ${user.id} already exists`;
         if(!address) return 'Please type your address.';
         if(!pw) return 'Please type your password.';
         if(!pwc) return 'Please type your password confirmation.';
         if(pw !== pwc) return 'Your password and password confirmation is not matched!';
-        return 0;
+        return undefined;
     }
 
     async encryptPassword(pw) {
@@ -57,6 +57,40 @@ class userService {
             { expiresIn: "30m" } // token expiration time
         );
         return token;
+    }
+
+    getLoginMethod(req) {
+        if(req.cookies.user) {
+            return 'jwt';
+        } else if(req.session.access_token) {
+            return 'kakao';
+        }
+        return undefined;
+    }
+
+    async getJWTUserInfo(JWT_TOKEN, SECRET_KEY) {
+        return await jwt.verify(JWT_TOKEN, SECRET_KEY);
+    }
+    async getKakaoUserInfo(kakao_access_token) {
+        const { nickname, profile_image } = await this.kakaoServiceInstance.getUserInfo(kakao_access_token);
+        const user = {
+            id: nickname,
+            address: profile_image
+        }
+        return user;
+    }
+    async getUserInfo(req) {
+        const loginMethod = this.getLoginMethod(req);
+        switch(loginMethod) {
+            case 'jwt': {
+                return await this.getJWTUserInfo(req.cookies.user, this.#config.JWT.SECRET);
+            }
+            case 'kakao': {
+                return await this.getKakaoUserInfo(req.session.access_token);
+            }
+            default:
+                break;
+        }
     }
 
     async getLoggedInUser(jwtDecodedUser, kakao_access_token) {

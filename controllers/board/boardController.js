@@ -7,7 +7,7 @@ const path = require('path');
 class BoardController {
     constructor(container) {
         this.serviceInstance = container.get('boardService');
-        this.userServiceInstance = container.get('userService');
+        // this.userServiceInstance = container.get('userService');
     }
 
     handleMainRequest = async (req, res, next) => {
@@ -31,51 +31,41 @@ class BoardController {
     }
     
     getArticle = async (req, res, next) => {
-        // if(req.query.keyStroke) return next();
-        // if(req.query.search) return next();
         const user = req.user;
         const { id } = req.params;
-        const article = await this.serviceInstance.showArticleByNum(id);
-        const comments = await this.serviceInstance.getComments(id);
+        const { article, comments } = this.serviceInstance.getArticleItems(id);
         return res.render(path.join(__dirname, '../../views/board/article'), {user:user, article: article, comments: comments, length: comments.length});
     }
 
     autoComplete = async (req, res, next) => {
-        // if(req.query.search) return next();
         const { keyStroke } = req.query;
         const titles = await this.serviceInstance.searchTitleByChar(keyStroke);
         return res.status(200).send(titles).end();
     }
+
     deleteResource = async (req, res, next) => {
         const user = req.user;
         const { resourceType, id } = req.params;
+        const isUserValidated = await this.serviceInstance.validateUserWithAuthor(user.id, resourceType, id);
+        if(!isUserValidated) {
+            return res.status(400).send('Account not matched.').end();
+        }
         switch(resourceType) {
             case 'article': {
-                const article = await this.serviceInstance.showArticleByNum(id);
-                if(user.id!==article.AUTHOR) {
-                    return res.status(400).send('Account not matched.').end();
-                }
-                const affectedRows = await this.serviceInstance.deleteByNum(id);
-                if(affectedRows===1) {
-                    return res.status(200).send('Article has been removed.').end(); 
-                } else {
-                    return res.status(400).send('Something went wrong').end(); 
-                }
+                var affectedRows = await this.serviceInstance.deleteArticleById(id);
+                break;
             }
             case 'comment': {
-                const commentAuthor = await this.serviceInstance.getCommentAuthorByNum(id);
-                if(user.id!==commentAuthor) {
-                    return res.status(400).send('Account not matched.').end();
-                }
-                const affectedRows = await this.serviceInstance.deleteComment(id);
-                if(affectedRows===1) {
-                    return res.status(200).send('Comment has been removed.').end();
-                } else {
-                    return res.status(400).send('Something went wrong').end();
-                }
+                var affectedRows = await this.serviceInstance.deleteComment(id);
+                break;
             }
             default: 
                 break;
+        }
+        if(affectedRows===1) {
+            return res.status(200).send(`${resourceType} has been removed.`).end(); 
+        } else {
+            return res.status(400).send('Something went wrong').end(); 
         }
     }
     
@@ -90,33 +80,26 @@ class BoardController {
         switch(resourceType) {
             case 'article': {
                 const { title, content } = req.body; 
-                const affectedRows = await this.serviceInstance.insert(title, content, user.id);
-                if(affectedRows===1) {
-                    return res.status(200).send('Article has been posted.').end(); 
-                } else {
-                    return res.status(400).send('Something went wrong').end();
-                }
+                var affectedRows = await this.serviceInstance.insertArticle(title, content, user.id);
+                break;
             }
             case 'comment': {
                 const { content } = req.body;
-                const affectedRows = await this.serviceInstance.insertComment(id, user.id, content);
-                if(affectedRows===1) {
-                    return res.status(200).send('Comment has been posted.');
-                } else {
-                    return res.status(400).send('Something went wrong.');
-                }
+                var affectedRows = await this.serviceInstance.insertComment(id, user.id, content);
+                break;
             }
             case 'reply': {
                 const { group_num, content } = req.body;
-                const affectedRows = await this.serviceInstance.insertReply(id, user.id, group_num, content);
-                if(affectedRows===1) {
-                    return res.status(200).send('Reply has been posted.');
-                } else {
-                    return res.status(400).send('Something went wrong.');
-                }
+                var affectedRows = await this.serviceInstance.insertReply(id, user.id, group_num, content);
+                break;
             }
             default:
                 return res.status(400).send('Invalid resource type.');
+        }
+        if(affectedRows===1) {
+            return res.status(200).send(`${resourceType} has been posted.`);
+        } else {
+            return res.status(400).send('Something went wrong.');
         }
     }
 
@@ -132,31 +115,28 @@ class BoardController {
     updateResource = async (req, res) => {
         const user = req.user;
         const { resourceType, id } = req.params;
+        const isUserValidated = await this.serviceInstance.validateUserWithAuthor(user.id, resourceType, id);
+        if(!isUserValidated) {
+            return res.status(400).send('Account not matched.').end();
+        }
         switch(resourceType) {
             case 'article': {
                 const { title, content } = req.body;
-                const changedRows = await this.serviceInstance.updateArticle(id, title, content);
-                if(changedRows===1) {
-                    return res.status(200).send('Your article has been editied.');
-                } else {
-                    return res.status(400).json({ error: 'Something went wrong.' });s 
-                }
+                var affectedRows = await this.serviceInstance.updateArticle(id, title, content);
+                break;
             }
             case 'comment': {
                 const { content } = req.body;
-                const commentAuthor = await this.serviceInstance.getCommentAuthorByNum(id);
-                if(user.id!==commentAuthor) {
-                    return res.status(200).send('Account not matched.').end();
-                }
-                const affectedRows = await this.serviceInstance.editCommentByNum(id, content);
-                if(affectedRows===1) {
-                    return res.status(200).send('Comment has been updated.').end();
-                } else {
-                    return res.status(400).send('Something went wrong.').end();
-                } 
+                var affectedRows = await this.serviceInstance.editCommentByNum(id, content);
+                break;
             }
             default:
                 return res.status(400).json({ error: 'Invalid resource type.' });
+        }
+        if(affectedRows===1) {
+            return res.status(200).send(`${resourceType} has been updated.`);
+        } else {
+            return res.status(400).json({ error: 'Something went wrong.' });s 
         }
     }
 }

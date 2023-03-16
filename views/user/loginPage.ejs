@@ -71,13 +71,17 @@
                 document.getElementById("address").value = "";
                 document.getElementById("pw").value = "";
                 document.getElementById("pwc").value = "";
+                console.log('signup');
                 $.ajax({
                     type: "post",
-                    url: '/user/:id/:address/:pw/:pwc',
+                    url: '/user/sign-up',
                     data: {id:id,address:address,pw:pw,pwc:pwc},
                     dataType:'text',
                     success: function(res) {
                         window.alert(res);
+                    }, 
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        window.alert(jqXHR.responseText);
                     }
                 });
             }

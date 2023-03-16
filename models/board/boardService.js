@@ -93,27 +93,22 @@ class boardService {
         return articles;
     }
 
-    async getPaginatedArticlesByTitle(title, currentPage, itemsPerPage) {
-        const matchingTitleCount = await this.getMatchingTitleCount(title); 
-        const pagination = await this.getPageItems(matchingTitleCount, currentPage, itemsPerPage);
-        const articles = await this.searchArticlesByTitle(title, pagination.startIndex, pagination.endIndex);
-        return { articles, pagination };
-    }
-
     async searchTitleByChar(keyStroke) {
-        const sql = `SELECT TITLE FROM BOARD WHERE TITLE LIKE '%${keyStroke}%' ORDER BY BOARD_NO DESC;`;
-        let [titles] = await this.repository.executeQuery(sql);
+        const sql = `SELECT TITLE FROM BOARD WHERE TITLE LIKE ? ORDER BY BOARD_NO DESC;`;
+        const values = [`%${keyStroke}%`];
+        let [titles] = await this.repository.executeQuery(sql, values);
         return titles;
     }
 
-    async showArticleByNum(article_num) {
-        const sql = `SELECT * FROM BOARD WHERE BOARD_NO=${article_num};`;
-        let [article] = await this.repository.executeQuery(sql);
+    async getArticleById(id) {
+        const sql = `SELECT * FROM BOARD WHERE BOARD_NO=?;`;
+        const values = [ id ];
+        let [article] = await this.repository.executeQuery(sql, values);
         article = this.convertArticleDateFormat(article[0]);
         return article;
     }
 
-    async insert(title, content, author) {
+    async insertArticle(title, content, author) {
         const sql = `INSERT INTO BOARD (TITLE, content, POST_DATE, UPDATE_DATE, AUTHOR) VALUES ?;`;
         const date_obj = new Date();
         const post_date = date_obj.getFullYear() +"-"+ parseInt(date_obj.getMonth()+1) +"-"+ date_obj.getDate();
@@ -125,9 +120,10 @@ class boardService {
         return res.affectedRows;
     }
 
-    async deleteByNum(article_num) {
-        const sql = `DELETE FROM BOARD WHERE BOARD_NO=${article_num};`;
-        const [res] = await this.repository.executeQuery(sql);
+    async deleteArticleById(id) {
+        const sql = `DELETE FROM BOARD WHERE BOARD_NO=?;`;
+        const values = [ id ];
+        const [res] = await this.repository.executeQuery(sql, values);
         return res.affectedRows;
     }
 
@@ -143,16 +139,18 @@ class boardService {
      * CommentService
      */
 
-    async getMaxCommentOrder(article_num, group_num) {
-        const sql = `SELECT MAX(comment_order) AS maxCommentOrder FROM comment WHERE article_num=${article_num} AND group_num=${group_num};`;
-        const [[res]] = await this.repository.executeQuery(sql);
+    async getMaxCommentOrder(id, group_num) {
+        const sql = `SELECT MAX(comment_order) AS maxCommentOrder FROM comment WHERE article_num=? AND group_num=?;`;
+        const values = [ id, group_num];
+        const [[res]] = await this.repository.executeQuery(sql, values);
         res.maxCommentOrder ??= 0;
         return res.maxCommentOrder;
     }
     
-    async getNewGroupNum(article_num) {
-        const sql = `SELECT MAX(comment.group_num) AS maxGroupNum FROM BOARD LEFT JOIN comment ON BOARD.BOARD_NO=comment.article_num WHERE BOARD.BOARD_NO=${article_num};`;
-        const [[res]] = await this.repository.executeQuery(sql);
+    async getNewGroupNum(id) {
+        const sql = `SELECT MAX(comment.group_num) AS maxGroupNum FROM BOARD LEFT JOIN comment ON BOARD.BOARD_NO=comment.article_num WHERE BOARD.BOARD_NO=?;`;
+        const values = [ id ];
+        const [[res]] = await this.repository.executeQuery(sql, values);
         res.maxGroupNum ??= 0;
         return res.maxGroupNum+1;
     }
@@ -165,11 +163,12 @@ class boardService {
         return time;
     }
     
-    async getComments(article_num) {
+    async getCommentsByArticleId(article_num) {
         // const sql = "SELECT * FROM COMMENT WHERE article_num='"+article_num+"';";
-        const sql = `SELECT * FROM comment WHERE article_num=${article_num} ORDER BY group_num, comment_order ASC;`
-        let [comments] = await this.repository.executeQuery(sql);
-        return comments
+        const sql = `SELECT * FROM comment WHERE article_num=? ORDER BY group_num, comment_order ASC;`
+        const values = [ article_num ];
+        let [comments] = await this.repository.executeQuery(sql, values);
+        return comments;
     }
     
     async insertComment(article_num, author, content) {
@@ -186,9 +185,10 @@ class boardService {
         return res.affectedRows;
     }
     
-    async editCommentByNum(comment_num, content) {
-        const query = `UPDATE comment SET content='${content}' WHERE comment_num=${comment_num};`
-        const [res] = await this.repository.executeQuery(query);
+    async editCommentByNum(id, content) {
+        const query = `UPDATE comment SET content=? WHERE comment_num=?;`;
+        const values = [id, content];
+        const [res] = await this.repository.executeQuery(query, values);
         return res.affectedRows;
     }
     
@@ -204,16 +204,46 @@ class boardService {
         return res.affectedRows;
     }
     
-    async getCommentAuthorByNum(comment_num) {
-        const sql = `SELECT author FROM comment WHERE comment_num=${comment_num};`;
-        const [[commentAuthor]] = await this.repository.executeQuery(sql);
+    async getCommentAuthorById(id) {
+        const sql = `SELECT author FROM comment WHERE comment_num=?;`;
+        const values = [ id ];
+        const [[commentAuthor]] = await this.repository.executeQuery(sql, values);
         return commentAuthor.author;
     }
     
-    async deleteComment(comment_num) {
-        const sql = `UPDATE comment SET author='deleted', content='deleted', time=NULL WHERE comment_num=${comment_num};`;
-        const [res] = await this.repository.executeQuery(sql);
+    async deleteComment(id) {
+        const sql = `UPDATE comment SET author='deleted', content='deleted', time=NULL WHERE comment_num=?;`;
+        const values = [ id ];
+        const [res] = await this.repository.executeQuery(sql, values);
         return res.affectedRows;
+    }
+    
+    async getPaginatedArticlesByTitle(title, currentPage, itemsPerPage) {
+        const matchingTitleCount = await this.getMatchingTitleCount(title); 
+        const pagination = await this.getPageItems(matchingTitleCount, currentPage, itemsPerPage);
+        const articles = await this.searchArticlesByTitle(title, pagination.startIndex, pagination.endIndex);
+        return { articles, pagination };
+    }
+
+    async getArticleItems(id) {
+        const article = await this.getArticleById(id);
+        const comments = await this.getCommentsByArticleId(id);
+        return { article, comments };
+    }
+
+    async validateUserWithAuthor(userId, resourceType, resourceId) {
+        switch(resourceType) {
+            case 'article': {
+                const article = await this.getArticleById(resourceId);
+                return userId===article.AUTHOR;
+            }
+            case 'comment': {
+                const commentAuthor = await this.getCommentAuthorById(resourceId); 
+                return userId===commentAuthor;
+            }
+            default:
+                return false;
+        }
     }
 }
 

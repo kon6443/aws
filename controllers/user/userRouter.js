@@ -20,18 +20,12 @@ path.join(__dirname, 'public');
 
 router.use('/', auth);
 
-router.get('/', UserControllerInstance.getMainPage);
+router.get('/', UserControllerInstance.handleGetMain);
+router.post('/sign-up', UserControllerInstance.handlePostSignUp);
+router.post('/sign-in', UserControllerInstance.handlePostLogIn);
+router.delete('/logout', FilterInstance.authenticationMethodDistinguisher, UserControllerInstance.handleDeleteLogOut);
 
-// signup, address should be changed to /signup
-router.post('/sign-up', UserControllerInstance.postResource);
-
-// login
-router.post('/:id/:pw', UserControllerInstance.postLogIn);
-
-// logout
-router.delete('/logout', FilterInstance.authenticationMethodDistinguisher, UserControllerInstance.deleteLogOut);
-
-router.get('/kakao-disconnection', UserControllerInstance.disconnetKakao);
+router.delete('/kakao-disconnection', UserControllerInstance.handleDeleteDisconnectKakao);
 
 router.use((err, req, res, next) => {
     res.json(err);

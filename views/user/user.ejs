@@ -50,17 +50,18 @@
                                 <button type="button" id="logOut" onclick="signOut()">Log out</button><br><br>
                             </form>
                             <form id="signOut">
-                                <button type="button" id="logOut" onclick="location.href='/user/kakao-disconnection'">Disconnect Kakao</button><br><br>
+                                <button type="button" id="logOut" onclick="disconnectKakao()">Disconnect Kakao</button><br><br>
                             </form>
                         </div>
                         <script>
                             function disconnectKakao() {
                                 $.ajax({
-                                    type: "get",
+                                    type: "delete",
                                     url: '/user/kakao-disconnection',
-                                    dataType:'json',
+                                    dataType:'text',
                                     success: function(res) {
-                                        windows.alert(res);
+                                        window.alert(res);
+                                        // windows.alert(res);
                                         location.reload();
                                     }
                                 });

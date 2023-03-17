@@ -71,7 +71,6 @@
                 document.getElementById("address").value = "";
                 document.getElementById("pw").value = "";
                 document.getElementById("pwc").value = "";
-                console.log('signup');
                 $.ajax({
                     type: "post",
                     url: '/user/sign-up',
@@ -93,7 +92,7 @@
                 document.getElementById("signinPW").value = "";
                 $.ajax({
                     type: "post",
-                    url: '/user/:id/:pw',
+                    url: '/user/sign-in',
                     data: {id:id,pw:pw},
                     dataType:'text',
                     success: function(res) {
@@ -103,6 +102,9 @@
                         } else {
                             alert(res);
                         }
+                    }, 
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        window.alert(jqXHR.responseText);
                     }
                 });
             }

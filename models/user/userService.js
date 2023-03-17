@@ -18,47 +18,6 @@ class userService {
         this.userRepository = container.get('userRepository');
     }
 
-    async validateUserInfo(id, address, pw, pwc) {
-        if(!id) return 'Please type your ID.';
-        const user = await this.userRepository.findById(id);
-        if(user) return `User name ${user.id} already exists`;
-        if(!address) return 'Please type your address.';
-        if(!pw) return 'Please type your password.';
-        if(!pwc) return 'Please type your password confirmation.';
-        if(pw !== pwc) return 'Your password and password confirmation is not matched!';
-        return undefined;
-    }
-
-    async encryptPassword(pw) {
-        const salt = await bcrypt.genSalt(this.saltRounds);
-        pw = await bcrypt.hash(pw, salt);
-        return pw;
-    }
-    async comparePassword(typedPw, dbPw) {
-        return await bcrypt.compare(typedPw, dbPw);
-    }
-
-    async loginCheck(id, clientTypedPw) {
-        const user = await this.userRepository.findById(id);
-        if(user==null) return false;
-        const userConfirmed = await bcrypt.compare(clientTypedPw, user.pw);
-        return userConfirmed;
-    }
-
-    async issueToken(id, address) {
-        const user = await this.userRepository.findById(id);
-        const payload = { // putting data into a payload
-            id: user.id,
-            address: user.address
-        };
-        const token = await jwt.sign(
-            payload, // payload into jwt.sign method
-            this.#config.JWT.SECRET, // secret key value
-            { expiresIn: "30m" } // token expiration time
-        );
-        return token;
-    }
-
     getLoginMethod(req) {
         if(req.cookies.user) {
             return 'jwt';
@@ -93,31 +52,75 @@ class userService {
         }
     }
 
-    async getLoggedInUser(jwtDecodedUser, kakao_access_token) {
-        var user;
-        if(jwtDecodedUser) {
-            user = jwtDecodedUser;
-        } else if(kakao_access_token) {
-            // console.log('kakao_access_token:', kakao_access_token);
-            const {nickname, profile_image} = await this.kakaoServiceInstance.getUserInfo(kakao_access_token);
-            user = {
-                id: nickname,
-                address: profile_image
-            }
-        } else {
-            return undefined;
+    async validateUserInfo(id, address, pw, pwc) {
+        if(!id) {
+            throw new Error('Please type your ID.');
         }
-        return user;
+        const user = await this.userRepository.findById(id);
+        if(user) {
+            throw new Error(`User name ${user.id} already exists`);
+        }
+        if(!address) {
+            throw new Error('Please type your address.');
+        }
+        if(!pw) {
+            throw new Error('Please type your password.');
+        }
+        if(!pwc) {
+            throw new Error('Please type your password confirmation.');
+        }
+        if(pw !== pwc) {
+            throw new Error('Your password and password confirmation must match exactly.');
+        }
+        return true;
     }
+    
+    async encryptPassword(pw) {
+        const salt = await bcrypt.genSalt(this.saltRounds);
+        pw = await bcrypt.hash(pw, salt);
+        return pw;
+    }
+
     async mongoDBSaveUser(id, address, pw) {
-        var user = {
+        const user = new this.User({
             id: id,
             address: address,
-            pw: pw
-        }
-        user = new this.User(user);
-        user.pw = await this.encryptPassword(pw);
+            pw: await this.encryptPassword(pw) 
+        });
         user.save();
+        return user;
+    }
+
+    async validateAndRegisterUser(id, address, pw, pwc) {
+        try {
+            await this.validateUserInfo(id, address, pw, pwc); 
+            const user = await this.mongoDBSaveUser(id, address, pw);
+            return user;
+        } catch(err) {
+            throw new Error(err.message);
+        }
+    }
+
+    async authenticateAndIssueJwtToken(id, pw) {
+        const user = await this.userRepository.findById(id);
+        if(!user) {
+            throw new Error('User not found.');
+        }
+        const isPasswordMatched = await bcrypt.compare(pw, user.pw);
+        if(!isPasswordMatched) {
+            throw new Error('Password is incorrect.');
+        }
+        // issuing a token.
+        const payload = {
+            id: user.id,
+            address: user.address
+        }
+        const token =  await jwt.sign(
+            payload,
+            this.#config.JWT.SECRET,
+            { expiresIn: '60m'}
+        );
+        return token;
     }
 
     /**
@@ -127,8 +130,15 @@ class userService {
         return await this.kakaoServiceInstance.logout(kakao_access_token);
     }
 
-    async disconnectKakao(kakao_access_token) {
+    async disconnectKakao2(kakao_access_token) {
         return await this.kakaoServiceInstance.unlink(kakao_access_token);
+    }
+
+    async disconnectKakao(req) {
+        const res = await this.kakaoServiceInstance.unlink(req.session.access_token);
+        console.log('res:', res);
+        req.session.destroy();
+        return res;
     }
 }
 

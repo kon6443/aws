@@ -67,7 +67,7 @@ class kakaoService {
             const profile_image = body.properties.profile_image;
             return {nickname, profile_image};
         } catch(err) {
-            throw Error(err);
+            throw new Error(err);
         }
     }
 

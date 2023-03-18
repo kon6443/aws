@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <br>
-                        <% for(let i=0;i< length;i++) { %>
+                        <% for(let i=0;i< comments.length;i++) { %>
                             <div class="row box" style="font-size: 25px;">
                                 <div class="col box col-3" style="font-size: 20px;">
                                     <a> <%= comments[i].author %> </a> <br>
@@ -108,7 +108,7 @@
                                 <% } %>
 
                             </div>
-                            <% if((i+1==length) || (comments[i+1].comment_order==1)) { %>
+                            <% if((i+1==comments.length) || (comments[i+1].comment_order==1)) { %>
                                 <div class="row box" style="font-size: 25px;">
                                     <div class="col box col-md-5" style="font-size: 25px;"></div>
                                     <div class="col box col-md-2" style="font-size: 10px;">

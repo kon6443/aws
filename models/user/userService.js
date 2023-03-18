@@ -1,8 +1,8 @@
-// userService.js
+/**
+ * userService.js
+ */
 
-// Using jsonwebtoken module.
 const jwt = require("jsonwebtoken");
-// importing bcrypt moudle to encrypt user password.
 const bcrypt = require('bcrypt');
 
 class userService {

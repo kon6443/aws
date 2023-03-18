@@ -40,11 +40,11 @@ class Filter {
         const loginMethod = this.defineLoginMethod(req);
         switch(loginMethod) {
             case 'jwt': {
-                req.user = this.getJWTInfo(req.cookies.user, this.#config.JWT.SECRET);
+                req.user = await this.getJWTInfo(req.cookies.user, this.#config.JWT.SECRET);
                 return next();
             }
             case 'kakao': {
-                req.user = this.getKakaoInfo(req.session.access_token);
+                req.user = await this.getKakaoInfo(req.session.access_token);
                 return next();
             }
             default:

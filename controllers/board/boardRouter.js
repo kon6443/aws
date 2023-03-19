@@ -18,6 +18,8 @@ router.get('/write', FilterInstance.authenticationMethodDistinguisher, BoardCont
 router.get('/auto-completion', BoardControllerInstance.handleGetAutoComplete);
 router.get('/:id', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.handleGetArticle);
 
+router.get('/:resourceType/:id', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.handleGetArticleForm2);
+
 // Here resourceType is a placeholder. Depends on its value, routers handle an article or comment.
 router.delete('/:resourceType/:id', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.handleDeleteResource);
 router.post('/:resourceType/:id?', FilterInstance.authenticationMethodDistinguisher, BoardControllerInstance.handlePostResource);

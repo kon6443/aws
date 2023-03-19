@@ -27,13 +27,17 @@ class BoardController {
     handleGetArticleForm2 = async (req, res) => {
         const user = req.user;
         const { resourceType, id } = req.params;
+        console.log('resourceType:', resourceType);
         try {
             switch(resourceType) {
                 case 'write': {
                     return res.render(path.join(__dirname, '../../views/board/boardWrite'), {user:user});
                 }
                 case 'edit': {
-                    
+                    const article = await this.serviceInstance.getArticleById(id);
+                    if(user.id===article.AUTHOR) {
+                        return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
+                    }
                 }
                 default: 
                     return res.status(400).send('No matching request.');

@@ -2,7 +2,8 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 /**
- * Reason why to use both config file and .env file is to use auto complete feature.
+ * Reason why to use both config.js and .env file is to use auto complete feature.
+ * And config is manipulated by registering into a container.
  */
 const config = {
     // Mongo DB

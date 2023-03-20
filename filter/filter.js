@@ -4,9 +4,6 @@
 
 const jwt = require('jsonwebtoken');
 
-// importing .env file
-// require('dotenv').config(); 
-
 class Filter {
     #config
     constructor(container) {
@@ -51,35 +48,6 @@ class Filter {
                 return res.redirect('/user');
         }
     }
-
-    // async getLoggedInUser(jwtDecodedUser, kakao_access_token) {
-    //     var user;
-    //     if(jwtDecodedUser) {
-    //         user = jwtDecodedUser;
-    //     } else if(kakao_access_token) {
-    //         // console.log('kakao_access_token:', kakao_access_token);
-    //         const {nickname, profile_image} = await this.kakaoServiceInstance.getUserInfo(kakao_access_token);
-    //         user = {
-    //             id: nickname,
-    //             address: profile_image
-    //         }
-    //     } else {
-    //         return undefined;
-    //     }
-    //     return user;
-    // }
-    
-    // authenticationMethodDistinguisher2 = async (req, res, next) => {
-    //     const jwtDecodedUserInfo = req.decoded;
-    //     const kakao_access_token = req.session.access_token;
-    //     // const user = await this.userServiceInstance.getLoggedInUser(jwtDecodedUserInfo, kakao_access_token);
-        
-    //     if(!user) {
-    //         return res.redirect('/user');
-    //     }
-    //     req.user = user;
-    //     return next();
-    // }
 }
 
 module.exports = Filter;

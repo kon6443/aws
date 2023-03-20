@@ -1,7 +1,7 @@
 // Connecting MySQL
 
 const mysql = require('mysql2/promise');
-const util = require('util');
+// const util = require('util');
 
 class MySQLRepository {
     constructor(container) {
@@ -36,12 +36,3 @@ class MySQLRepository {
 }
 
 module.exports = MySQLRepository;
-
-// const conn = mysql.createConnection({
-//     host: "localhost",
-//     user: config.MYSQL.USER,
-//     password: config.MYSQL.PASSWORD,
-//     database: 'board_db'
-// });
-
-// module.exports = conn;

@@ -1,7 +1,8 @@
-// Connecting MySQL
+/**
+ * MySQLRepository
+ */
 
 const mysql = require('mysql2/promise');
-// const util = require('util');
 
 class MySQLRepository {
     constructor(container) {

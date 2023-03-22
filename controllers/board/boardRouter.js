@@ -8,9 +8,6 @@ const router = express.Router();
 const container = require('../../models/container/container');
 const FilterInstance = container.get('Filter');
 const BoardControllerInstance = container.get('BoardController');
-// const auth = require("../../models/authentication/authMiddleware");
-
-// router.use('/', auth);
 
 // '/board'
 router.get('/', BoardControllerInstance.handleMainRequest);

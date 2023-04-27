@@ -12,11 +12,11 @@ class Filter {
         this.kakaoServiceInstance = container.get('kakaoService');
     }
 
-    async getJWTInfo(JWT_TOKEN, SECRET_KEY) {
+    async getInfoWithJWT(JWT_TOKEN, SECRET_KEY) {
         return await jwt.verify(JWT_TOKEN, SECRET_KEY);
     }
 
-    async getKakaoInfo(kakao_access_token) {
+    async getInfoWithKakaoAccessToken(kakao_access_token) {
         const { nickname, profile_image } = await this.kakaoServiceInstance.getUserInfo(kakao_access_token);
         const user = {
             id: nickname,
@@ -33,15 +33,16 @@ class Filter {
         }
         return undefined; 
     }
+
     authenticationMethodDistinguisher = async (req, res, next) => {
         const loginMethod = this.defineLoginMethod(req);
         switch(loginMethod) {
             case 'jwt': {
-                req.user = await this.getJWTInfo(req.cookies.user, this.#config.JWT.SECRET);
+                req.user = await this.getInfoWithJWT(req.cookies.user, this.#config.JWT.SECRET);
                 return next();
             }
             case 'kakao': {
-                req.user = await this.getKakaoInfo(req.session.access_token);
+                req.user = await this.getInfoWithKakaoAccessToken(req.session.access_token);
                 return next();
             }
             default:

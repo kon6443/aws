@@ -19,8 +19,8 @@ const kakaoService = require('../kakao/kakaoService');
 const userService = require('../user/userService');
 const boredAPI = require('../APIs/boredAPI');
 const homeService = require('../home/homeService');
-const boardService = require('../board/boardService');
-const BoardController = require('../../controllers/board/boardController');
+const ArticleService = require('../articles/articleService');
+const ArticleController = require('../../controllers/articles/articleController');
 
 container.set('User', User);
 container.set('config', config);
@@ -34,8 +34,8 @@ container.set('Filter', new filter(container));
 container.set('UserController', new UserController(container));
 container.set('boredAPI', new boredAPI());
 container.set('homeService', new homeService(container));
-container.set('boardService', new boardService(container));
-container.set('BoardController', new BoardController(container));
+container.set('ArticleService', new ArticleService(container));
+container.set('ArticleController', new ArticleController(container));
 
 module.exports = container;
 

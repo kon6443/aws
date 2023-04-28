@@ -6,7 +6,7 @@ const path = require('path');
 
 class BoardController {
     constructor(container) {
-        this.serviceInstance = container.get('boardService');
+        this.serviceInstance = container.get('ArticleService');
     }
 
     handleMainRequest = async (req, res, next) => {
@@ -24,40 +24,6 @@ class BoardController {
         });
     }
 
-    handleGetArticleForm2 = async (req, res) => {
-        const user = req.user;
-        const { resourceType, id } = req.params;
-        console.log('resourceType:', resourceType);
-        try {
-            switch(resourceType) {
-                case 'write': {
-                    return res.render(path.join(__dirname, '../../views/board/boardWrite'), {user:user});
-                }
-                case 'edit': {
-                    const article = await this.serviceInstance.getArticleById(id);
-                    if(user.id===article.AUTHOR) {
-                        return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
-                    }
-                }
-                default: 
-                    return res.status(400).send('No matching request.');
-            }
-        } catch(err) {
-            console.error(err);
-            return res.status(500).send(err.message);
-        }
-    }
-
-    handleGetArticleForm = async (req, res) => {
-        try {
-            const user = req.user;
-            return res.render(path.join(__dirname, '../../views/board/boardWrite'), {user:user});
-        } catch(err) {
-            console.error(err);
-            return res.status(500).send(err.message);
-        }
-    }
-    
     handleGetAutoComplete = async (req, res, next) => {
         try {
             const { keyStroke } = req.query;
@@ -65,6 +31,16 @@ class BoardController {
             return res.status(200).send(titles).end();
         } catch(err) {
             console.error(err); 
+            return res.status(500).send(err.message);
+        }
+    }
+
+    handleGetWritingArticleForm = async (req, res) => {
+        try {
+            const user = req.user;
+            return res.render(path.join(__dirname, '../../views/board/boardWrite'), {user:user});
+        } catch(err) {
+            console.error(err);
             return res.status(500).send(err.message);
         }
     }
@@ -77,6 +53,20 @@ class BoardController {
             return res.render(path.join(__dirname, '../../views/board/article'), {user, article, comments});
         } catch(err) {
             console.error(err); 
+            return res.status(500).send(err.message);
+        }
+    }
+
+    handleGetEditingArticleForm = async (req, res) => {
+        const user = req.user;
+        const { id } = req.params;
+        try {
+            const article = await this.serviceInstance.getArticleById(id);
+            if(user.id===article.AUTHOR) {
+                return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
+            } 
+        } catch(err) {
+            console.error(err);
             return res.status(500).send(err.message);
         }
     }
@@ -115,19 +105,19 @@ class BoardController {
     handlePostResource = async (req, res) => {
         const user = req.user;
         /**
-         * In article, id refers nothing. undefined.
+         * In new, id refers nothing. undefined.
          * In comment, id refers article_id.
          * In reply, id refers comment_id that a user is replying to.
          */
         const { resourceType, id } = req.params;
         try {
             switch(resourceType) {
-                case 'article': {
+                case 'new': {
                     const { title, content } = req.body; 
                     var affectedRows = await this.serviceInstance.insertArticle(title, content, user.id);
                     break;
                 }
-                case 'comment': {
+                case 'Comment': {
                     const { content } = req.body;
                     var affectedRows = await this.serviceInstance.insertComment(id, user.id, content);
                     break;
@@ -141,7 +131,7 @@ class BoardController {
                     return res.status(400).send('Invalid resource type.');
             }
             if(affectedRows===1) {
-                return res.status(200).send(`${resourceType} has been posted.`);
+                return res.status(201).send(`${resourceType} has been posted.`);
             } else {
                 return res.status(400).send('Something went wrong.');
             }
@@ -181,15 +171,6 @@ class BoardController {
         } catch(err) {
             console.error(err);
             return res.status(500).send(err.message);
-        }
-    }
-
-    showEditingArticle = async (req, res) => {
-        const user = req.user;
-        const { id } = req.params;
-        const article = await this.serviceInstance.getArticleById(id);
-        if(user.id===article.AUTHOR) {
-            return res.render(path.join(__dirname, '../../views/board/editArticle'), {user:user, article:article});
         }
     }
 

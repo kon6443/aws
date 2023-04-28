@@ -25,7 +25,7 @@
 				<ul class="about">
                     <div>
                         <h1>
-                            <a href="/board" style="color: white; text-decoration: none; display: inline-block;"> Board </a>
+                            <a href="/articles" style="color: white; text-decoration: none; display: inline-block;"> Board </a>
                             <a style="display: inline-block; float: right; margin-right: 3%;"> Welcome <%= user %>! </a>
                         </h1>
                         <div >
@@ -52,15 +52,15 @@
                             <% } %> -->
                             <% articles.forEach((article) => { %>
                                 <tr>
-                                    <td style="height: 5vh;"><a href="/board/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.BOARD_NO %></a></td>
-                                    <td style="height: 5vh;"><a href="/board/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.TITLE %></a></td>
-                                    <td style="height: 5vh;"><a href="/board/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.POST_DATE %></a></td>
-                                    <td style="height: 5vh;"><a href="/board/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.AUTHOR %></a></td>
+                                    <td style="height: 5vh;"><a href="/articles/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.BOARD_NO %></a></td>
+                                    <td style="height: 5vh;"><a href="/articles/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.TITLE %></a></td>
+                                    <td style="height: 5vh;"><a href="/articles/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.POST_DATE %></a></td>
+                                    <td style="height: 5vh;"><a href="/articles/<%= article.BOARD_NO %>" style="color: white; text-decoration: none;"><%= article.AUTHOR %></a></td>
                                 </tr>
                             <% }); %>
                         </table >
                     </div>
-                    <button type="button" id="new" onclick="location.href='/board/write'">New</button>
+                    <button type="button" id="new" onclick="location.href='/articles/new'">New</button>
                     <center>
                         <nav class="col-8">
                             <% 
@@ -70,17 +70,17 @@
                             %>
                             <ul class="pagination pagination-sm justify-content-center align-items-center h-100 mb-0">            
                                 <li class="page-item <%= previousBtnEnabled?'':'disabled' %>">
-                                    <a class="page-link" href="/board?current-page=<%= pagination.currentPage-1 %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>" <%= previousBtnEnabled?'':'tabindex=-1' %>>«</a>
+                                    <a class="page-link" href="/articles?current-page=<%= pagination.currentPage-1 %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>" <%= previousBtnEnabled?'':'tabindex=-1' %>>«</a>
                                 </li>
                                 <% for(i=1;i<=pagination.totalPages;i++){ %>
                                     <% if(i==1 || i==pagination.totalPages || (i>=pagination.currentPage-offset && i<=pagination.currentPage+offset)){ %>
-                                        <li class="page-item <%= pagination.currentPage==i?'active':'' %>"><a class="page-link" href="/board?current-page=<%= i %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>"> <%= i %> </a></li>
+                                        <li class="page-item <%= pagination.currentPage==i?'active':'' %>"><a class="page-link" href="/articles?current-page=<%= i %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>"> <%= i %> </a></li>
                                     <% } else if(i==2 || i==pagination.totalPages-1){ %>
                                         <li><a class="page-link">...</a></li>
                                     <% } %>
                                 <% } %>
                                 <li class="page-item <%= nextBtnEnabled?'':'disabled' %>">
-                                    <a class="page-link" href="/board?current-page=<%= pagination.currentPage+1 %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>" <%= nextBtnEnabled?'':'tabindex=-1' %>>»</a>
+                                    <a class="page-link" href="/articles?current-page=<%= pagination.currentPage+1 %>&items-per-page=<%= pagination.itemsPerPage %>&search=<%= search %>" <%= nextBtnEnabled?'':'tabindex=-1' %>>»</a>
                                 </li>
                             </ul>
                         </nav>
@@ -91,7 +91,7 @@
         <script>
             function search() {
                 const search = document.getElementById('search').value;
-                window.location.href = "/board?search="+search;
+                window.location.href = "/articles?search="+search;
                 // window.location.href = "/board?search="+search+"&current-page=<%= pagination.currentPage %>&items-per-page=<%= pagination.itemsPerPage %>";
                 // window.location.href = '/board?search='+search;
             }
@@ -103,7 +103,7 @@
                 }
                 $.ajax({
                     type: "GET",
-                    url: `/board/auto-completion?keyStroke=${keyStroke}`,
+                    url: `/articles/auto-completion?keyStroke=${keyStroke}`,
                     data: {},
                     dataType:'json',
                     success: function(res) {

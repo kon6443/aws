@@ -41,7 +41,7 @@
                                         <label for="content"> <h3>Contents: </h3></label> <br>
                                         <textarea id="content" rows="10%" cols="100%" /></textarea>
                                     </div>
-                                    <button type="button" id="back" onclick="location.href='/board'">Back</button>
+                                    <button type="button" id="back" onclick="location.href='/articles'">Back</button>
                                     <button type="button" id="post" onclick="postArticle()" >Post</button> <br><br>
                                 </center>
                             </form>
@@ -53,15 +53,15 @@
                             function postArticle() {
                                 const title = document.getElementById("title").value;
                                 const content = document.getElementById("content").value;
-                                const resourceType = 'article';
+                                const resourceType = 'new';
                                 $.ajax({
                                     type: "post",
-                                    url: `/board/${resourceType}`,
+                                    url: `/articles/${resourceType}`,
                                     data: {title: title, content:content},
                                     dataType:'text',
                                     success: function(res) {
                                         alert(res);
-                                        window.location.href = '/board';
+                                        window.location.href = '/articles';
                                     }
                                 });
                             }

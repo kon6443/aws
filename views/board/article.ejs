@@ -25,7 +25,7 @@
 					<article class="about-text">
                         <div>
                             <h1><%= user.id %>, Welcome! </h1>
-                            <button type="button" id="back" onclick="location.href='/board'">Back</button>
+                            <button type="button" id="back" onclick="location.href='/articles'">Back</button>
                             <button type="button" id="logOut" onclick="signOut()">Log out</button>
                         </div>
 					</article>
@@ -144,7 +144,7 @@
                 console.log('id:', id);
                 $.ajax({
                     type: "put",
-                    url: `/board/${resourceType}/${id}`,
+                    url: `/articles/${resourceType}/${id}`,
                     data: {content: content},
                     dataType:'text',
                     success: function(res) {
@@ -170,7 +170,7 @@
                 const resourceType = 'reply';
                 $.ajax({
                     type: "post",
-                    url: `/board/${resourceType}/${id}`,
+                    url: `/articles/${resourceType}/${id}`,
                     data: {group_num: group_num, content: content},
                     dataType:'text',
                     success: function(res) {
@@ -195,7 +195,7 @@
                 const resourceType = 'comment';
                 $.ajax({
                     type: "delete",
-                    url: `/board/${resourceType}/${id}`,
+                    url: `/articles/${resourceType}/${id}`,
                     data: {},
                     dataType:'text',
                     success: function(res) {
@@ -210,14 +210,14 @@
                 const id = <%= article.BOARD_NO %>;
                 const content = document.getElementById('comment').value;
                 document.getElementById('comment').value = '';
-                const resourceType = 'comment';
+                const resourceType = 'Comment';
                 $.ajax({
                     type: "post",
-                    url: `/board/${resourceType}/${id}`,
+                    url: `/articles/${resourceType}/${id}`,
                     data: {content: content},
                     dataType:'text',
                     success: function(res) {
-                        if(res == 'Comment has been posted.') {
+                        if(res === 'Comment has been posted.') {
                             location.reload();
                         } else {
                             alert('Something went wrong.');
@@ -230,13 +230,13 @@
                 const resourceType = 'article';
                 $.ajax({
                     type: "delete",
-                    url: `/board/${resourceType}/${id}`,
+                    url: `/articles/${resourceType}/${id}`,
                     data: {},
                     dataType:'text',
                     success: function(res) {
                         alert(res);
                         if(res === 'Article has been removed.') {
-                            window.location.href = '/board';
+                            window.location.href = '/articles';
                         }
                     }
                 });
@@ -245,7 +245,8 @@
                 const author = '<%= article.AUTHOR %>';
                 const user = '<%= user.id %>';
                 if(user === author) {
-                    window.location.href = '/board/article/<%= article.BOARD_NO %>';
+                    window.location.href = '/articles/<%= article.BOARD_NO %>?mode=edit';
+                    // window.location.href = '/articles/article/<%= article.BOARD_NO %>';
                 } else {
                     alert('Account not matched.');
                 }

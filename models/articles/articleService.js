@@ -187,7 +187,7 @@ class boardService {
     
     async editCommentByNum(id, content) {
         const query = `UPDATE comment SET content=? WHERE comment_num=?;`;
-        const values = [id, content];
+        const values = [content, id];
         const [res] = await this.repository.executeQuery(query, values);
         return res.affectedRows;
     }

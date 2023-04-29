@@ -20,7 +20,7 @@ router.get('/:id/edit', FilterInstance.authenticationMethodDistinguisher, Articl
 // router.get('/:resourceType/:id', FilterInstance.authenticationMethodDistinguisher, ArticleControllerInstance.handleGetArticleForm2);
 
 // Here resourceType is a placeholder. Depends on its value, routers handle an article or comment.
-router.post('/:resourceType/:id?', FilterInstance.authenticationMethodDistinguisher, ArticleControllerInstance.handlePostResource);
+router.post('/:resourceType/:id', FilterInstance.authenticationMethodDistinguisher, ArticleControllerInstance.handlePostResource);
 router.put('/:resourceType/:id', FilterInstance.authenticationMethodDistinguisher, ArticleControllerInstance.handleUpdateResource);
 router.delete('/:resourceType/:id', FilterInstance.authenticationMethodDistinguisher, ArticleControllerInstance.handleDeleteResource);
 

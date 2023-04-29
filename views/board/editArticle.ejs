@@ -41,7 +41,7 @@
                                         <label for="content"> <h3>Contents: </h3></label> <br>
                                         <textarea id="content" rows="10%" cols="100%" /> <%= article.content%> </textarea>
                                     </div>
-                                    <button type="button" id="back" onclick="location.href='/board'">Back</button>
+                                    <button type="button" id="back" onclick="window.history.back()">Back</button>
                                     <button type="button" id="post" onclick="submitEditiedArticle()" >Post</button> <br><br>
                                 </center>
                             </form>
@@ -57,12 +57,12 @@
                                 const content = document.getElementById("content").value;
                                 $.ajax({
                                     type: "put",
-                                    url: `/board/${resourceType}/${id}`,
+                                    url: `/articles/${resourceType}/${id}`,
                                     data: {title: title, content:content},
                                     dataType:'text',
                                     success: function(res) {
                                         alert(res);
-                                        window.location.href = '/board/'+id;
+                                        window.location.href = '/articles/'+id;
                                     }
                                 });
                             }

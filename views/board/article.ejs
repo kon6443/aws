@@ -141,14 +141,13 @@
                 const content = document.getElementById('editContent'+id).value;
                 document.getElementById('editContent'+id).value = '';
                 const resourceType = 'comment';
-                console.log('id:', id);
                 $.ajax({
                     type: "put",
                     url: `/articles/${resourceType}/${id}`,
                     data: {content: content},
                     dataType:'text',
                     success: function(res) {
-                        if(res === 'Comment has been updated.') {
+                        if(res === 'comment has been updated.') {
                             location.reload();
                         } else {
                             alert('Something went wrong.');
@@ -174,7 +173,7 @@
                     data: {group_num: group_num, content: content},
                     dataType:'text',
                     success: function(res) {
-                        if(res == 'Reply has been posted.') {
+                        if(res == 'reply has been posted.') {
                             location.reload();
                         } else {
                             alert('Something went wrong.');
@@ -200,7 +199,7 @@
                     dataType:'text',
                     success: function(res) {
                         alert(res);
-                        if(res === 'Comment has been removed.') {
+                        if(res === 'comment has been removed.') {
                             location.reload();
                         }
                     }
@@ -210,14 +209,14 @@
                 const id = <%= article.BOARD_NO %>;
                 const content = document.getElementById('comment').value;
                 document.getElementById('comment').value = '';
-                const resourceType = 'Comment';
+                const resourceType = 'comment';
                 $.ajax({
                     type: "post",
                     url: `/articles/${resourceType}/${id}`,
                     data: {content: content},
                     dataType:'text',
                     success: function(res) {
-                        if(res === 'Comment has been posted.') {
+                        if(res === 'comment has been posted.') {
                             location.reload();
                         } else {
                             alert('Something went wrong.');
@@ -235,18 +234,18 @@
                     dataType:'text',
                     success: function(res) {
                         alert(res);
-                        if(res === 'Article has been removed.') {
+                        if(res === 'article has been removed.') {
                             window.location.href = '/articles';
                         }
                     }
                 });
             }
             function editArticle() {
+                console.log('editArticle');
                 const author = '<%= article.AUTHOR %>';
                 const user = '<%= user.id %>';
                 if(user === author) {
-                    window.location.href = '/articles/<%= article.BOARD_NO %>?mode=edit';
-                    // window.location.href = '/articles/article/<%= article.BOARD_NO %>';
+                    window.location.href = '/articles/<%= article.BOARD_NO %>/edit';
                 } else {
                     alert('Account not matched.');
                 }

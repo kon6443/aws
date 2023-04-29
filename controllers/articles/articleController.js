@@ -148,7 +148,8 @@ class BoardController {
         const { resourceType, id } = req.params;
         const isUserValidated = await this.serviceInstance.validateUserWithAuthor(user.id, resourceType, id);
         if(!isUserValidated) {
-            return res.status(400).send('Account not matched.').end();
+            // 401: Unauthorized, 403: Forbidden
+            return res.status(401).send('Account not matched.').end();
         }
         try {
             switch(resourceType) {

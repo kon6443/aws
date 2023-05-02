@@ -32,6 +32,23 @@ class HomeController {
         }
     }
 
+    handleGetAuthCodeAndRedirect = async (req, res, next) => {
+        const AUTHORIZE_CODE = req.query['code'];
+        try {
+            const {
+                access_token,
+                id_token,
+                refresh_token
+            } = await homeServiceInstacnce.getTokens(AUTHORIZE_CODE);
+            req.session.access_token = access_token;
+            req.session.id_token = id_token;
+            req.session.refresh_token = refresh_token;
+            return res.status(300).redirect('/user');
+        } catch(err) {
+            next(err);
+        }
+    }
+
 }
 
 module.exports = HomeController ;

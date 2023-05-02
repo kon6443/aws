@@ -12,22 +12,7 @@ const HomeControllerInstance = container.get('HomeController');
 router.get('/', HomeControllerInstance.handleGetMainPage);
 router.get('/auth/kakao', HomeControllerInstance.handleGetAuthenticateURLAndRedirect);
 
-router.get('/auth/kakao/callback', async (req, res, next) => {
-    const AUTHORIZE_CODE = req.query['code'];
-    try {
-        const {
-            access_token,
-            id_token,
-            refresh_token
-        } = await homeServiceInstacnce.getTokens(AUTHORIZE_CODE);
-        req.session.access_token = access_token;
-        req.session.id_token = id_token;
-        req.session.refresh_token = refresh_token;
-        return res.status(300).redirect('/user');
-    } catch(err) {
-        next(err);
-    }
-});
+router.get('/auth/kakao/callback', HomeControllerInstance.handleGetAuthCodeAndRedirect);
 
 router.use((err, req, res, next) => {
     if(err.message==='Invalid user') {

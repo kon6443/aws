@@ -10,9 +10,11 @@ class game2048Service {
         this.scriptPath = path.join(__dirname, '..', '..', 'pythonScript');
         this.game2048Repository = container.get('game2048Repository');
     }
+
     getPythonFilePath(file_name) {
         return path.join(this.scriptPath, file_name);
     }
+
     async getRank(options, fileLocation) {
         const res = await new Promise((resolve, reject) => {
             PythonShell.PythonShell.run(fileLocation, options, function(err, res) {
@@ -25,6 +27,7 @@ class game2048Service {
         }); 
         return res;
     }
+
     async displayGame() {
         var options = {
             mode: 'json',
@@ -34,7 +37,6 @@ class game2048Service {
             args: [null]
         };
         return await this.game2048Repository.callPythonScript(options, this.getPythonFilePath('dbDisplay.py'));
-        // return this.getRank(options, this.getPythonFilePath('dbDisplay.py'));
     }
     
     async checkNewRecord(score) {
@@ -58,6 +60,7 @@ class game2048Service {
         };
         return await this.game2048Repository.callPythonScript(options, this.getPythonFilePath('dbPost.py')); 
     }
+
 }
 
 module.exports = game2048Service;

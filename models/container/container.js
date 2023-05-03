@@ -19,6 +19,7 @@ const UserController = require('../../controllers/user/UserController');
 
 const game2048Repository = require('../2048/2048Repository');
 const game2048Service = require('../2048/2048Service');
+const Game2048Controller = require('../../controllers/2048/Game2048Controller');
 
 const kakaoService = require('../kakao/kakaoService');
 
@@ -37,6 +38,7 @@ container.set('userRepository', new userRepository(container));
 
 container.set('game2048Repository', new game2048Repository());
 container.set('game2048Service', new game2048Service(container));
+container.set('Game2048Controller', new Game2048Controller(container.get('game2048Service')));
 
 container.set('kakaoService', new kakaoService(container));
 

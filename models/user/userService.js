@@ -136,7 +136,6 @@ class userService {
 
     async disconnectKakao(req) {
         const res = await this.kakaoServiceInstance.unlink(req.session.access_token);
-        console.log('res:', res);
         req.session.destroy();
         return res;
     }

@@ -11,15 +11,7 @@ const HomeControllerInstance = container.get('HomeController');
 // Home page.
 router.get('/', HomeControllerInstance.handleGetMainPage);
 router.get('/auth/kakao', HomeControllerInstance.handleGetAuthenticateURLAndRedirect);
-
 router.get('/auth/kakao/callback', HomeControllerInstance.handleGetAuthCodeAndRedirect);
-
-router.use((err, req, res, next) => {
-    if(err.message==='Invalid user') {
-        res.sendFile(path.join(__dirname, '../../views/home/home.html'));
-    } else {
-        console.error(err);
-    }
-});
+router.use(HomeControllerInstance.handleErrorHandling);
 
 module.exports = router;

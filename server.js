@@ -12,5 +12,11 @@ const server = app.listen(port, function() {
     console.log('Listening on '+port);
 });
 
-connectSocket(server);
+const container = require('./models/container/container');
+const UserServiceInstance = container.get('userService');
+const ChatServer = container.get('ChatServer');
+const ChatServerInstance = new ChatServer(server, UserServiceInstance);
+
+ChatServerInstance.connectChatServer();
+// connectSocket(server);
 connectMongoDB();

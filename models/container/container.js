@@ -11,6 +11,7 @@ const User = mongoose.model('User', userSchema);
 
 const MySQLRepository = require('../MySQLRepository');
 const userRepository = require('../user/userRepository');
+const ChatServer = require('../chat/ChatServer');
 
 const filter = require('../../filter/filter');
 
@@ -25,6 +26,9 @@ const kakaoService = require('../kakao/kakaoService');
 
 const boredAPI = require('../APIs/boredAPI');
 
+const ChatService = require('../chat/chatService');
+const ChatController = require('../../controllers/chat/ChatController');
+
 const homeService = require('../home/homeService');
 const HomeController = require('../../controllers/home/homeController');
 
@@ -35,6 +39,7 @@ container.set('User', User);
 container.set('config', config);
 container.set('MySQLRepository', new MySQLRepository(container));
 container.set('userRepository', new userRepository(container));
+container.set('ChatServer', ChatServer);
 
 container.set('game2048Repository', new game2048Repository());
 container.set('game2048Service', new game2048Service(container));
@@ -48,6 +53,9 @@ container.set('UserController', new UserController(container));
 container.set('Filter', new filter(container));
 
 container.set('boredAPI', new boredAPI());
+
+container.set('ChatService', new ChatService(container.get('userService')));
+container.set('ChatController', new ChatController(container.get('ChatService')));
 
 container.set('homeService', new homeService(container));
 container.set('HomeController', new HomeController(container.get('homeService')));

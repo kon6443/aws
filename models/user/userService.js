@@ -30,6 +30,7 @@ class userService {
     async getJWTUserInfo(JWT_TOKEN, SECRET_KEY) {
         return await jwt.verify(JWT_TOKEN, SECRET_KEY);
     }
+
     async getKakaoUserInfo(kakao_access_token) {
         const { nickname, profile_image } = await this.kakaoServiceInstance.getUserInfo(kakao_access_token);
         const user = {
@@ -38,6 +39,7 @@ class userService {
         }
         return user;
     }
+
     async getUserInfo(req) {
         const loginMethod = this.getLoginMethod(req);
         switch(loginMethod) {

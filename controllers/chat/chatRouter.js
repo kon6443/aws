@@ -1,15 +1,15 @@
-// chatRouter.js
+/**
+ * chatRouter.js
+ */
 
 const express = require("express");
 const router = express.Router();
 
-// Importing chat service
-const chatMiddleWare = require('../../models/chat/chatService');
-const auth = require("../../models/authentication/authMiddleware");
+const container = require('../../models/container/container');
+const ChatControllerInstance = container.get('ChatController');
 
-router.use('/', auth);
-router.get('/', chatMiddleWare.showMain);
-
-router.use(chatMiddleWare.errorHandler);
+// router.use('/', );
+router.get('/', ChatControllerInstance.handleGetMain);
+router.use(ChatControllerInstance.handleErrorHandler);
 
 module.exports = router;

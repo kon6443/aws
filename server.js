@@ -2,8 +2,6 @@
 
 const app = require('./app');
 
-// Socket.
-const connectSocket = require('./controllers/chat/connectSocket');
 // MongoDB.
 const { connectMongoDB } = require('./models/connectMongoDB');
 
@@ -18,5 +16,4 @@ const ChatServer = container.get('ChatServer');
 const ChatServerInstance = new ChatServer(server, UserServiceInstance);
 
 ChatServerInstance.connectChatServer();
-// connectSocket(server);
 connectMongoDB();

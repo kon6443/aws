@@ -2,7 +2,6 @@
  * ChatServer.js
  */
 
-// SocketIO
 const socketIo = require('socket.io');
 const cookieParser = require('cookie-parser');
 
@@ -33,7 +32,6 @@ class ChatServer {
     async handleConnection(socket) {
         const req = socket.request;
         const user = await this.userServiceInstance.getUserInfo(req);
-        console.log('user:', user);
         socket.name = user.id;
         this.userDict[socket.id] = user.id;
         console.log(socket.id, ' connected: ', socket.name);

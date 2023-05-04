@@ -62,17 +62,17 @@
                             });
 
                             const sendMessage = () => {
-                                    var msgLine = $('<div class="msgLine">');
-                                    var msgBox = $('<div class="msgBox">');
-                                    const msg = document.getElementById("myChat").value;
-                                    msgBox.append(msg);
-                                    msgBox.css('display', 'inline-block');
-                                    msgLine.css('text-align', 'right');
-                                    msgLine.append(msgBox);
-                                    $('#chatContent').append(msgLine);
-                                    socket.emit('msg', msg);
-                                    document.getElementById("myChat").value = "";
-                                    chatContent.scrollTop = chatContent.scrollHeight;
+                                var msgLine = $('<div class="msgLine">');
+                                var msgBox = $('<div class="msgBox">');
+                                const msg = document.getElementById("myChat").value;
+                                msgBox.append(msg);
+                                msgBox.css('display', 'inline-block');
+                                msgLine.css('text-align', 'right');
+                                msgLine.append(msgBox);
+                                $('#chatContent').append(msgLine);
+                                socket.emit('msg', msg);
+                                document.getElementById("myChat").value = "";
+                                chatContent.scrollTop = chatContent.scrollHeight;
                             }
                             document.getElementById("send").addEventListener("click", sendMessage);
                             

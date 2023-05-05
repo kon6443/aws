@@ -29,6 +29,9 @@ const boredAPI = require('../APIs/boredAPI');
 const ChatService = require('../chat/chatService');
 const ChatController = require('../../controllers/chat/ChatController');
 
+// const TetrisService = require('../tetris/tetrisService');
+const TetrisController = require('../../controllers/tetris/TetrisController');
+
 const homeService = require('../home/homeService');
 const HomeController = require('../../controllers/home/homeController');
 
@@ -56,6 +59,9 @@ container.set('boredAPI', new boredAPI());
 
 container.set('ChatService', new ChatService(container.get('userService')));
 container.set('ChatController', new ChatController(container.get('ChatService')));
+
+// container.set('TetrisService', new TetrisService());
+container.set('TetrisController', new TetrisController());
 
 container.set('homeService', new homeService(container));
 container.set('HomeController', new HomeController(container.get('homeService')));

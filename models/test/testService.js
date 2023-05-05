@@ -1,9 +1,20 @@
-// testService.js
+/**
+ * TetrisService.js
+ */
 
 const path = require('path');
 
-// const sayHello = require('../../tests/prac.spec').sayHello;
+class TetrisService {
 
+    startTetris = async () => {
+        console.log('Tetris has been started.');
+    }
+
+}
+
+module.exports = TetrisService;
+
+/*
 exports.showTest = (req, res, next) => {    
     res.status(200).sendFile(path.join(__dirname, '../../views/test/test.html'));
 
@@ -26,3 +37,4 @@ exports.errorHandler = (err, req, res, next) => {
         res.status(400).json({ message: "Parameter error" });
     }
 }
+*/

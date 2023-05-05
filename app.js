@@ -50,7 +50,7 @@ const gameTetrisRouter = require('./controllers/tetris/tetrisRouter');
 const userRouter = require('./controllers/user/userRouter');
 const chatRouter = require('./controllers/chat/chatRouter');
 const articleRouter = require('./controllers/articles/articleRouter');
-const testRouter = require('./controllers/test/testRouter');
+// const testRouter = require('./controllers/test/testRouter');
 const vehicleRouter = require('./controllers/vehicle/vehicleRouter');
 
 app.use('/', homeRouter);
@@ -60,7 +60,7 @@ app.use('/vehicle', vehicleRouter);
 app.use('/articles', articleRouter);
 app.use('/chat', chatRouter);
 app.use('/user', userRouter);
-app.use('/test', testRouter);
+// app.use('/test', testRouter);
 
 // 404 Error Handling
 app.use(function(req, res, next) {

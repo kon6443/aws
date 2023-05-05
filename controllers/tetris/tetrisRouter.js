@@ -3,14 +3,15 @@
  */
 
 const express = require("express");
-const app = express();
 const router = express.Router();
-const path = require('path');
+const container = require('../../models/container/container');
+const TetrisControllerInstance = container.get('TetrisController');
+// const app = express();
+// app.use(express.static(__dirname + '/public'));
 
-app.use(express.static(__dirname + '/public'));
-
-router.get('/', () => {
-    return res.sendFile(path.join(__dirname, '../../views/Tetris/tetris.html'));
-});
+router.get('/', TetrisControllerInstance.handleGetMain);
+// router.get('/', () => {
+//     return res.sendFile(path.join(__dirname, '../../views/Tetris/tetris.html'));
+// });
 
 module.exports = router;

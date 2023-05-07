@@ -51,12 +51,10 @@ const userRouter = require('./controllers/user/userRouter');
 const chatRouter = require('./controllers/chat/chatRouter');
 const articleRouter = require('./controllers/articles/articleRouter');
 // const testRouter = require('./controllers/test/testRouter');
-const vehicleRouter = require('./controllers/vehicle/vehicleRouter');
 
 app.use('/', homeRouter);
 app.use('/2048', game2048Router);
 app.use('/tetris', gameTetrisRouter);
-app.use('/vehicle', vehicleRouter);
 app.use('/articles', articleRouter);
 app.use('/chat', chatRouter);
 app.use('/user', userRouter);

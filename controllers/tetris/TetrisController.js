@@ -2,9 +2,11 @@
  * TetrisController.js
  */
 
+const path = require('path');
+
 class TetrisController {
     constructor() {
-        console.log('controller');
+
     }
 
     handleGetMain = (req, res) => {

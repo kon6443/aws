@@ -9,10 +9,10 @@ COPY package*.json ./
 RUN npm install
 
 # Copying rest of the applications to app directory. 
-COPY . /app
+COPY ../../ /app
 
 # Exposing the port and starting the application.
-Expose 8080
+Expose 80
 
 CMD ["npm", "start"]
 

@@ -1,18 +1,23 @@
 # This repository has been made to practice MVC pattern with NodeJS and AWS EC2.
 
 ## Implemented
+• Applied DI(Dependency Injection) using container in `typedi` module with plain JavaScript. <br>
+    &emsp;▪︎ All classes are manipulated in container.js file. <br>
+• Clean code. <br>
+• Applied MVC pattern. <br>
+    &emsp;▪︎ Each layer does not affect to other layers and helps to loosen the bound between the different components. <br>
 • Board:  <br>
-    &emsp;▪︎ Posting, editing, deleting, searching by title, board screen page, comment, comment reply. <br>
+    &emsp;▪︎ CRUD, searching by title, board screen page, comment, comment reply. <br>
 • Web chat. <br>
-• Applied MVC pattern, trying to make a clean and good looking code. <br>
-• Sign up, sign in, sign out. <br>
-• RESTful <br>
+    &emsp;▪︎ socket.io <br>
+• JWT & session based <br>
+    &emsp;▪︎ Sign up, sign in, sign out. <br>
+• RESTful principles. <br>
 
 ## Planing to implement
 • Admin account <br>
 • Grop chat(invitation) <br>
 • Preventing duplicated login <br>
-• Error handling <br>
 
 ## How to run
 • In order to run this project, you need to rename `.env.forGitHub` file to `.env` and initialize those values. <br>

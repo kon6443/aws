@@ -2,7 +2,7 @@
 
 ## Implemented
 • Applied DI(Dependency Injection) using container in `typedi` module with plain JavaScript. <br>
-    &emsp;▪︎ All classes are manipulated in container.js file. <br>
+    &emsp;▪︎ All classes are manipulated in one single file called `container.js`. <br>
 • Clean code. <br>
 • Applied MVC pattern. <br>
     &emsp;▪︎ Each layer does not affect to other layers and helps to loosen the bound between the different components. <br>

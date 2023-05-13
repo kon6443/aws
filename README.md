@@ -1,8 +1,8 @@
-# This repository has been made to practice MVC pattern with NodeJS and AWS EC2.
+# This repository has been made to practice node.js and AWS EC2.
 
 ## Implemented
-• Applied DI(Dependency Injection) using container in `typedi` module with plain JavaScript. <br>
-    &emsp;▪︎ All classes are manipulated in one single file called `container.js`. <br>
+• Applied DI (Dependency Injection) using container in `typedi` module with plain JavaScript. <br>
+    &emsp;▪︎ All classes are manipulated in one single file called `models/container/container.js`. <br>
 • Clean code. <br>
 • Applied MVC pattern. <br>
     &emsp;▪︎ Each layer does not affect to other layers and helps to loosen the bound between the different components. <br>
